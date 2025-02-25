@@ -73,7 +73,7 @@ public partial class EdgarGraphResource : Resource
             _validate_layer_button(property, i);
     }
 
-    private Dictionary get_data() =>
+    public Dictionary get_data() =>
         new()
         {
             { "nodes", nodes },
@@ -81,7 +81,7 @@ public partial class EdgarGraphResource : Resource
             { "layers_tmjs", new Array<Array<string>>(layers_tmjs.Select(array => new Array<string>(array.Select(tmj_res => tmj_res.ResourcePath))))},
         };
 
-    private void set_data(Dictionary data)
+    public void set_data(Dictionary data)
     {
         if (data is null) return;
 
@@ -90,7 +90,7 @@ public partial class EdgarGraphResource : Resource
 
         layers_tmjs = [.. data["layers_tmjs"].AsGodotArray<Array<string>>().Select(array => new Array<EdgarTiledResource>(array.Select(path => ResourceLoader.Load<EdgarTiledResource>(path))))];
     }
-    private bool save()
+    public bool save()
     {
         var file = FileAccess.Open(ResourcePath, FileAccess.ModeFlags.Write);
         if (file is null) return false;
