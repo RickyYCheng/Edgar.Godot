@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://bcrt34q8x2dta"]
+
+[ext_resource type="Script" uid="uid://bxl3ol86emk38" path="res://addons/edgar.godot/graph_edit/edgar_graph_node.gd" id="1_ompx8"]
+
+[node name="EdgarGraphNode" type="GraphNode"]
+title = "Edgar Graph Node"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(0.403922, 0.670588, 0.623529, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(0.917647, 0.419608, 0.4, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color(1, 1, 1, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color(1, 1, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+script = ExtResource("1_ompx8")
+
+[node name="RoomTypeButton" type="OptionButton" parent="."]
+layout_mode = 2
+flat = true
+selected = 0
+item_count = 2
+popup/item_0/text = "Basic Room"
+popup/item_0/id = 0
+popup/item_1/text = "Corridor Room"
+popup/item_1/id = 1
+
+[node name="EdgarLayerButton" type="OptionButton" parent="."]
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "basic"
+popup/item_0/id = 0

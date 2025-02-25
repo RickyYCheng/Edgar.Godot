@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://bgvssxmr2slqt"]
+
+[ext_resource type="Script" uid="uid://c1xyk6f4pb32k" path="res://addons/edgar.godot/graph_edit/edgar_graph_edit.gd" id="1_elojy"]
+[ext_resource type="Script" uid="uid://bc61pwb4kvnol" path="res://addons/edgar.godot/graph_edit/edgar_graphedit_menu_button.gd" id="2_fkgkv"]
+[ext_resource type="PackedScene" uid="uid://bcrt34q8x2dta" path="res://addons/edgar.godot/graph_edit/EdgarGraphNode.tscn" id="2_x13w6"]
+
+[node name="EdgarGraphEdit" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_elojy")
+edgar_graph_node_scene = ExtResource("2_x13w6")
+
+[node name="GraphEdit" type="GraphEdit" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+right_disconnects = true
+show_zoom_label = true
+
+[node name="MenuButton" type="MenuButton" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+item_count = 1
+popup/item_0/text = "Add Room Node"
+popup/item_0/id = 0
+script = ExtResource("2_fkgkv")
+
+[connection signal="connection_request" from="GraphEdit" to="." method="_on_graph_edit_connection_request"]
+[connection signal="delete_nodes_request" from="GraphEdit" to="." method="_on_graph_edit_delete_nodes_request"]
+[connection signal="disconnection_request" from="GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
+[connection signal="popup_request" from="GraphEdit" to="." method="_on_graph_edit_popup_request"]
+[connection signal="id_pressed" from="MenuButton" to="." method="_on_menu_button_id_pressed"]
