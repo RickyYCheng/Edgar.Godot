@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 using Godot;
@@ -24,15 +25,27 @@ public partial class EdgarTiledResource : Resource
         }
     }
 
-    private bool _handle_polygon_points_clockwise(Vector2[] polygon)
+    private bool check_clock_wise(Array<Vector2> points)
     {
-        var is_clockwise = Geometry2D.IsPolygonClockwise(polygon);
+        var vec = points[^1];
+        long num = 0L;
+        foreach (Vector2 point in points)
+        {
+            num += (long)(point.X - vec.X) * (long)(point.Y + vec.Y);
+            vec = point;
+        }
+
+        return num > 0;
+    }
+    private bool _handle_polygon_points_clockwise(Array<Vector2> polygon)
+    {
+        var is_clockwise = check_clock_wise(polygon);
 
         if (is_clockwise) return true;
 
-        System.Array.Reverse(polygon);
+        polygon.Reverse();
 
-        is_clockwise = Geometry2D.IsPolygonClockwise(polygon);
+        is_clockwise = check_clock_wise(polygon);
 
         if (is_clockwise) return true;
 
@@ -52,7 +65,7 @@ public partial class EdgarTiledResource : Resource
                 {
                     @object["polygon"] = new Array(@object["polygon"].AsGodotArray<Dictionary>().Select(_vec2_from_xy_obj));
 
-                    if (_handle_polygon_points_clockwise(@object["polygon"].AsVector2Array()) is false)
+                    if (_handle_polygon_points_clockwise(@object["polygon"].AsGodotArray<Vector2>()) is false)
                         GD.PrintErr("Cannot convert polygon to a clockwise one. ");
                 }
                 else if (@object.ContainsKey("polyline"))
