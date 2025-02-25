@@ -10,26 +10,26 @@ public partial class EdgarGraphResource : Resource
     [Export] public Array<Dictionary<string, string>> edges = [];
     [Export] public Array<Array<EdgarTiledResource>> layers_tmjs = [];
 
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_1 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_2 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_3 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_4 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_5 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_6 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_7 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_8 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_9 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_10 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_11 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_12 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_13 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_14 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_15 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_16 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_17 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_18 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_19 { get; }
-    [ExportToolButton("", Icon = "Callable")] public System.Action select_layer_20 { get; }
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_1 => Callable.From(() => _select_layer(0));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_2 => Callable.From(() => _select_layer(1));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_3 => Callable.From(() => _select_layer(2));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_4 => Callable.From(() => _select_layer(3));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_5 => Callable.From(() => _select_layer(4));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_6 => Callable.From(() => _select_layer(5));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_7 => Callable.From(() => _select_layer(6));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_8 => Callable.From(() => _select_layer(7));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_9 => Callable.From(() => _select_layer(8));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_10 => Callable.From(() => _select_layer(9));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_11 => Callable.From(() => _select_layer(10));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_12 => Callable.From(() => _select_layer(11));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_13 => Callable.From(() => _select_layer(12));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_14 => Callable.From(() => _select_layer(13));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_15 => Callable.From(() => _select_layer(14));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_16 => Callable.From(() => _select_layer(15));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_17 => Callable.From(() => _select_layer(16));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_18 => Callable.From(() => _select_layer(17));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_19 => Callable.From(() => _select_layer(18));
+    [ExportToolButton("", Icon = "Callable")] public Callable select_layer_20 => Callable.From(() => _select_layer(19));
 
     void _select_layer(int id)
     {
@@ -51,27 +51,6 @@ public partial class EdgarGraphResource : Resource
     }
     public EdgarGraphResource()
     {
-        select_layer_1 = () => _select_layer(0);
-        select_layer_2 = () => _select_layer(1);
-        select_layer_3 = () => _select_layer(2);
-        select_layer_4 = () => _select_layer(3);
-        select_layer_5 = () => _select_layer(4);
-        select_layer_6 = () => _select_layer(5);
-        select_layer_7 = () => _select_layer(6);
-        select_layer_8 = () => _select_layer(7);
-        select_layer_9 = () => _select_layer(8);
-        select_layer_10 = () => _select_layer(9);
-        select_layer_11 = () => _select_layer(10);
-        select_layer_12 = () => _select_layer(11);
-        select_layer_13 = () => _select_layer(12);
-        select_layer_14 = () => _select_layer(13);
-        select_layer_15 = () => _select_layer(14);
-        select_layer_16 = () => _select_layer(15);
-        select_layer_17 = () => _select_layer(16);
-        select_layer_18 = () => _select_layer(17);
-        select_layer_19 = () => _select_layer(18);
-        select_layer_20 = () => _select_layer(19);
-
         PropertyListChanged += () => save();
     }
 
