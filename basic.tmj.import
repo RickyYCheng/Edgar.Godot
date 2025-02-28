@@ -1,0 +1,15 @@
+[remap]
+
+importer="edgar.tmj.importer"
+type="EdgarTiledResource"
+uid="uid://bpxtl2asrgnqy"
+path="res://.godot/imported/basic.tmj-d4ee46f8dd6779f6369e0187702baf30.tres"
+
+[deps]
+
+source_file="res://basic.tmj"
+dest_files=["res://.godot/imported/basic.tmj-d4ee46f8dd6779f6369e0187702baf30.tres"]
+
+[params]
+
+my_option=false

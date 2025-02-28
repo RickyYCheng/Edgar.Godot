@@ -1,0 +1,15 @@
+[remap]
+
+importer="edgar.graph.importer"
+type="EdgarGraphResource"
+uid="uid://4e6cqbrgcuxq"
+path="res://.godot/imported/level.egr-9c50a18022a37ec4dbb43371226f25e8.tres"
+
+[deps]
+
+source_file="res://level.egr"
+dest_files=["res://.godot/imported/level.egr-9c50a18022a37ec4dbb43371226f25e8.tres"]
+
+[params]
+
+my_option=false

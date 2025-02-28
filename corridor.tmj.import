@@ -1,0 +1,15 @@
+[remap]
+
+importer="edgar.tmj.importer"
+type="EdgarTiledResource"
+uid="uid://2412wqlgw5i2"
+path="res://.godot/imported/corridor.tmj-f1bc3d9a6c1b6d8d3fc3ca0d74a4d732.tres"
+
+[deps]
+
+source_file="res://corridor.tmj"
+dest_files=["res://.godot/imported/corridor.tmj-f1bc3d9a6c1b6d8d3fc3ca0d74a4d732.tres"]
+
+[params]
+
+my_option=false

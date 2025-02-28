@@ -25,7 +25,7 @@ enabled=PackedStringArray("res://addons/edgar.godot/plugin.cfg")
 [layer_names]
 
 edgar/layer_1="basic"
-edgar/layer_2="treasure"
+edgar/layer_2="corridor"
 edgar/layer_3=""
 edgar/layer_4=""
 edgar/layer_5=""

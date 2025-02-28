@@ -105,6 +105,102 @@
                 }, 
                 {
                  "height":0,
+                 "id":8,
+                 "name":"Door 3",
+                 "polyline":[
+                        {
+                         "x":144,
+                         "y":144
+                        }, 
+                        {
+                         "x":128,
+                         "y":144
+                        }, 
+                        {
+                         "x":112,
+                         "y":144
+                        }, 
+                        {
+                         "x":96,
+                         "y":144
+                        }, 
+                        {
+                         "x":80,
+                         "y":144
+                        }, 
+                        {
+                         "x":64,
+                         "y":144
+                        }, 
+                        {
+                         "x":48,
+                         "y":144
+                        }, 
+                        {
+                         "x":32,
+                         "y":144
+                        }, 
+                        {
+                         "x":16,
+                         "y":144
+                        }],
+                 "rotation":0,
+                 "type":"Lnk.Door",
+                 "visible":true,
+                 "width":0,
+                 "x":0,
+                 "y":16
+                }, 
+                {
+                 "height":0,
+                 "id":9,
+                 "name":"Door 4",
+                 "polyline":[
+                        {
+                         "x":144,
+                         "y":-16
+                        }, 
+                        {
+                         "x":128,
+                         "y":-16
+                        }, 
+                        {
+                         "x":112,
+                         "y":-16
+                        }, 
+                        {
+                         "x":96,
+                         "y":-16
+                        }, 
+                        {
+                         "x":80,
+                         "y":-16
+                        }, 
+                        {
+                         "x":64,
+                         "y":-16
+                        }, 
+                        {
+                         "x":48,
+                         "y":-16
+                        }, 
+                        {
+                         "x":32,
+                         "y":-16
+                        }, 
+                        {
+                         "x":16,
+                         "y":-16
+                        }],
+                 "rotation":0,
+                 "type":"Lnk.Door",
+                 "visible":true,
+                 "width":0,
+                 "x":0,
+                 "y":16
+                }, 
+                {
+                 "height":0,
                  "id":7,
                  "name":"Boundary",
                  "polygon":[
@@ -170,7 +266,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":8,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

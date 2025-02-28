@@ -32,8 +32,9 @@ public partial class EdgarGodotGenerator : GodotObject
             return doorModes;
         })]);
 
-        // TODO: add transformations
-        return new RoomTemplateGrid2D(outline, doors, name);
+        var transformations = tiledRes.boundary.ContainsKey("properties") ? Json.ParseString(tiledRes.boundary["properties"].AsGodotArray<Dictionary>().FirstOrDefault(prop => prop["name"].AsString() == "transformation")["value"].AsString()).AsInt32Array().Select(e => (TransformationGrid2D)e) : [TransformationGrid2D.Identity];
+
+        return new RoomTemplateGrid2D(outline, doors, name, allowedTransformations: [.. transformations]);
     }
     private static LevelDescriptionGrid2D<string> GetLevelDescriptionGrid2D(EdgarGraphResource graphRes)
     {
@@ -76,6 +77,7 @@ public partial class EdgarGodotGenerator : GodotObject
                 "rooms", new Array<Dictionary>(layout.Rooms.Select(room => new Dictionary
                 {
                     { "room", room.Room },
+                    { "is_corridor", room.IsCorridor },
                     { "position", new Dictionary{ { "x", room.Position.X }, { "y", room.Position.Y } } },
                     { "template", room.RoomTemplate.Name },
                     { "transformation", (int)room.Transformation },
