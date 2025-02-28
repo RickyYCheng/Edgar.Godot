@@ -1,8 +1,7 @@
 # Edgar.Godot
 
 Edgar.Godot is the Godot version of the highly acclaimed [Edgar-DotNet](https://github.com/OndrejNepozitek/Edgar-DotNet), designed to bring its powerful procedural level generation capabilities to the Godot engine.  
-[Edgar-DotNet](https://github.com/OndrejNepozitek/Edgar-DotNet) is a renowned 2D procedural level generator, ideal for creating maps in 2D Rogue-Like games.  
-The amazing library was developed by OndrejNepozitek, building upon the works of Chongyang Ma.
+[Edgar-DotNet](https://github.com/OndrejNepozitek/Edgar-DotNet) is a renowned 2D procedural level generator, ideal for creating maps in 2D Rogue-Like games, and this amazing library was developed by OndrejNepozitek, building upon the works of Chongyang Ma.
 
 > **Note**: Edgar.Godot currently focuses primarily on generating level layouts (Layout), rather than providing a complete, out-of-the-box solution.  
 > Users can utilize the generated layouts and customize/expand the map content according to their own needs.  
