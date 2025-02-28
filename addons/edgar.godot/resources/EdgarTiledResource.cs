@@ -8,7 +8,7 @@ public partial class EdgarTiledResource : Resource
 {
     [Export] public Dictionary tmj = [];
     [Export] public Dictionary boundary = [];
-    [Export] public Array doors = [];
+    [Export] public Array<Dictionary> doors = [];
     public void set_data(Dictionary data)
     {
         if (data is null) return;
