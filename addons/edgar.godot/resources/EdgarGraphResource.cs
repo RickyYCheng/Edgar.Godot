@@ -1,4 +1,8 @@
+using System.Drawing;
 using System.Linq;
+
+using Edgar.Geometry;
+using Edgar.GraphBasedGenerator.Grid2D;
 
 using Godot;
 using Godot.Collections;
@@ -10,6 +14,9 @@ public partial class EdgarGraphResource : Resource
     [Export] public Array<Dictionary<string, string>> edges = [];
     [Export] public Array<Array<EdgarTiledResource>> layers_tmjs = [];
 
+    private GraphBasedGeneratorGrid2D<string> generator;
+
+    #region ToolButtons
     [ExportToolButton("", Icon = "Callable")] public Callable select_layer_1 => Callable.From(() => _select_layer(0));
     [ExportToolButton("", Icon = "Callable")] public Callable select_layer_2 => Callable.From(() => _select_layer(1));
     [ExportToolButton("", Icon = "Callable")] public Callable select_layer_3 => Callable.From(() => _select_layer(2));
@@ -30,7 +37,6 @@ public partial class EdgarGraphResource : Resource
     [ExportToolButton("", Icon = "Callable")] public Callable select_layer_18 => Callable.From(() => _select_layer(17));
     [ExportToolButton("", Icon = "Callable")] public Callable select_layer_19 => Callable.From(() => _select_layer(18));
     [ExportToolButton("", Icon = "Callable")] public Callable select_layer_20 => Callable.From(() => _select_layer(19));
-
     void _select_layer(int id)
     {
         if (layers_tmjs.Count <= id)
@@ -49,11 +55,13 @@ public partial class EdgarGraphResource : Resource
 
         NotifyPropertyListChanged();
     }
+    #endregion
     public EdgarGraphResource()
     {
         PropertyListChanged += () => save();
     }
 
+    #region Godot Editor
     private void _validate_layer_button(Dictionary property, int id)
     {
         if (property["name"].AsString() == $"select_layer_{id+1}")
@@ -72,7 +80,8 @@ public partial class EdgarGraphResource : Resource
         for (var i = 0; i < 20; i++)
             _validate_layer_button(property, i);
     }
-
+    #endregion
+    
     public Dictionary get_data() =>
         new()
         {
@@ -80,7 +89,6 @@ public partial class EdgarGraphResource : Resource
             { "edges", edges },
             { "layers_tmjs", new Array<Array<string>>(layers_tmjs.Select(array => new Array<string>(array.Select(tmj_res => tmj_res.ResourcePath))))},
         };
-
     public void set_data(Dictionary data)
     {
         if (data is null) return;
@@ -92,9 +100,81 @@ public partial class EdgarGraphResource : Resource
     }
     public bool save()
     {
+        if (this is null) return true; // avoid disposed
+
         var file = FileAccess.Open(ResourcePath, FileAccess.ModeFlags.Write);
         if (file is null) return false;
 
         return file.StoreString(Json.Stringify(get_data()));
     }
+
+    private static RoomTemplateGrid2D GetRoomTemplateGrid2D(EdgarTiledResource tiledRes)
+    {
+        var name = tiledRes.ResourcePath.GetFile().GetBaseName();
+
+        var boundX = tiledRes.boundary["x"].AsInt32();
+        var boundY = tiledRes.boundary["y"].AsInt32();
+        var outline = new PolygonGrid2D(tiledRes.boundary["polygon"].AsVector2Array().Select(pt => new Vector2Int((int)pt.X + boundX, (int)pt.Y + boundY)));
+
+        var doors = new ManualDoorModeGrid2D([.. tiledRes.doors.SelectMany(door =>
+        {
+            var doorPoints = door["polyline"].AsVector2Array().Select(pt => new Vector2Int((int)pt.X + door["x"].AsInt32(), (int)pt.Y + door["y"].AsInt32()));
+            var fst = doorPoints.Skip(1);
+            var snd = doorPoints.SkipLast(1);
+            var doorModes = Enumerable.Zip(fst, snd, (fst, snd) => new DoorGrid2D(fst, snd));
+            return doorModes;
+        })]);
+
+        var transformations = tiledRes.boundary.ContainsKey("properties") ? Json.ParseString(tiledRes.boundary["properties"].AsGodotArray<Dictionary>().FirstOrDefault(prop => prop["name"].AsString() == "transformation")["value"].AsString()).AsInt32Array().Select(e => (TransformationGrid2D)e) : [TransformationGrid2D.Identity];
+
+        return new RoomTemplateGrid2D(outline, doors, name, allowedTransformations: [.. transformations]);
+    }
+    private LevelDescriptionGrid2D<string> GetLevelDescriptionGrid2D()
+    {
+        var layers_tmjs = this.layers_tmjs;
+        var layers_templates = layers_tmjs.Select(tmjs => tmjs.Select(GetRoomTemplateGrid2D).ToList()).ToArray();
+
+        // TODO: add MinimumRoomDistance and RepeatMode
+        var levelDesctipion = new LevelDescriptionGrid2D<string>();
+
+        // add rooms
+        foreach (var kv in this.nodes)
+        {
+            var name = kv.Key.AsString();
+            var node = kv.Value.AsGodotDictionary();
+            var isCorridor = node["is_corridor_room"].AsInt32() == 1;
+            var edgarLayer = node["edgar_layer"].AsInt32();
+
+            var roomDescription = new RoomDescriptionGrid2D(isCorridor, layers_templates[edgarLayer]);
+            levelDesctipion.AddRoom(name, roomDescription);
+        }
+
+        // add edges
+        foreach (var conn in this.edges)
+        {
+            var fromNode = conn["from_node"];
+            var toNode = conn["to_node"];
+            levelDesctipion.AddConnection(fromNode, toNode);
+        }
+
+        return levelDesctipion;
+    }
+
+    public LayoutGrid2D<string> GenerateLayout() => (generator ??= new(GetLevelDescriptionGrid2D())).GenerateLayout();
+    public Dictionary GenerateLayoutDictionary() => LayoutToDictionary(GenerateLayout());
+
+    private static Dictionary LayoutToDictionary(LayoutGrid2D<string> layout) =>
+        new()
+        {
+            {
+                "rooms", new Array<Dictionary>(layout.Rooms.Select(room => new Dictionary
+                {
+                    { "room", room.Room },
+                    { "is_corridor", room.IsCorridor },
+                    { "position", new Dictionary{ { "x", room.Position.X }, { "y", room.Position.Y } } },
+                    { "template", room.RoomTemplate.Name },
+                    { "transformation", (int)room.Transformation },
+                }))
+            }
+        };
 }
