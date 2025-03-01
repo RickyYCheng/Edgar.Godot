@@ -7,7 +7,7 @@ using Edgar.GraphBasedGenerator.Grid2D;
 using Godot;
 using Godot.Collections;
 
-[Tool, GlobalClass, Icon("res://addons/edgar.godot/icons/edgar_graph_icon.svg")]
+[Tool, GlobalClass, Icon("res://addons/edgar.godot/icons/edgar_icon.svg")]
 public partial class EdgarGraphResource : Resource
 {
     [Export] public Dictionary nodes = [];

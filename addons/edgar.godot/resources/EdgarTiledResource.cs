@@ -3,7 +3,7 @@ using System.Linq;
 using Godot;
 using Godot.Collections;
 
-[Tool, GlobalClass, Icon("res://addons/edgar.godot/icons/edgar_tiled_icon.svg")]
+[Tool, GlobalClass, Icon("res://addons/edgar.godot/icons/edgar_icon_template.svg")]
 public partial class EdgarTiledResource : Resource
 {
     [Export] public Dictionary tmj = [];

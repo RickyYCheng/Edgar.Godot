@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2yxg77yxwamm"
-path="res://.godot/imported/edgar_tiled_icon.svg-b04752b72a6c22469077ece0a404ef30.ctex"
+uid="uid://jnv48e0dwce6"
+path="res://.godot/imported/edgar_icon.png-04788893841e833390f47c1c9dce678d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/edgar.godot/icons/edgar_tiled_icon.svg"
-dest_files=["res://.godot/imported/edgar_tiled_icon.svg-b04752b72a6c22469077ece0a404ef30.ctex"]
+source_file="res://addons/edgar.godot/icons/edgar_icon.png"
+dest_files=["res://.godot/imported/edgar_icon.png-04788893841e833390f47c1c9dce678d.ctex"]
 
 [params]
 
@@ -32,6 +32,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
