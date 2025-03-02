@@ -110,7 +110,7 @@ public partial class EdgarGraphResource : Resource
 
     private static RoomTemplateGrid2D GetRoomTemplateGrid2D(EdgarTiledResource tiledRes)
     {
-        var name = tiledRes.ResourcePath.GetFile().GetBaseName();
+        var name = tiledRes.ResourcePath;
 
         var boundX = tiledRes.boundary["x"].AsInt32();
         var boundY = tiledRes.boundary["y"].AsInt32();
