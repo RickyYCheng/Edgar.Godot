@@ -1,5 +1,11 @@
-[gd_scene format=3 uid="uid://uqccgfihvr5n"]
+[gd_scene load_steps=3 format=3 uid="uid://uqccgfihvr5n"]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource type="Script" uid="uid://05vfqacbjdhj" path="res://edgar_renderer_tilemap.gd" id="1_ig7tw"]
+[ext_resource type="Resource" uid="uid://4e6cqbrgcuxq" path="res://level.egr" id="2_0xm2m"]
 
-[node name="TileMapLayer" type="TileMapLayer" parent="."]
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("tilemaplayers")]
+script = ExtResource("1_ig7tw")
+tilemaplayers = [NodePath("Col")]
+graph_resource = ExtResource("2_0xm2m")
+
+[node name="Col" type="TileMapLayer" parent="."]
