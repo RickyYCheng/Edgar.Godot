@@ -1,8 +1,6 @@
 using Godot;
 
-using System;
-
-public partial class EdgarRendererBase : Node
+public partial class EdgarRendererBase<TNode> : Node where TNode : Node
 {
     [Signal] public delegate void RenderedEventHandler();
 
