@@ -1,7 +1,22 @@
 { "compressionlevel":-1,
  "height":20,
- "infinite":false,
+ "infinite":true,
  "layers":[
+        {
+         "chunks":[],
+         "class":"Col",
+         "height":0,
+         "id":5,
+         "name":"Col",
+         "opacity":1,
+         "startx":0,
+         "starty":0,
+         "type":"tilelayer",
+         "visible":true,
+         "width":0,
+         "x":0,
+         "y":0
+        }, 
         {
          "draworder":"topdown",
          "id":2,
@@ -105,102 +120,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":8,
-                 "name":"Door 3",
-                 "polyline":[
-                        {
-                         "x":144,
-                         "y":144
-                        }, 
-                        {
-                         "x":128,
-                         "y":144
-                        }, 
-                        {
-                         "x":112,
-                         "y":144
-                        }, 
-                        {
-                         "x":96,
-                         "y":144
-                        }, 
-                        {
-                         "x":80,
-                         "y":144
-                        }, 
-                        {
-                         "x":64,
-                         "y":144
-                        }, 
-                        {
-                         "x":48,
-                         "y":144
-                        }, 
-                        {
-                         "x":32,
-                         "y":144
-                        }, 
-                        {
-                         "x":16,
-                         "y":144
-                        }],
-                 "rotation":0,
-                 "type":"Lnk.Door",
-                 "visible":true,
-                 "width":0,
-                 "x":0,
-                 "y":16
-                }, 
-                {
-                 "height":0,
-                 "id":9,
-                 "name":"Door 4",
-                 "polyline":[
-                        {
-                         "x":144,
-                         "y":-16
-                        }, 
-                        {
-                         "x":128,
-                         "y":-16
-                        }, 
-                        {
-                         "x":112,
-                         "y":-16
-                        }, 
-                        {
-                         "x":96,
-                         "y":-16
-                        }, 
-                        {
-                         "x":80,
-                         "y":-16
-                        }, 
-                        {
-                         "x":64,
-                         "y":-16
-                        }, 
-                        {
-                         "x":48,
-                         "y":-16
-                        }, 
-                        {
-                         "x":32,
-                         "y":-16
-                        }, 
-                        {
-                         "x":16,
-                         "y":-16
-                        }],
-                 "rotation":0,
-                 "type":"Lnk.Door",
-                 "visible":true,
-                 "width":0,
-                 "x":0,
-                 "y":16
-                }, 
-                {
-                 "height":0,
                  "id":7,
                  "name":"Boundary",
                  "polygon":[
@@ -240,18 +159,7 @@
                  "draworder":"topdown",
                  "id":4,
                  "name":"Object Layer 2",
-                 "objects":[
-                        {
-                         "height":16,
-                         "id":3,
-                         "name":"Test Object 1",
-                         "rotation":0,
-                         "type":"",
-                         "visible":true,
-                         "width":16,
-                         "x":32,
-                         "y":32
-                        }],
+                 "objects":[],
                  "opacity":1,
                  "type":"objectgroup",
                  "visible":true,
@@ -265,7 +173,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":5,
+ "nextlayerid":6,
  "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
