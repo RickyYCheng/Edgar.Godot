@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bgvssxmr2slqt"]
 
-[ext_resource type="Script" uid="uid://c1xyk6f4pb32k" path="res://addons/edgar.godot/graph_edit/edgar_graph_edit.gd" id="1_elojy"]
-[ext_resource type="Script" uid="uid://bc61pwb4kvnol" path="res://addons/edgar.godot/graph_edit/edgar_graphedit_menu_button.gd" id="2_fkgkv"]
+[ext_resource type="Script" uid="uid://bl5qu75kpq3aw" path="res://addons/edgar.godot/graph_edit/edgar_graph_edit.gd" id="1_elojy"]
+[ext_resource type="Script" uid="uid://bc4wiey2kc7t1" path="res://addons/edgar.godot/graph_edit/edgar_graphedit_menu_button.gd" id="2_fkgkv"]
 [ext_resource type="PackedScene" uid="uid://bcrt34q8x2dta" path="res://addons/edgar.godot/graph_edit/EdgarGraphNode.tscn" id="2_x13w6"]
 
 [node name="EdgarGraphEdit" type="Control"]

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2023-2025 RickyYC
+# Copyright (c) 2025 RickyYC
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ extends GraphNode
 
 @onready var room_type_button: OptionButton = $RoomTypeButton
 @onready var edgar_layer_button: OptionButton = $EdgarLayerButton
+@onready var is_pivot_button: CheckButton = $IsPivotButton
 
 func _ready() -> void:
 	edgar_layer_button.clear()
@@ -39,9 +40,11 @@ func get_data():
 		"position_offset": {"x": position_offset.x, "y": position_offset.y},
 		"is_corridor_room": room_type_button.selected if room_type_button.selected >= 0 else 0,
 		"edgar_layer": edgar_layer_button.selected if edgar_layer_button.selected >= 0 else 0,
+		"is_pivot": is_pivot_button.button_pressed,
 	}
 
 func set_data(data):
 	position_offset = Vector2(data.position_offset.x, data.position_offset.y)
 	room_type_button.select(data.is_corridor_room)
 	edgar_layer_button.select(data.edgar_layer)
+	is_pivot_button.button_pressed = data.is_pivot

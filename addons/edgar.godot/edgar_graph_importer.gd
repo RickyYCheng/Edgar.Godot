@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2023-2025 RickyYC
+# Copyright (c) 2025 RickyYC
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ func _get_save_extension() -> String:
 	return "tres"
 
 func _get_resource_type() -> String:
-	return "Resource"
+	return "EdgarGraphResource"
 
 func _get_priority() -> float:
 	return 0.11
@@ -88,8 +88,6 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 		if not options[key] is EdgarLayersResource: continue
 		var files = options[key].files.map(func(uid): return ResourceUID.get_id_path(ResourceUID.text_to_id(uid)))
 		layers.push_back(files)
-	
-	print(reimport_layers)
 	
 	res.set_meta("is_edgar_graph", true)
 	res.set_meta("nodes", json["nodes"])

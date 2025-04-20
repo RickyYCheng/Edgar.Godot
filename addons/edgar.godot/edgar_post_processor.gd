@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2023-2025 RickyYC
+# Copyright (c) 2025 RickyYC
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-extends Node
-
 func _post_process(base_node: Node2D):
 	var lnk : Node2D = base_node.get_children().filter(func(node): return node.has_meta("lnk"))[0]
 	
@@ -31,8 +29,15 @@ func _post_process(base_node: Node2D):
 	for node in lnk.get_children():
 		if not node.has_meta("lnk"): continue
 		match node.get_meta("lnk"):
-			"boundary": boundary = node.polygon
-			"door": doors.push_back(node.points)
+			"boundary": 
+				boundary = node.polygon
+				for i in range(boundary.size()):
+					boundary[i] += node.position
+			"door": 
+				var door : PackedVector2Array = node.points
+				for i in range(door.size()):
+					door[i] += node.position
+				doors.push_back(door)
 			_: pass
 	
 	var lnk_dict := {
