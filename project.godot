@@ -11,8 +11,9 @@ config_version=5
 [application]
 
 config/name="edgar.godot"
-config/features=PackedStringArray("4.4", "GL Compatibility")
-config/icon="res://icon.svg"
+run/main_scene="uid://cqusrldbxf4tv"
+config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
+config/icon="res://addons/edgar.godot/icon.svg"
 
 [dotnet]
 
@@ -25,7 +26,8 @@ enabled=PackedStringArray("res://addons/YATI/plugin.cfg", "res://addons/edgar.go
 [layer_names]
 
 edgar/layer_1="combat"
-edgar/layer_2="corridor"
+edgar/layer_2="limit"
+edgar/layer_3=""
 edgar/layer_4=""
 edgar/layer_5=""
 edgar/layer_6=""
@@ -43,9 +45,9 @@ edgar/layer_17=""
 edgar/layer_18=""
 edgar/layer_19=""
 edgar/layer_20=""
-edgar/layer_3=""
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

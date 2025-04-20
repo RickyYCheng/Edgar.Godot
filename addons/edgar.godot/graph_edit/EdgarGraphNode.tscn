@@ -1,8 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://bcrt34q8x2dta"]
+[gd_scene load_steps=3 format=3 uid="uid://bcrt34q8x2dta"]
 
 [ext_resource type="Script" uid="uid://bf0xdiq7xi6sd" path="res://addons/edgar.godot/graph_edit/edgar_graph_node.gd" id="1_ompx8"]
+[ext_resource type="ButtonGroup" uid="uid://dpxg8if0tlfno" path="res://addons/edgar.godot/graph_edit/is_pivot_button_group.tres" id="2_ksnd0"]
 
-[node name="EdgarGraphNode" type="GraphNode"]
+[node name="_GraphNode_00000" type="GraphNode"]
 title = "Edgar Graph Node"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -22,6 +23,15 @@ slot/1/right_type = 0
 slot/1/right_color = Color(1, 1, 1, 1)
 slot/1/right_icon = null
 slot/1/draw_stylebox = true
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = false
+slot/2/right_type = 0
+slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
 script = ExtResource("1_ompx8")
 
 [node name="RoomTypeButton" type="OptionButton" parent="."]
@@ -40,5 +50,10 @@ selected = 0
 item_count = 2
 popup/item_0/text = "combat"
 popup/item_0/id = 0
-popup/item_1/text = "corridor"
+popup/item_1/text = "limit"
 popup/item_1/id = 1
+
+[node name="IsPivotButton" type="CheckButton" parent="."]
+layout_mode = 2
+button_group = ExtResource("2_ksnd0")
+text = "Is Pivot"
