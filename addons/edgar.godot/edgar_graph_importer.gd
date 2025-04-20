@@ -89,8 +89,6 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 		var files = options[key].files.map(func(uid): return ResourceUID.get_id_path(ResourceUID.text_to_id(uid)))
 		layers.push_back(files)
 	
-	print(reimport_layers)
-	
 	res.set_meta("is_edgar_graph", true)
 	res.set_meta("nodes", json["nodes"])
 	res.set_meta("edges", json["edges"])
