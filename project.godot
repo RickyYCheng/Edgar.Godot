@@ -1,0 +1,51 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="edgar.godot"
+config/features=PackedStringArray("4.4", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[dotnet]
+
+project/assembly_name="edgar.godot"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/YATI/plugin.cfg", "res://addons/edgar.godot/plugin.cfg")
+
+[layer_names]
+
+edgar/layer_1="combat"
+edgar/layer_2="corridor"
+edgar/layer_4=""
+edgar/layer_5=""
+edgar/layer_6=""
+edgar/layer_7=""
+edgar/layer_8=""
+edgar/layer_9=""
+edgar/layer_10=""
+edgar/layer_11=""
+edgar/layer_12=""
+edgar/layer_13=""
+edgar/layer_14=""
+edgar/layer_15=""
+edgar/layer_16=""
+edgar/layer_17=""
+edgar/layer_18=""
+edgar/layer_19=""
+edgar/layer_20=""
+edgar/layer_3=""
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
