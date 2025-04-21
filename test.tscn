@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqusrldbxf4tv"]
+
+[ext_resource type="Script" uid="uid://banurnsvqsv1k" path="res://TestScript.cs" id="1_37kl0"]
+[ext_resource type="Resource" uid="uid://c0bllpgcsxj1o" path="res://level.edgar-graph" id="2_8uh7m"]
+
+[node name="Test" type="Node2D"]
+script = ExtResource("1_37kl0")
+level = ExtResource("2_8uh7m")
