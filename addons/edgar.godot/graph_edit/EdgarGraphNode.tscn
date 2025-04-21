@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bf0xdiq7xi6sd" path="res://addons/edgar.godot/graph_edit/edgar_graph_node.gd" id="1_ompx8"]
 
-[node name="EdgarGraphNode" type="GraphNode"]
+[node name="_GraphNode_00000" type="GraphNode"]
 title = "Edgar Graph Node"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -37,8 +37,6 @@ popup/item_1/id = 1
 [node name="EdgarLayerButton" type="OptionButton" parent="."]
 layout_mode = 2
 selected = 0
-item_count = 2
+item_count = 1
 popup/item_0/text = "combat"
 popup/item_0/id = 0
-popup/item_1/text = "corridor"
-popup/item_1/id = 1
