@@ -3,25 +3,10 @@
  "infinite":true,
  "layers":[
         {
-         "chunks":[],
-         "class":"Col",
-         "height":0,
-         "id":5,
-         "name":"Col",
-         "opacity":1,
-         "startx":0,
-         "starty":0,
-         "type":"tilelayer",
-         "visible":true,
-         "width":0,
-         "x":0,
-         "y":0
-        }, 
-        {
          "class":"Lnk",
          "draworder":"topdown",
          "id":2,
-         "name":"Object Layer 1",
+         "name":"lnk",
          "objects":[
                 {
                  "height":0,
@@ -29,40 +14,24 @@
                  "name":"Door 1",
                  "polyline":[
                         {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":-16
-                        }, 
-                        {
-                         "x":0,
-                         "y":-32
-                        }, 
-                        {
-                         "x":0,
+                         "x":96,
                          "y":-48
                         }, 
                         {
-                         "x":0,
+                         "x":96,
                          "y":-64
                         }, 
                         {
-                         "x":0,
+                         "x":96,
                          "y":-80
                         }, 
                         {
-                         "x":0,
+                         "x":96,
                          "y":-96
                         }, 
                         {
-                         "x":0,
+                         "x":96,
                          "y":-112
-                        }, 
-                        {
-                         "x":0,
-                         "y":-128
                         }],
                  "properties":[
                         {
@@ -84,39 +53,23 @@
                  "polyline":[
                         {
                          "x":0,
-                         "y":0
+                         "y":144
                         }, 
                         {
                          "x":0,
-                         "y":16
+                         "y":160
                         }, 
                         {
                          "x":0,
-                         "y":32
+                         "y":176
                         }, 
                         {
                          "x":0,
-                         "y":48
+                         "y":192
                         }, 
                         {
                          "x":0,
-                         "y":64
-                        }, 
-                        {
-                         "x":0,
-                         "y":80
-                        }, 
-                        {
-                         "x":0,
-                         "y":96
-                        }, 
-                        {
-                         "x":0,
-                         "y":112
-                        }, 
-                        {
-                         "x":0,
-                         "y":128
+                         "y":208
                         }],
                  "properties":[
                         {
@@ -138,19 +91,19 @@
                  "polygon":[
                         {
                          "x":0,
-                         "y":0
+                         "y":96
                         }, 
                         {
                          "x":0,
                          "y":-160
                         }, 
                         {
-                         "x":160,
+                         "x":256,
                          "y":-160
                         }, 
                         {
-                         "x":160,
-                         "y":0
+                         "x":256,
+                         "y":96
                         }],
                  "properties":[
                         {
@@ -178,33 +131,64 @@
          "y":0
         }, 
         {
-         "id":3,
-         "layers":[
-                {
-                 "draworder":"topdown",
-                 "id":4,
-                 "name":"Object Layer 2",
-                 "objects":[],
-                 "opacity":1,
-                 "type":"objectgroup",
-                 "visible":true,
-                 "x":0,
-                 "y":0
-                }],
-         "name":"Group Layer 1",
+         "draworder":"topdown",
+         "id":6,
+         "name":"markers",
+         "objects":[],
          "opacity":1,
-         "type":"group",
+         "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "chunks":[
+                {
+                 "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    1, 1, 1, 1, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 1, 1,
+                    1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1, 1,
+                    1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1, 1,
+                    1, 1, 1, 1, 2, 2, 0, 0, 0, 0, 0, 3, 0, 0, 1, 1,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1, 1,
+                    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 1, 1,
+                    0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 1, 1, 1, 1, 1, 1,
+                    0, 0, 0, 0, 0, 0, 0, 4, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                 "height":16,
+                 "width":16,
+                 "x":0,
+                 "y":0
+                }],
+         "class":"Col",
+         "height":16,
+         "id":5,
+         "name":"col",
+         "opacity":1,
+         "startx":-16,
+         "starty":0,
+         "type":"tilelayer",
+         "visible":true,
+         "width":32,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":6,
+ "nextlayerid":7,
  "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
  "tileheight":16,
- "tilesets":[],
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"col.tsx"
+        }],
  "tilewidth":16,
  "type":"map",
  "version":"1.10",

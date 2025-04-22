@@ -3,12 +3,12 @@
 importer="YATI"
 type="PackedScene"
 uid="uid://balbn6ypujkdf"
-path="res://.godot/imported/basic.tmj-d4ee46f8dd6779f6369e0187702baf30.tscn"
+path="res://.godot/imported/basic.tmj-df75c6dd927ffab52fe5ebe111ceb8b9.tscn"
 
 [deps]
 
-source_file="res://basic.tmj"
-dest_files=["res://.godot/imported/basic.tmj-d4ee46f8dd6779f6369e0187702baf30.tscn"]
+source_file="res://assets/basic.tmj"
+dest_files=["res://.godot/imported/basic.tmj-df75c6dd927ffab52fe5ebe111ceb8b9.tscn"]
 
 [params]
 
