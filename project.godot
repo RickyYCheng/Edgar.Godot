@@ -26,25 +26,7 @@ enabled=PackedStringArray("res://addons/YATI/plugin.cfg", "res://addons/edgar.go
 [layer_names]
 
 edgar/layer_1="combat"
-edgar/layer_2=""
-edgar/layer_4=""
-edgar/layer_5=""
-edgar/layer_6=""
-edgar/layer_7=""
-edgar/layer_8=""
-edgar/layer_9=""
-edgar/layer_10=""
-edgar/layer_11=""
-edgar/layer_12=""
-edgar/layer_13=""
-edgar/layer_14=""
-edgar/layer_15=""
-edgar/layer_16=""
-edgar/layer_17=""
-edgar/layer_18=""
-edgar/layer_19=""
-edgar/layer_20=""
-edgar/layer_3=""
+edgar/layer_2="limit"
 
 [rendering]
 

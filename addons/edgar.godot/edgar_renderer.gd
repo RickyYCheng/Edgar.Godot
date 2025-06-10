@@ -30,10 +30,12 @@ signal post_process(renderer: EdgarRenderer)
 var generator: Callable
 @export var level: Resource:
 	get: return level
-	set(v): 
-		if not EdgarGodot.is_edgar_level_resource(v) and v != null: return
-		level = v
-		generator = EdgarGodot.get_generator(level)
+	set(v):
+		if v == null:
+			level = null
+		if EdgarGodot.is_edgar_level_resource(v):
+			level = v
+			generator = EdgarGodot.get_generator(level)
 @export var layout: Dictionary
 @export_tool_button("Generate Layout") var generator_layout_btn : Callable = generate_layout
 

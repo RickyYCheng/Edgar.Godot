@@ -31,7 +31,7 @@ using Godot;
 using Godot.Collections;
 
 [GlobalClass]
-public partial class EdgarGodot : Node
+public partial class EdgarGodot : GodotObject
 {
     public static Callable get_generator(Resource level)
     {
