@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-extends Node
-
 func _post_process(base_node: Node2D):
 	var lnk : Node2D = base_node.get_children().filter(func(node): return node.has_meta("lnk"))[0]
 	

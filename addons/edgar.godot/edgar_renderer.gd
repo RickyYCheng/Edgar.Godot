@@ -37,6 +37,7 @@ var generator: Callable
 			level = v
 			generator = EdgarGodot.get_generator(level)
 @export var layout: Dictionary
+@export var limit_layer : int = -1
 @export_tool_button("Generate Layout") var generator_layout_btn : Callable = generate_layout
 
 func _ready() -> void:
@@ -45,6 +46,8 @@ func _ready() -> void:
 
 func generate_layout() -> void:
 	layout = generator.call()
+	for room in layout.rooms:
+		room["edgar_layer"] = level.get_meta("nodes", {})[room.room].edgar_layer
 	_render()
 
 func _render() -> void:
@@ -52,7 +55,10 @@ func _render() -> void:
 		printerr("[EdgarGodot] Cannot render: layout is null.")
 		return
 	clear()
+	var limit_offset : Vector2i
 	for room in layout.rooms:
+		if room.edgar_layer == limit_layer:
+			limit_offset = -room.position
 		var room_template = load(room.template)
 		var tmj: Node = room_template.instantiate()
 		for child in tmj.get_children():
@@ -61,7 +67,7 @@ func _render() -> void:
 				var tml : TileMapLayer = child
 				var cells := tml.get_used_cells()
 				for cell in cells:
-					set_cell(cell + Vector2i(room.position / Vector2(tml.tile_set.tile_size)), tml.get_cell_source_id(cell), tml.get_cell_atlas_coords(cell), tml.get_cell_alternative_tile(cell))
+					set_cell(cell + limit_offset / tile_set.tile_size + Vector2i(room.position / Vector2(tml.tile_set.tile_size)), tml.get_cell_source_id(cell), tml.get_cell_atlas_coords(cell), tml.get_cell_alternative_tile(cell))
 			elif child.name == "markers":
 				markers_post_process.emit(self, child)
 		
