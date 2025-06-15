@@ -22,6 +22,7 @@
 
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using Edgar.Geometry;
@@ -33,6 +34,7 @@ using Godot.Collections;
 [GlobalClass]
 public partial class EdgarGodot : GodotObject
 {
+    [Pure]
     public static Callable get_generator(Resource level)
     {
         var level_description = GetLevelDescription(level);
@@ -60,6 +62,7 @@ public partial class EdgarGodot : GodotObject
         });
     }
 
+    [Pure]
     public static LevelDescriptionGrid2D<string> GetLevelDescription(Resource level)
     {
         if (is_edgar_level_resource(level) is false) return null;
@@ -114,6 +117,8 @@ public partial class EdgarGodot : GodotObject
 
         return level_description;
     }
+
+    [Pure]
     public static bool is_edgar_level_resource(Resource level)
         => level is not null && level.HasMeta("is_edgar_graph");
 }
