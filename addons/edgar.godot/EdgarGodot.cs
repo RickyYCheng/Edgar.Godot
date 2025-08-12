@@ -21,7 +21,7 @@ public partial class EdgarGodot : GodotObject
         if (is_edgar_level_resource(level) is false)
         {
             GD.PrintErr($"The resource {level} is not a valid edgar level resource!");
-            return Callable.From(() => new Dictionary { });
+            return Callable.From(() => default(Dictionary));
         }
 
         var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
