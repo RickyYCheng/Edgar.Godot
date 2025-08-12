@@ -1,7 +1,14 @@
 # Edgar.Godot
 
-Edgar.Godot is a set of gdscript tools designed to create ready-to-use json data resources by utilizing `*.tmj`, `*.tmx` files, as well as custom `*.edgar-graph` files.  
-With the generated `*.edgar-graph` (json) files and the Edgar engine, you can easily combine them to generate Rogue maps.  
-> This library depends on `YATI` and `Edgar`.  
-> **Currently, the source of `Edgar.Aot` is used in this repo.** Which means you should use a `Dotnet C#` version `Godot`.  
-> If you need a non-C# (Dotnet) version of the Edgar engine, please check my github repository: Edgar.GDExtension.  
+## Overview
+Edgar.Godot is a comprehensive GDScript toolkit for converting `*.tmj`/`*.tmx` tilemap files and custom `*.edgar-graph` files into ready-to-use JSON data resources. The generated `*.edgar-graph` files can be seamlessly integrated with the Edgar engine to procedurally generate Rogue-like maps.
+
+> **Dependencies**:  
+> - Requires `YATI` and `Edgar` libraries  
+> - **Current Implementation Note**:  
+>   This repository currently utilizes `Edgar.Aot` (C#/.NET version) source files, requiring Godot with .NET support.  
+>   For a native GDExtension implementation, visit: [Edgar.GDExtension](https://github.com/RickyYCheng/Edgar.GDExtension)
+
+## Development Roadmap
+- [ ] Standardize interfaces between C# script and GDExtension versions  
+- [ ] Finalize repository structure and implementation approach
