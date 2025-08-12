@@ -10,5 +10,5 @@ Edgar.Godot is a comprehensive GDScript toolkit for converting `*.tmj`/`*.tmx` t
 >   For a native GDExtension implementation, visit: [Edgar.GDExtension](https://github.com/RickyYCheng/Edgar.GDExtension)
 
 ## Development Roadmap
-- [ ] Standardize interfaces between C# script and GDExtension versions  
+- [ ] Standardize interfaces between `C#` script and GDExtension versions  
 - [ ] Finalize repository structure and implementation approach
