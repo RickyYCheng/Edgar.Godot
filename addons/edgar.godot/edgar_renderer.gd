@@ -27,7 +27,7 @@ extends TileMapLayer
 signal markers_post_process(renderer: EdgarRenderer, markers: Node)
 signal post_process(renderer: EdgarRenderer)
 
-var generator: Callable
+var generator: EdgarGodotGenerator
 @export var level: Resource:
 	get: return level
 	set(v):
@@ -45,7 +45,7 @@ func _ready() -> void:
 		_render()
 
 func generate_layout() -> void:
-	layout = generator.call()
+	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes", {})[room.room].edgar_layer
 	_render()
