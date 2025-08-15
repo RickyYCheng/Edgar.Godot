@@ -38,6 +38,6 @@ public partial class EdgarGodot : GodotObject
         return get_generator(nodes, edges, layers);
     }
     [Pure]
-    public static EdgarGodotGenerator get_generator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
+    public static EdgarGodotGenerator get_generator(Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Dictionary<string, Dictionary>> layers)
         => new(nodes, edges, layers);
 }

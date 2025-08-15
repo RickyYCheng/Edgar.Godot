@@ -14,10 +14,6 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
     readonly GraphBasedGeneratorGrid2D<string> _captured_generator = new(GetLevelDescription(nodes, edges, layers));
 
     [Pure]
-    public static EdgarGodotGenerator @new(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
-        => new(nodes, edges, layers);
-
-    [Pure]
     private static LevelDescriptionGrid2D<string> GetLevelDescription(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
     {
         var level_description = new LevelDescriptionGrid2D<string>();
@@ -67,6 +63,9 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
 
         return level_description;
     }
+
+    public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
+        => new(nodes, edges, layers);
 
     public Dictionary generate_layout()
     {
