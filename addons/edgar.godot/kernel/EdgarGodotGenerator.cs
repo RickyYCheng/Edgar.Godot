@@ -74,17 +74,17 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
     {
         if (resource_valid(level) is false)
         {
-            GD.PrintErr($"The resource {level} is not a valid edgar level resource!");
+            GD.PushError($"The level resource is not a valid edgar level resource!");
             return null;
         }
 
         var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
         var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
-        var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(level =>
+        var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
         {
             var result = new Godot.Collections.Dictionary<string, Dictionary> { };
 
-            foreach (var name in level)
+            foreach (var name in layer)
             {
                 var tmj = GD.Load<PackedScene>(name);
                 var lnk = tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
