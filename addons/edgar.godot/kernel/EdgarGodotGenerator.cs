@@ -64,24 +64,55 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
         return level_description;
     }
 
+    public static bool resource_valid(Resource level)
+        => level is not null && level.HasMeta("is_edgar_graph");
+
     public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
         => new(nodes, edges, layers);
+
+    public static EdgarGodotGenerator from_resource(Resource level)
+    {
+        if (resource_valid(level) is false)
+        {
+            GD.PrintErr($"The resource {level} is not a valid edgar level resource!");
+            return null;
+        }
+
+        var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
+        var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
+        var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(level =>
+        {
+            var result = new Godot.Collections.Dictionary<string, Dictionary> { };
+
+            foreach (var name in level)
+            {
+                var tmj = GD.Load<PackedScene>(name);
+                var lnk = tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
+                result.Add(name, lnk);
+            }
+
+            return result;
+        }));
+
+        return cons(nodes, edges, layers);
+    }
 
     public Dictionary generate_layout()
     {
         var layout = _captured_generator.GenerateLayout();
         if (layout == null) return [];
+        // NOTE: keep same with gd-extension version
         return new Dictionary {
             { "rooms", new Array(layout.Rooms.Select(room => (Variant)new Dictionary
                 {
                     { "room", room.Room },
                     { "position", new Vector2(room.Position.X, room.Position.Y) },
-                    { "outline", new Array(room.Outline.GetPoints().Select(pt => (Variant)new Vector2(pt.X, pt.Y))) },
+                    //{ "outline", new Array(room.Outline.GetPoints().Select(pt => (Variant)new Vector2(pt.X, pt.Y))) },
                     { "is_corridor", room.IsCorridor },
                     //{ "transformation", room.Transformation.ToString() },
                     { "doors", new Array(room.Doors.Select(door => (Variant)new Dictionary{ { "from_room", door.FromRoom }, { "to_room", door.ToRoom }, { "door_line", new Dictionary { { "from", new Vector2(door.DoorLine.From.X, door.DoorLine.From.Y) }, { "to", new Vector2(door.DoorLine.To.X, door.DoorLine.To.Y) } } } })) },
                     { "template", room.RoomTemplate.Name },
-                    { "description", new Dictionary{ { "is_corridor", room.RoomDescription.IsCorridor }, { "templates", new Array(room.RoomDescription.RoomTemplates.Select(template => (Variant)template.Name)) } } },
+                    //{ "description", new Dictionary{ { "is_corridor", room.RoomDescription.IsCorridor }, { "templates", new Array(room.RoomDescription.RoomTemplates.Select(template => (Variant)template.Name)) } } },
                 }))
             }
         };

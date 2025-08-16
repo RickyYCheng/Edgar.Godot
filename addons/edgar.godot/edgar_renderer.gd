@@ -33,9 +33,9 @@ var generator: EdgarGodotGenerator
 	set(v):
 		if v == null:
 			level = null
-		if EdgarGodot.is_edgar_level_resource(v):
+		if EdgarGodotGenerator.resource_valid(v):
 			level = v
-			generator = EdgarGodot.get_generator_from_resource(level)
+			generator = EdgarGodotGenerator.from_resource(level)
 @export var layout: Dictionary
 @export var limit_layer : int = -1
 @export_tool_button("Generate Layout") var generator_layout_btn : Callable = generate_layout
