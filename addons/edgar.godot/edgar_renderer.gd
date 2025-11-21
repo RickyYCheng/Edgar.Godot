@@ -53,6 +53,8 @@ func _render() -> void:
 	
 	for id in tile_map_layers:
 		var tile_map_layer := tile_map_layers[id]
+		if tile_map_layer.tile_set == null:
+			printerr("[EdgarGodot.Renderer] The tileset of TileMapLayer id %d is null. " % id)
 		tile_map_layer.clear()
 		var position_offset := Vector2.ZERO
 		for room in layout.rooms:
@@ -60,13 +62,12 @@ func _render() -> void:
 				break
 			if room.is_pivot: 
 				position_offset = room.position
+		
 		for room in layout.rooms:
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
 			for child in tmj.get_children():
 				if child.name == "col" and child is TileMapLayer:
-					if tile_map_layer.tile_set == null: 
-						tile_map_layer.tile_set = child.tile_set
 					var tml := child as TileMapLayer
 					var cells := tml.get_used_cells()
 					for cell in cells:
