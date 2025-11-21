@@ -68,6 +68,8 @@ func _render() -> void:
 			if room.is_pivot: 
 				position_offset = room.position
 		
+		var anchor := Vector2.ZERO
+		
 		var room_exceptions := tile_map_layer.get_meta("room_exceptions", {})
 		var room_inclusions := tile_map_layer.get_meta("room_inclusions", {})
 		for room in layout.rooms:
@@ -80,6 +82,9 @@ func _render() -> void:
 			
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
+			
+			if room.is_pivot:
+				anchor = tmj.get_meta("anchor", Vector2.ZERO)
 			
 			var tile_exceptions := tile_map_layer.get_meta("tile_exceptions", {}) as Dictionary
 			var tile_inclusions := tile_map_layer.get_meta("tile_inclusions", {}) as Dictionary
@@ -112,6 +117,7 @@ func _render() -> void:
 					_markers_post_process(id, tile_map_layer, child)
 			
 			tmj.queue_free()
+			tile_map_layer.position = -anchor
 		_post_process(id, tile_map_layer)
 
 ## Do not call [code]super()[/code] here. [br]

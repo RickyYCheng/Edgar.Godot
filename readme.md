@@ -27,10 +27,10 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 
 ## Development Roadmap
 - [x] Kernel Standardization: Unified interfaces for both C# and GDExtension implementations
-- [ ] Renderer Improvements
+- [x] Renderer Improvements
 	- [x] Pivot room selection
 	- [x] Partially render (e.g. specific layers, rooms) of the generated layout
-	- [ ] Anchor system in pivot rooms for precise spawning and positioning
+	- [x] Anchor system in pivot rooms for precise positioning
 - [ ] Sample renderer using a concrete tileset
 - [ ] Feature parity with Edgar-DotNet
 	- [ ] Template transformations

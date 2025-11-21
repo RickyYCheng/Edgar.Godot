@@ -32,6 +32,14 @@ A valid `Door` should be:
 > If an additional independent `Door` is added with overlapping segments [1,3], [3,5], then the full set of usable segments becomes [0,2], [1,3], [2,4], [3,5], [4,6], and the minimal alignment step decreases to 1. This makes the movement unit along that edge smaller, increases the number of alignment positions, and enriches possible generation combinations.  
 > Summary: Adding overlapping segments reduces the minimal step size, enabling finer control and more generation possibilities.
 
+#### Anchor
+A valid `Anchor` should be:
+1. name = "anchor"
+
+> [!NOTE]
+> An `Anchor` marks the pivot point of a room.
+> During rendering, the position of each `TileMapLayer` is offset by the anchor of the **pivot room**.
+
 ## Filters
 A filter is a function to determine which tiles or rooms should be rendered in the final map. This is especially useful when you have multiple layers in Tiled but only want to render specific parts in Godot, e.g., multi-layered tilemaps.  
 
