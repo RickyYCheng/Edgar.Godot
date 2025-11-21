@@ -75,17 +75,33 @@ func _render() -> void:
 			
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
+			
+			var tile_exceptions := tile_map_layer.get_meta("tile_exceptions", {}) as Dictionary
+			var tile_inclusions := tile_map_layer.get_meta("tile_inclusions", {}) as Dictionary
+			
 			for child in tmj.get_children():
 				if child.name == "col" and child is TileMapLayer:
 					var origin_tml := child as TileMapLayer
 					var cells := origin_tml.get_used_cells()
 					
 					for cell in cells:
+						var source_id := origin_tml.get_cell_source_id(cell)
+						var atlas_coord := origin_tml.get_cell_atlas_coords(cell)
+						var alternative_tile := origin_tml.get_cell_alternative_tile(cell)
+						
+						var target_tile := Vector4i(source_id, atlas_coord.x, atlas_coord.y, alternative_tile)
+						if not tile_inclusions.is_empty():
+							if tile_inclusions.get(target_tile, false) == false:
+								continue
+						else:
+							if tile_exceptions.get(target_tile, false) == true:
+								continue
+						
 						tile_map_layer.set_cell(
 							cell + Vector2i((room.position - position_offset) / Vector2(origin_tml.tile_set.tile_size)), 
-							origin_tml.get_cell_source_id(cell), 
-							origin_tml.get_cell_atlas_coords(cell), 
-							origin_tml.get_cell_alternative_tile(cell)
+							source_id, 
+							atlas_coord, 
+							alternative_tile
 						)
 				elif child.name == "markers":
 					_markers_post_process(id, tile_map_layer, child)
