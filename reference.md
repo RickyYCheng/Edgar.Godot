@@ -34,18 +34,21 @@ A filter is a function to determine which tiles or rooms should be rendered in t
 
 ### Tile Filters
 To enable a tile filter, add the following meta-data to the target `TileMapLayer` node of a renderer:  
-1. `tile_exceptions`: An array or a dictionary of int to filter the tiles that you do not want to render.  
-2. `tile_inclusions`: An array or a dictionary of int to filter the tiles that you do **only** want to render.  
+1. `tile_exceptions`: An `Dictionary[Vector4i, bool]` to filter the tiles that you do not want to render.  
+2. `tile_inclusions`: An `Dictionary[Vector4i, bool]` to filter the tiles that you do **only** want to render.  
 
-> [!IMPORTANT]
+> [!NOTE]
 > You can only use either `tile_exceptions` or `tile_inclusions` at a time.  
 > If both are provided, only `tile_inclusions` will be considered.  
 
+> [!IMPORTANT]
+> The key of the dictionaries should be a `Vector4i` representing the tile's source ID and alternative tile, formatted as `(source_id: int, atlas_coord: Vector2i, alternative_tile: int)`.  
+
 ### Room Filters
 To enable a room filter, add the following meta-data to the target `TileMapLayer` node of a renderer:  
-1. `room_exceptions`: An array or a dictionary of string to filter the rooms that you do not want to render.  
-2. `room_inclusions`: An array or a dictionary of string to filter the rooms that you do **only** want to render.
+1. `room_exceptions`: An `Dictionary[String, bool]` to filter the rooms that you do not want to render.  
+2. `room_inclusions`: An `Dictionary[String, bool]` to filter the rooms that you do **only** want to render.
 
-> [!IMPORTANT]
+> [!NOTE]
 > You can only use either `room_exceptions` or `room_inclusions` at a time.  
 > If both are provided, only `room_inclusions` will be considered.  

@@ -63,13 +63,23 @@ func _render() -> void:
 			if room.is_pivot: 
 				position_offset = room.position
 		
+		var room_exceptions := tile_map_layer.get_meta("room_exceptions", {})
+		var room_inclusions := tile_map_layer.get_meta("room_inclusions", {})
 		for room in layout.rooms:
+			if not room_inclusions.is_empty():
+				if room_inclusions.get(room.room, false) == false:
+					continue
+			else:
+				if room_exceptions.get(room.room, false) == true:
+					continue
+			
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
 			for child in tmj.get_children():
 				if child.name == "col" and child is TileMapLayer:
 					var origin_tml := child as TileMapLayer
 					var cells := origin_tml.get_used_cells()
+					
 					for cell in cells:
 						tile_map_layer.set_cell(
 							cell + Vector2i((room.position - position_offset) / Vector2(origin_tml.tile_set.tile_size)), 
