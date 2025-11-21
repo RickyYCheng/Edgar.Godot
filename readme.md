@@ -31,7 +31,6 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 	- [x] Pivot room selection
 	- [x] Partially render (e.g. specific layers, rooms) of the generated layout
 	- [x] Anchor system in pivot rooms for precise positioning
-- [ ] Sample renderer using a concrete tileset
 - [ ] Feature parity with Edgar-DotNet
 	- [ ] Template transformations
 	- [ ] Deterministic generation via seed management
