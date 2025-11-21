@@ -27,14 +27,23 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 
 ## Development Roadmap
 - [x] Kernel Standardization: Unified interfaces for both C# and GDExtension implementations
-- [ ] Renderer Improvements
+- [x] Renderer Improvements
 	- [x] Pivot room selection
-	- [ ] Beacon system in pivot rooms for precise spawning and positioning
-- [ ] Sample renderer using a concrete tileset
+	- [x] Partially render (e.g. specific layers, rooms) of the generated layout
+	- [x] Anchor system in pivot rooms for precise positioning
 - [ ] Feature parity with Edgar-DotNet
 	- [ ] Template transformations
 	- [ ] Deterministic generation via seed management
 - [ ] Publish on the Godot Asset Library / Store
+- [ ] Ability to render 3d maps with 2d layouts
+
+## Meta Reference
+There are some already in-used fields in the Tiled map's `properties`.  
+They are used to define the room's metadata for Edgar.  
+
+Firstly, since this project use [YATI](https://github.com/Kiamo2/YATI), please refer to [YATI's reference](https://github.com/Kiamo2/YATI/blob/main/Reference.md).  
+
+After that, the specific fields for Edgar.Godot can be found in [reference](reference.md).
 
 ## Quick Start
 Please check the default scene.

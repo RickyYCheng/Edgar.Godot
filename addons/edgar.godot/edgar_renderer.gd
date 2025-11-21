@@ -28,7 +28,8 @@ signal markers_post_process(renderer: EdgarRenderer2D, id: int, tile_map_layer: 
 signal post_process(renderer: EdgarRenderer2D, id: int, tile_map_lauer: TileMapLayer)
 
 var generator: EdgarGodotGenerator
-@export_tool_button("Generate Layout") var generator_layout_btn : Callable = _generate_layout
+@export_tool_button("Generate Layout") var generate_layout_btn : Callable = _generate_layout_and_render
+@export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = _render
 @export var tile_map_layers: Dictionary[int, TileMapLayer] = {}
 @export var level: Resource:
 	get: return level
@@ -39,11 +40,15 @@ var generator: EdgarGodotGenerator
 			level = v
 			generator = EdgarGodotGenerator.from_resource(level)
 @export var layout: Dictionary
+
 func _generate_layout() -> void:
 	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer
 		room["is_pivot"] = level.get_meta("nodes")[room.room].is_pivot
+	
+func _generate_layout_and_render() -> void:
+	_generate_layout()
 	_render()
 
 func _render() -> void:
@@ -53,6 +58,8 @@ func _render() -> void:
 	
 	for id in tile_map_layers:
 		var tile_map_layer := tile_map_layers[id]
+		if tile_map_layer.tile_set == null:
+			printerr("[EdgarGodot.Renderer] The tileset of TileMapLayer id %d is null. " % id)
 		tile_map_layer.clear()
 		var position_offset := Vector2.ZERO
 		for room in layout.rooms:
@@ -60,29 +67,65 @@ func _render() -> void:
 				break
 			if room.is_pivot: 
 				position_offset = room.position
+		
+		var anchor := Vector2.ZERO
+		
+		var room_exceptions := tile_map_layer.get_meta("room_exceptions", {})
+		var room_inclusions := tile_map_layer.get_meta("room_inclusions", {})
 		for room in layout.rooms:
+			if not room_inclusions.is_empty():
+				if room_inclusions.get(room.room, false) == false:
+					continue
+			else:
+				if room_exceptions.get(room.room, false) == true:
+					continue
+			
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
+			
+			if room.is_pivot:
+				anchor = tmj.get_meta("anchor", Vector2.ZERO)
+			
+			var tile_exceptions := tile_map_layer.get_meta("tile_exceptions", {}) as Dictionary
+			var tile_inclusions := tile_map_layer.get_meta("tile_inclusions", {}) as Dictionary
+			
 			for child in tmj.get_children():
 				if child.name == "col" and child is TileMapLayer:
-					if tile_map_layer.tile_set == null: 
-						tile_map_layer.tile_set = child.tile_set
-					var tml := child as TileMapLayer
-					var cells := tml.get_used_cells()
+					var origin_tml := child as TileMapLayer
+					var cells := origin_tml.get_used_cells()
+					
 					for cell in cells:
-						tile_map_layer.set_cell(cell + Vector2i((room.position - position_offset) / Vector2(tml.tile_set.tile_size)), tml.get_cell_source_id(cell), tml.get_cell_atlas_coords(cell), tml.get_cell_alternative_tile(cell))
+						var source_id := origin_tml.get_cell_source_id(cell)
+						var atlas_coord := origin_tml.get_cell_atlas_coords(cell)
+						var alternative_tile := origin_tml.get_cell_alternative_tile(cell)
+						
+						var target_tile := Vector4i(source_id, atlas_coord.x, atlas_coord.y, alternative_tile)
+						if not tile_inclusions.is_empty():
+							if tile_inclusions.get(target_tile, false) == false:
+								continue
+						else:
+							if tile_exceptions.get(target_tile, false) == true:
+								continue
+						
+						tile_map_layer.set_cell(
+							cell + Vector2i((room.position - position_offset) / Vector2(origin_tml.tile_set.tile_size)), 
+							source_id, 
+							atlas_coord, 
+							alternative_tile
+						)
 				elif child.name == "markers":
 					_markers_post_process(id, tile_map_layer, child)
 			
 			tmj.queue_free()
+			tile_map_layer.position = -anchor
 		_post_process(id, tile_map_layer)
 
-## Do not call `super()` here. [br]
-## `super()` will execute `post_process.emit(self)`. [br]
+## Do not call [code]super()[/code] here. [br]
+## [code]super()[/code] will execute [code]post_process.emit(self)[/code]. [br]
 func _post_process(id: int, tile_map_layer: TileMapLayer) -> void:
 	post_process.emit(self, id, tile_map_layer)
 
-## Do not call `super()` here. [br]
-## `super()` will execute `markers_post_process.emit(self, markers)`. [br]
+## Do not call [code]super()[/code] here. [br]
+## [code]super()[/code] will execute [code]markers_post_process.emit(self, markers)[/code]. [br]
 func _markers_post_process(id: int, tile_map_layer: TileMapLayer, markers: Node) -> void:
 	markers_post_process.emit(self, id, tile_map_layer, markers)

@@ -21,12 +21,16 @@
 # SOFTWARE.
 
 func _post_process(base_node: Node2D):
-	var lnk : Node2D = base_node.get_children().filter(func(node): return node.has_meta("lnk"))[0]
+	var lnk : Node2D = base_node.get_children().filter(func(node): return node.name == "lnk")[0]
 	
 	var boundary : PackedVector2Array
 	var doors : Array[PackedVector2Array]
 	
+	var anchor = null
 	for node in lnk.get_children():
+		if anchor == null and node.name == "anchor":
+			anchor = node
+		
 		if not node.has_meta("lnk"): continue
 		match node.get_meta("lnk"):
 			"boundary": 
@@ -46,6 +50,7 @@ func _post_process(base_node: Node2D):
 	}
 	
 	base_node.set_meta("lnk", lnk_dict)
+	base_node.set_meta("anchor", anchor.global_position if anchor else Vector2.ZERO)
 	
 	base_node.remove_child(lnk)
 	lnk.queue_free()
