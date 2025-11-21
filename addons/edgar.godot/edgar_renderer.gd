@@ -28,7 +28,8 @@ signal markers_post_process(renderer: EdgarRenderer2D, id: int, tile_map_layer: 
 signal post_process(renderer: EdgarRenderer2D, id: int, tile_map_lauer: TileMapLayer)
 
 var generator: EdgarGodotGenerator
-@export_tool_button("Generate Layout") var generator_layout_btn : Callable = _generate_layout
+@export_tool_button("Generate Layout") var generate_layout_btn : Callable = _generate_layout_and_render
+@export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = _render
 @export var tile_map_layers: Dictionary[int, TileMapLayer] = {}
 @export var level: Resource:
 	get: return level
@@ -39,11 +40,15 @@ var generator: EdgarGodotGenerator
 			level = v
 			generator = EdgarGodotGenerator.from_resource(level)
 @export var layout: Dictionary
+
 func _generate_layout() -> void:
 	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer
 		room["is_pivot"] = level.get_meta("nodes")[room.room].is_pivot
+	
+func _generate_layout_and_render() -> void:
+	_generate_layout()
 	_render()
 
 func _render() -> void:
