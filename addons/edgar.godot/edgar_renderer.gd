@@ -68,22 +68,27 @@ func _render() -> void:
 			var tmj: Node = room_template.instantiate()
 			for child in tmj.get_children():
 				if child.name == "col" and child is TileMapLayer:
-					var tml := child as TileMapLayer
-					var cells := tml.get_used_cells()
+					var origin_tml := child as TileMapLayer
+					var cells := origin_tml.get_used_cells()
 					for cell in cells:
-						tile_map_layer.set_cell(cell + Vector2i((room.position - position_offset) / Vector2(tml.tile_set.tile_size)), tml.get_cell_source_id(cell), tml.get_cell_atlas_coords(cell), tml.get_cell_alternative_tile(cell))
+						tile_map_layer.set_cell(
+							cell + Vector2i((room.position - position_offset) / Vector2(origin_tml.tile_set.tile_size)), 
+							origin_tml.get_cell_source_id(cell), 
+							origin_tml.get_cell_atlas_coords(cell), 
+							origin_tml.get_cell_alternative_tile(cell)
+						)
 				elif child.name == "markers":
 					_markers_post_process(id, tile_map_layer, child)
 			
 			tmj.queue_free()
 		_post_process(id, tile_map_layer)
 
-## Do not call `super()` here. [br]
-## `super()` will execute `post_process.emit(self)`. [br]
+## Do not call [code]super()[/code] here. [br]
+## [code]super()[/code] will execute [code]post_process.emit(self)[/code]. [br]
 func _post_process(id: int, tile_map_layer: TileMapLayer) -> void:
 	post_process.emit(self, id, tile_map_layer)
 
-## Do not call `super()` here. [br]
-## `super()` will execute `markers_post_process.emit(self, markers)`. [br]
+## Do not call [code]super()[/code] here. [br]
+## [code]super()[/code] will execute [code]markers_post_process.emit(self, markers)[/code]. [br]
 func _markers_post_process(id: int, tile_map_layer: TileMapLayer, markers: Node) -> void:
 	markers_post_process.emit(self, id, tile_map_layer, markers)

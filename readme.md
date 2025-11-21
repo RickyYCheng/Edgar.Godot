@@ -31,6 +31,7 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 	- [x] Pivot room selection
 	- [ ] Beacon system in pivot rooms for precise spawning and positioning
 - [ ] Sample renderer using a concrete tileset
+- [ ] Find the best way to handle the limit room
 - [ ] Feature parity with Edgar-DotNet
 	- [ ] Template transformations
 	- [ ] Deterministic generation via seed management

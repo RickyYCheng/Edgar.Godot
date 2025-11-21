@@ -87,9 +87,19 @@ func _on_graph_edit_delete_nodes_request(nodes: Array[StringName]) -> void:
 
 func _add_new_node(node_name:String="") -> GraphNode:
 	var node : GraphNode = edgar_graph_node_scene.instantiate()
-	graph_edit.add_child(node)
+	node.change_name.connect(
+		func(old, new):
+			var conns := graph_edit.get_connection_list_from_node(old)
+			for conn in conns:
+				graph_edit.disconnect_node(conn.from_node, conn.from_port, conn.to_node, conn.to_port)
+			graph_nodes.erase(old)
+			graph_nodes[new] = node
+			for conn in conns:
+				graph_edit.connect_node(conn.from_node if conn.from_node != old else new, conn.from_port, conn.to_node if conn.to_node != old else new, conn.to_port)
+	)
+	graph_edit.add_child(node, true)
 	
-	node.name = node.name if node_name == "" else node_name
+	node.room_name = node_name
 	
 	node.position_offset = (menu_button.position + graph_edit.scroll_offset) / graph_edit.zoom
 	if graph_edit.snapping_enabled:

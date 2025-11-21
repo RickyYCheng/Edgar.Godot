@@ -24,9 +24,21 @@
 class_name EdgarGraphNode
 extends GraphNode
 
+signal change_name(old_name:String, new_name: String)
+
 @onready var room_type_button: OptionButton = $RoomTypeButton
 @onready var edgar_layer_button: OptionButton = $EdgarLayerButton
 @onready var is_pivot_button: CheckButton = $IsPivotButton
+@onready var line_edit: LineEdit = $LineEdit
+
+var room_name: String:
+	set(v):
+		var old_name := name
+		name = v
+		room_name = name
+		line_edit.text = room_name
+		title = room_name
+		change_name.emit(old_name, room_name)
 
 func _ready() -> void:
 	edgar_layer_button.clear()
@@ -48,3 +60,6 @@ func set_data(data):
 	room_type_button.select(data.is_corridor_room)
 	edgar_layer_button.select(data.edgar_layer)
 	is_pivot_button.button_pressed = data.is_pivot
+
+func _on_line_edit_text_submitted(new_text: String) -> void:
+	room_name = new_text
