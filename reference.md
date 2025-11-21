@@ -1,23 +1,26 @@
 # Edgar.Godot Reference
 
-## Lnk
+## Layers
+"col": The main brick layer of the map. 
+"markers": The marker layer for defining special objects for later use.
+"lnk": The layer defining the topology of room connections.
+
+### lnk
 > [!IMPORTANT]
-> `Lnk` is used to define the topology of the room connections, which is a object layer.  
+> `lnk` is used to define the topology of the room connections, which is a object layer.  
 > Only the first object in the layer is considered.  
 
-A valid `Lnk` layer should have:
-1. class = "Lnk"
-2. properties:
-    - `lnk` = "lnk"
+A valid `lnk` layer should be:
+1. name = "lnk"
 
-### Boundary
-A valid `Boundary` should have:
+#### Boundary
+A valid `Boundary` should be:
 1. class = "polygon" (built-in in `YATI`, not `Edgar.Godot`)
 2. properties:
     - `lnk` = "boundary"
 
-### Door
-A valid `Door` should have:
+#### Door
+A valid `Door` should be:
 1. class = "line" (built-in in `YATI`, not `Edgar.Godot`)
 2. properties:
     - `lnk` = "door"

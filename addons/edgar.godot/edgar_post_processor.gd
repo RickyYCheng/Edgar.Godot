@@ -21,7 +21,7 @@
 # SOFTWARE.
 
 func _post_process(base_node: Node2D):
-	var lnk : Node2D = base_node.get_children().filter(func(node): return node.has_meta("lnk"))[0]
+	var lnk : Node2D = base_node.get_children().filter(func(node): return node.name == "lnk")[0]
 	
 	var boundary : PackedVector2Array
 	var doors : Array[PackedVector2Array]
