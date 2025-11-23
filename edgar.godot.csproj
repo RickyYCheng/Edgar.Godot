@@ -3,7 +3,4 @@
     <TargetFramework>net8.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="addons\edgar.godot\kernel\" />
-  </ItemGroup>
 </Project>

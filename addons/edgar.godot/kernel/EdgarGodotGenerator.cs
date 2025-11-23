@@ -4,6 +4,7 @@ using System.Linq;
 
 using Edgar.Geometry;
 using Edgar.GraphBasedGenerator.Grid2D;
+using Edgar.Legacy.Utils.Interfaces;
 
 using Godot;
 using Godot.Collections;
@@ -116,5 +117,16 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
                 }))
             }
         };
+    }
+
+    public void inject_random(Node random)
+    {
+        if (random is not RRandomWrapper rnd) return;
+        _captured_generator.InjectRandomGenerator(rnd.Random);
+    }
+
+    public void inject_seed(int seed)
+    {
+        _captured_generator.InjectRandomGenerator(new System.Random(seed));
     }
 }

@@ -33,9 +33,22 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 	- [x] Anchor system in pivot rooms for precise positioning
 - [ ] Feature parity with Edgar-DotNet
 	- [ ] Template transformations
-	- [ ] Deterministic generation via seed management
-- [ ] Publish on the Godot Asset Library / Store
+	- [x] Deterministic generation via seed management
+- [x] Publish on the Godot Asset Library / Store
 - [ ] Ability to render 3d maps with 2d layouts
+
+## Randomness and Networking
+By default, `Edgar.Godot` uses dotnet's `System.Random` for randomness, since the `Edgar-Dotnet` library relies on it.
+
+Considering Godot has its own randomness system via `RandomNumberGenerator`, `Edgar.Godot` provides two approaches to customize randomness, with a valid one making it possible for `netfox` users to do rewindable random generation:
+1. `generator.inject_seed(int seed)`: Injects a seed into the internal `System.Random` instance.
+2. `generator.inject_random(RRandomWrapper random)`: Injects a custom random wrapper that could be used as the `netfox` compatible rewindable random generator.
+
+> [netfox](https://github.com/foxssake/netfox) is a Godot networking library with prediction and reconciliation features.  
+
+> [!IMPORTANT]
+> This feature is still experimental and only support C# kernel for now.  
+> For the `GDExtension` kernel, there is no way to customize the randomness yet.  
 
 ## Meta Reference
 There are some already in-used fields in the Tiled map's `properties`.  
