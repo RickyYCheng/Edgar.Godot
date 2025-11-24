@@ -16,14 +16,12 @@ A valid `lnk` layer should be:
 #### Boundary
 A valid `Boundary` should be:
 1. class = "polygon" (built-in in `YATI`, not `Edgar.Godot`)
-2. properties:
-    - `lnk` = "boundary"
+2. property `lnk` = "boundary" or name = "Boundary"
 
 #### Door
 A valid `Door` should be:
 1. class = "line" (built-in in `YATI`, not `Edgar.Godot`)
-2. properties:
-    - `lnk` = "door"
+2. property `lnk` = "door"
 
 > [!NOTE]
 > The `Door` objects is a polyline with multiple segments.  
@@ -34,7 +32,7 @@ A valid `Door` should be:
 
 #### Anchor
 A valid `Anchor` should be:
-1. name = "anchor"
+1. property `lnk` = "anchor" or name = "Anchor"
 
 > [!NOTE]
 > An `Anchor` marks the pivot point of a room.

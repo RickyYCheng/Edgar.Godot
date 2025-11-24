@@ -106,8 +106,14 @@
                 {
                  "height":0,
                  "id":15,
-                 "name":"anchor",
+                 "name":"Anchor",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"lnk",
+                         "type":"string",
+                         "value":"anchor"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

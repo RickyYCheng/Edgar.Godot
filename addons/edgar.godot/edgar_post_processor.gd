@@ -26,23 +26,23 @@ func _post_process(base_node: Node2D):
 	var boundary : PackedVector2Array
 	var doors : Array[PackedVector2Array]
 	
-	var anchor = null
-	for node in lnk.get_children():
-		if anchor == null and node.name == "anchor":
-			anchor = node
-		
-		if not node.has_meta("lnk"): continue
-		match node.get_meta("lnk"):
-			"boundary": 
-				boundary = node.polygon
-				for i in range(boundary.size()):
-					boundary[i] += node.position
-			"door": 
-				var door : PackedVector2Array = node.points
-				for i in range(door.size()):
-					door[i] += node.position
-				doors.push_back(door)
-			_: pass
+	var nodes := lnk.get_children()
+	var anchor_nodes := nodes.filter(func(node): return node.name == "Anchor" or (node.has_meta("lnk") and node.get_meta("lnk") == "anchor"))
+	var bound_nodes := nodes.filter(func(node): return node.name == "Boundary" or (node.has_meta("lnk") and node.get_meta("lnk") == "boundary"))
+	var door_nodes := nodes.filter(func(node): return node.has_meta("lnk") and node.get_meta("lnk") == "door")
+	
+	var anchor_node = anchor_nodes[0] if not anchor_nodes.is_empty() else null
+	var bound_node = bound_nodes[0] # NOTE: must have a boundary node
+	
+	boundary = bound_node.polygon
+	for i in range(boundary.size()):
+		boundary[i] += bound_node.position
+	
+	for node in door_nodes:
+		var door : PackedVector2Array = node.points
+		for i in range(door.size()):
+			door[i] += node.position
+		doors.push_back(door)
 	
 	var lnk_dict := {
 		"boundary": boundary,
@@ -50,7 +50,7 @@ func _post_process(base_node: Node2D):
 	}
 	
 	base_node.set_meta("lnk", lnk_dict)
-	base_node.set_meta("anchor", anchor.global_position if anchor else Vector2.ZERO)
+	base_node.set_meta("anchor", anchor_node.global_position if anchor_node else Vector2.ZERO)
 	
 	base_node.remove_child(lnk)
 	lnk.queue_free()
