@@ -33,8 +33,8 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 	- [x] Anchor system in pivot rooms for precise positioning
 - [ ] Feature parity with Edgar-DotNet
 	- [ ] Template transformations
-	- [ ] Deterministic generation via seed management
-- [ ] Publish on the Godot Asset Library / Store
+	- [x] Deterministic generation via seed management
+- [x] Publish on the Godot Asset Library / Store
 - [ ] Ability to render 3d maps with 2d layouts
 
 ## Meta Reference
