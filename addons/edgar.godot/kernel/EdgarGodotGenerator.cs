@@ -119,6 +119,12 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
         };
     }
 
+    public Dictionary generate_layout_with_seed(int seed)
+    {
+        inject_seed(seed);
+        return generate_layout();
+    }
+
     public void inject_seed(int seed)
     {
         _captured_generator.InjectRandomGenerator(new System.Random(seed));
