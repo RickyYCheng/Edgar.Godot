@@ -39,11 +39,15 @@ var generator: EdgarGodotGenerator
 		if EdgarGodotGenerator.resource_valid(v):
 			level = v
 			generator = EdgarGodotGenerator.from_resource(level)
+			generator.inject_seed(seed)
 @export var layout: Dictionary
-@export var seed: int
+@export var seed: int:
+	set(sd):
+		seed = sd
+		if generator != null:
+			generator.inject_seed(seed)
 
 func _generate_layout() -> void:
-	generator.inject_seed(seed)
 	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer
