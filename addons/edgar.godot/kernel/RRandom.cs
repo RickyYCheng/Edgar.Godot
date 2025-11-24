@@ -4,24 +4,22 @@ using Godot;
 
 public class RRandom : Random
 {
-    readonly Lazy<Node> lazyNetworkRollback;
-    readonly Lazy<Node> lazyNetworkTime;
-
-    Node NetworkRollback => lazyNetworkRollback.Value;
-    Node NetworkTime => lazyNetworkTime.Value;
+    Node NetworkRollback { get; }
+    Node NetworkTime { get; }
 
     readonly RandomNumberGenerator _rng;
     long _last_reset_tick = -1;
     long _last_reset_rollback_tick = -1;
 
-    public RRandom(Node node, ulong p_seed)
+    public RRandom(ulong seed = 0)
     {
-        lazyNetworkRollback = new(() => node.GetNode("/root/NetworkRollback"));
-        lazyNetworkTime = new(() => node.GetNode("/root/NetworkTime"));
+        var root = ((SceneTree)Engine.GetMainLoop()).Root;
+        NetworkTime = root.GetNode($"/root/{nameof(NetworkTime)}");
+        NetworkRollback = root.GetNode($"/root/{nameof(NetworkRollback)}");
 
         _rng = new()
         {
-            Seed = p_seed
+            Seed = seed
         };
     }
 

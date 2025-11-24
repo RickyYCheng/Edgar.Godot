@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=4 uid="uid://cqusrldbxf4tv"]
+[gd_scene load_steps=6 format=4 uid="uid://cqusrldbxf4tv"]
 
 [ext_resource type="Script" uid="uid://cj8jnjw3vox4m" path="res://addons/edgar.godot/edgar_renderer.gd" id="1_eah0e"]
 [ext_resource type="Resource" uid="uid://c0bllpgcsxj1o" path="res://level.edgar-graph" id="2_huxjw"]
-[ext_resource type="Script" uid="uid://ch4kdgl2b8fsu" path="res://addons/edgar.godot/kernel/RRandomWrapper.cs" id="3_huxjw"]
 [ext_resource type="Texture2D" uid="uid://d1bu2dxntawl5" path="res://assets/col.png" id="3_utb82"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xtivw"]
@@ -16,11 +15,8 @@ texture = ExtResource("3_utb82")
 [sub_resource type="TileSet" id="TileSet_huxjw"]
 sources/0 = SubResource("TileSetAtlasSource_xtivw")
 
-[node name="EdgarRenderer2D" type="Node2D" node_paths=PackedStringArray("tile_map_layers", "random")]
+[node name="EdgarRenderer2D" type="Node2D"]
 script = ExtResource("1_eah0e")
-tile_map_layers = {
-0: NodePath("TileMapLayer")
-}
 level = ExtResource("2_huxjw")
 layout = {
 "rooms": [{
@@ -99,12 +95,7 @@ layout = {
 "template": "res://assets/limit.tmj"
 }]
 }
-random = NodePath("RRandomWrapper")
 metadata/_custom_type_script = "uid://cj8jnjw3vox4m"
-
-[node name="RRandomWrapper" type="Node" parent="."]
-script = ExtResource("3_huxjw")
-metadata/_custom_type_script = "uid://ch4kdgl2b8fsu"
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 position = Vector2(0, -864)
