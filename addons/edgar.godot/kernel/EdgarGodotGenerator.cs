@@ -119,7 +119,7 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
         };
     }
 
-    public Dictionary generate_layout_with_seed(int seed)
+    public Dictionary generate_layout_with_seed_injection(int seed)
     {
         inject_seed(seed);
         return generate_layout();
