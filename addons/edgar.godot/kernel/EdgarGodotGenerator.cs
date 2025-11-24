@@ -119,8 +119,8 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
         };
     }
 
-    public void inject_seed(ulong seed)
+    public void inject_seed(int seed)
     {
-        _captured_generator.InjectRandomGenerator(new RRandom(seed));
+        _captured_generator.InjectRandomGenerator(new System.Random(seed));
     }
 }
