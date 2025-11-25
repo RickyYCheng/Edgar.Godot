@@ -35,7 +35,7 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 	- [x] Deterministic generation via seed management
 - [x] Publish on the Godot Asset Library / Store
 - [x] Add examples use concrete tilesets
-- [ ] Add outline message for layout.rooms to make rendering more flexible
+- [x] Add outline message for layout.rooms to make rendering more flexible
 > === WILL NOT IMPLEMENT CURRENTLY ===
 - [ ] Ability to render 3d maps with 2d layouts
 
