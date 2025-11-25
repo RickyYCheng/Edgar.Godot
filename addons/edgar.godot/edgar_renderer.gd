@@ -64,8 +64,6 @@ func _render() -> void:
 	
 	for id in tile_map_layers:
 		var tile_map_layer := tile_map_layers[id]
-		if tile_map_layer.tile_set == null:
-			printerr("[EdgarGodot.Renderer] The tileset of TileMapLayer id %d is null. " % id)
 		tile_map_layer.clear()
 		var position_offset := Vector2.ZERO
 		for room in layout.rooms:
