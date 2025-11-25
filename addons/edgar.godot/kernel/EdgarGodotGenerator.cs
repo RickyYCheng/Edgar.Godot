@@ -108,7 +108,7 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
                 {
                     { "room", room.Room },
                     { "position", new Vector2(room.Position.X, room.Position.Y) },
-                    //{ "outline", new Array(room.Outline.GetPoints().Select(pt => (Variant)new Vector2(pt.X, pt.Y))) },
+                    { "outline", new Array(room.Outline.GetPoints().Select(pt => (Variant)new Vector2(pt.X, pt.Y))) },
                     { "is_corridor", room.IsCorridor },
                     //{ "transformation", room.Transformation.ToString() },
                     { "doors", new Array(room.Doors.Select(door => (Variant)new Dictionary{ { "from_room", door.FromRoom }, { "to_room", door.ToRoom }, { "door_line", new Dictionary { { "from", new Vector2(door.DoorLine.From.X, door.DoorLine.From.Y) }, { "to", new Vector2(door.DoorLine.To.X, door.DoorLine.To.Y) } } } })) },
