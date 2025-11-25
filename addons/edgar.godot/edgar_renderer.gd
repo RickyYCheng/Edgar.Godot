@@ -24,8 +24,8 @@
 class_name EdgarRenderer2D
 extends Node2D
 
-signal markers_post_process(renderer: EdgarRenderer2D, id: int, tile_map_layer: TileMapLayer, markers: Node)
 signal post_process(renderer: EdgarRenderer2D, id: int, tile_map_lauer: TileMapLayer)
+signal markers_post_process(renderer: EdgarRenderer2D, id: int, tile_map_layer: TileMapLayer, markers: Node)
 
 var generator: EdgarGodotGenerator
 @export_tool_button("Generate Layout") var generate_layout_btn : Callable = _generate_layout_and_render
@@ -56,6 +56,10 @@ func _generate_layout() -> void:
 func _generate_layout_and_render() -> void:
 	_generate_layout()
 	_render()
+
+func _init() -> void:
+	post_process.connect(func(renderer, id, tml): _post_process(id, tml))
+	markers_post_process.connect(func(renderer, id, tml, markers): _markers_post_process(id, tml, markers))
 
 func _render() -> void:
 	if layout == null:
@@ -117,18 +121,17 @@ func _render() -> void:
 							alternative_tile
 						)
 				elif child.name == "markers":
-					_markers_post_process(id, tile_map_layer, child)
+					markers_post_process.emit(self, id, tile_map_layer, child)
 			
 			tmj.queue_free()
 			tile_map_layer.position = -position_offset
-		_post_process(id, tile_map_layer)
+		post_process.emit(self, id, tile_map_layer)
 
 ## Do not call [code]super()[/code] here. [br]
-## [code]super()[/code] will execute [code]post_process.emit(self)[/code]. [br]
+## [code]super()[/code] will execute [code]tile_map_layer._post_process(self)[/code]. [br]
 func _post_process(id: int, tile_map_layer: TileMapLayer) -> void:
-	post_process.emit(self, id, tile_map_layer)
+	if tile_map_layer.has_method("_post_process"):
+		tile_map_layer._post_process(self, id)
 
-## Do not call [code]super()[/code] here. [br]
-## [code]super()[/code] will execute [code]markers_post_process.emit(self, markers)[/code]. [br]
 func _markers_post_process(id: int, tile_map_layer: TileMapLayer, markers: Node) -> void:
-	markers_post_process.emit(self, id, tile_map_layer, markers)
+	pass
