@@ -21,6 +21,11 @@
 # SOFTWARE.
 
 func _post_process(base_node: Node2D):
+	var tile_size := Vector2.ONE
+	for node in base_node.get_children():
+		if node is TileMapLayer:
+			tile_size = Vector2(node.tile_set.tile_size)
+	
 	var lnk : Node2D = base_node.get_children().filter(func(node): return node.name == "lnk")[0]
 	
 	var boundary : PackedVector2Array
@@ -37,11 +42,13 @@ func _post_process(base_node: Node2D):
 	boundary = bound_node.polygon
 	for i in range(boundary.size()):
 		boundary[i] += bound_node.position
+		boundary[i] /= tile_size
 	
 	for node in door_nodes:
 		var door : PackedVector2Array = node.points
 		for i in range(door.size()):
 			door[i] += node.position
+			door[i] /= tile_size
 		doors.push_back(door)
 	
 	var lnk_dict := {
@@ -49,8 +56,10 @@ func _post_process(base_node: Node2D):
 		"doors": doors,
 	}
 	
+	var anchor = anchor_node.global_position / tile_size if anchor_node else Vector2.ZERO
+	
 	base_node.set_meta("lnk", lnk_dict)
-	base_node.set_meta("anchor", anchor_node.global_position if anchor_node else Vector2.ZERO)
+	base_node.set_meta("anchor", anchor)
 	
 	base_node.remove_child(lnk)
 	lnk.queue_free()

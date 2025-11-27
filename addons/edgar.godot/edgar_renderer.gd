@@ -115,7 +115,7 @@ func _render() -> void:
 								continue
 						
 						tile_map_layer.set_cell(
-							cell + Vector2i(room.position / Vector2(origin_tml.tile_set.tile_size)), 
+							cell + Vector2i(room.position), 
 							source_id, 
 							atlas_coord, 
 							alternative_tile
@@ -124,7 +124,7 @@ func _render() -> void:
 					markers_post_process.emit(self, id, tile_map_layer, child)
 			
 			tmj.queue_free()
-			tile_map_layer.position = -position_offset
+			tile_map_layer.position = -position_offset * (Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE)
 		post_process.emit(self, id, tile_map_layer)
 
 ## Do not call [code]super()[/code] here. [br]
