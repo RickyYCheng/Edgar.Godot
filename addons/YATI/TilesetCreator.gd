@@ -264,7 +264,7 @@ func handle_tiles(tiles: Array):
 			# Tile with its own image -> separate atlas source
 			_current_atlas_source = TileSetAtlasSource.new()
 			var added_source_id = _tileset.add_source(_current_atlas_source, get_special_property(tile, GODOT_ATLAS_ID_PROPERTY))
-			register_atlas_source(added_source_id, 1, tile_id, Vector2i.ZERO)
+			register_atlas_source(added_source_id, 1, tile_id, _tile_offset)
 
 			var texture_path = tile["image"]
 			var ext = texture_path.get_extension().to_lower()
@@ -396,13 +396,13 @@ func handle_objectgroup(object_group: Dictionary, current_tile: TileData, tile_i
 	var objects = object_group["objects"] as Array
 	for obj in objects:
 		if obj.has("point") and obj["point"]:
-			# print_rich("[color="+WARNING_COLOR+"] -- 'Point' has currently no corresponding tileset element in Godot 4. -> Skipped[/color]")
+			# print_rich("[color="+WARNING_COLOR+"] -- 'Point' on tile " + str(tile_id) + " skipped as there is no corresponding element in Godot 4.[/color]")
 			# CommonUtils.warning_count += 1
-			break
+			continue
 		if obj.has("ellipse") and obj["ellipse"]:
-			# print_rich("[color="+WARNING_COLOR+"] -- 'Ellipse' has currently no corresponding tileset element in Godot 4. -> Skipped[/color]")
+			# print_rich("[color="+WARNING_COLOR+"] -- 'Ellipse' on tile " + str(tile_id) + " skipped as there is no corresponding element in Godot 4.[/color]")
 			# CommonUtils.warning_count += 1
-			break
+			continue
 
 		if _ct != null:
 			_ct.merge_custom_properties(obj, "object")
