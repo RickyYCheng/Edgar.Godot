@@ -38,37 +38,50 @@ A valid `Anchor` should be:
 > An `Anchor` marks the pivot point of a room.
 > During rendering, the position of each `TileMapLayer` is offset by the anchor of the **pivot room**.
 
+### col
+See "col" in Renderer section for details.
+
 ## Renderer
 
 A renderer converts an Edgar.Godot layout into Godot nodes (typically `TileMapLayer`). It supports tile and room filtering via metadata and emits signals for post‑processing.
 
+### col
+The `col` layer is the brick layer of the map. Obviously, there should be multiple `col` layers if the map has multiple tilemaps.  
+
+To achieve this, you need to set the meta-data `tiled_layer` on each `TileMapLayer` node of a renderer, specifying which Tiled layer it corresponds to.  
+
+For example, if you have two tilemaps in Tiled named "Ground" and "Decorations", you would create two `TileMapLayer` nodes under the renderer, each with the `tiled_layer` meta-data set to "Ground" and "Decorations" respectively.
+
+> [!NOTE]
+> For simplicity, you can name the `TileMapLayer` nodes the same as their corresponding Tiled layers. For example, a `TileMapLayer` node named "col" would have the `tiled_layer` meta-data set to "col".
+
 ### Signals
-- `post_process(renderer: EdgarRenderer2D, id: int, tile_map_layer: TileMapLayer)`
-- `markers_post_process(renderer: EdgarRenderer2D, id: int, tile_map_layer: TileMapLayer, markers: Node)`
+- `post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, tiled_layer: String)`
+- `markers_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, markers: Node)`
 
 You can connect to or await these signals to run custom logic after rendering.
 
-### Ways to integrate
+#### Ways to integrate
 
 1) Script-based (override methods)
 - Extend `EdgarRenderer2D` and override:
 ```gdscript
 extends EdgarRenderer2D
 
-func _post_process(id: int, tile_map_layer: TileMapLayer) -> void:
-    # Custom per-layer post-processing
-    pass
+func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
+	# Custom per-layer post-processing
+	pass
 
-func _markers_post_process(id: int, tile_map_layer: TileMapLayer, markers: Node) -> void:
-    # Custom marker post-processing
-    pass
+func _markers_post_process(tile_map_layer: TileMapLayer, markers: Node) -> void:
+	# Custom marker post-processing
+	pass
 ```
 - Alternatively, implement hooks directly on a `TileMapLayer`. The renderer will detect and call them:
 ```gdscript
 # On the TileMapLayer script
-func _post_process(renderer: EdgarRenderer2D, id: int) -> void:
-    # Adjust this layer after rendering
-    pass
+func _post_process(renderer: EdgarRenderer2D, tiled_layer: String) -> void:
+	# Adjust this layer after rendering
+	pass
 ```
 
 > [!NOTE]
@@ -101,3 +114,5 @@ To enable a room filter, add the following meta-data to the target `TileMapLayer
 > You can only use either `room_exceptions` or `room_inclusions` at a time.  
 > If both are provided, only `room_inclusions` will be considered.  
 
+### Layer filter
+See "col" in Renderer section for details.

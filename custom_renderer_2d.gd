@@ -1,39 +1,38 @@
 @tool
 extends EdgarRenderer2D
 
-func _post_process(id: int, tile_map_layer: TileMapLayer) -> void:
-	match id:
-		1:
-			var blocks := tile_map_layer.get_used_cells_by_id(0, Vector2(0, 0))
-			var platforms := tile_map_layer.get_used_cells_by_id(0, Vector2(1, 0))
-			var ladders := tile_map_layer.get_used_cells_by_id(0, Vector2(2, 0))
-			var slopes_l := tile_map_layer.get_used_cells_by_id(0, Vector2(3, 0))
-			var slopes_r := tile_map_layer.get_used_cells_by_id(0, Vector2(4, 0))
-			
-			tile_map_layer.clear()
-			
+func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
+	# NOTE: you must manually set your resource_name in resource 'new_tile_set.tres'
+	if tile_map_layer.tile_set.resource_name == "new_tile_set":
+		var blocks := tile_map_layer.get_used_cells_by_id(0, Vector2(0, 0))
+		var platforms := tile_map_layer.get_used_cells_by_id(0, Vector2(1, 0))
+		var ladders := tile_map_layer.get_used_cells_by_id(0, Vector2(2, 0))
+		var slopes_l := tile_map_layer.get_used_cells_by_id(0, Vector2(3, 0))
+		var slopes_r := tile_map_layer.get_used_cells_by_id(0, Vector2(4, 0))
+		
+		tile_map_layer.clear()
+		
+		if tiled_layer == "col":
 			# NOTE: just ignore tile/room exceptions/inclusions here for simplicity
 			for room in layout.rooms:
 				if int(room.edgar_layer) != 1:
 					continue
 				
-				tile_map_layer.set_cells_terrain_connect(get_room_cells(room, tile_map_layer), 0, 0)
+				tile_map_layer.set_cells_terrain_connect(get_room_cells(room), 0, 0)
 				break # only have one limit layer
 			
 			for room in layout.rooms:
 				if int(room.edgar_layer) != 0:
 					continue
 				
-				for cell in get_room_cells(room, tile_map_layer):
+				for cell in get_room_cells(room):
 					tile_map_layer.erase_cell(cell)
-			
+		
 			tile_map_layer.set_cells_terrain_connect(blocks, 0, 0)
 			tile_map_layer.set_cells_terrain_connect(platforms, 0, 1)
 			tile_map_layer.set_cells_terrain_connect(ladders, 0, 2)
 			tile_map_layer.set_cells_terrain_connect(slopes_l, 0, 3)
 			tile_map_layer.set_cells_terrain_connect(slopes_r, 0, 4)
-		_:
-			pass
 
 # NOTE: we have two types of polygon here
 # 1. strong simple polygon for basic room
@@ -41,7 +40,7 @@ func _post_process(id: int, tile_map_layer: TileMapLayer) -> void:
 # in our limit room, the inner loop was created, then was the outer boundary
 # so the inner boundary is what we want
 # This depends on your implement / constrain details
-func get_room_cells(room: Dictionary, tile_map_layer: TileMapLayer) -> Array:
+func get_room_cells(room: Dictionary) -> Array:
 	var _position = room.position
 	var _outline := room.outline as PackedVector2Array
 	var _take_cnt := 0

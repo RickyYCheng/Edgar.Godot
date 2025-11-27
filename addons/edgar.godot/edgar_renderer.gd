@@ -24,13 +24,13 @@
 class_name EdgarRenderer2D
 extends Node2D
 
-signal post_process(renderer: EdgarRenderer2D, id: int, tile_map_lauer: TileMapLayer)
-signal markers_post_process(renderer: EdgarRenderer2D, id: int, tile_map_layer: TileMapLayer, markers: Node)
+signal post_process(renderer: EdgarRenderer2D, tile_map_lauer: TileMapLayer, tiled_layer: String)
+signal markers_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, markers: Node)
 
 var generator: EdgarGodotGenerator
 @export_tool_button("Generate Layout") var generate_layout_btn : Callable = _generate_layout_and_render
 @export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = _render
-@export var tile_map_layers: Dictionary[int, TileMapLayer] = {}
+@export var tile_map_layers: Array[TileMapLayer] = []
 @export var level: Resource:
 	get: return level
 	set(v):
@@ -58,16 +58,15 @@ func _generate_layout_and_render() -> void:
 	_render()
 
 func _init() -> void:
-	post_process.connect(func(renderer, id, tml): _post_process(id, tml))
-	markers_post_process.connect(func(renderer, id, tml, markers): _markers_post_process(id, tml, markers))
+	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
+	markers_post_process.connect(func(renderer, tml, markers): _markers_post_process(tml, markers))
 
 func _render() -> void:
 	if layout == null:
 		printerr("[EdgarGodot] Cannot render: layout is null.")
 		return
 	
-	for id in tile_map_layers:
-		var tile_map_layer := tile_map_layers[id]
+	for tile_map_layer in tile_map_layers:
 		tile_map_layer.clear()
 		var position_offset := Vector2.ZERO
 		for room in layout.rooms:
@@ -78,14 +77,13 @@ func _render() -> void:
 		
 		var room_exceptions := tile_map_layer.get_meta("room_exceptions", {})
 		var room_inclusions := tile_map_layer.get_meta("room_inclusions", {})
+		
+		var tile_exceptions := tile_map_layer.get_meta("tile_exceptions", {}) as Dictionary
+		var tile_inclusions := tile_map_layer.get_meta("tile_inclusions", {}) as Dictionary
+		
+		var tiled_layer := tile_map_layer.get_meta("tiled_layer", tile_map_layer.name)
+		
 		for room in layout.rooms:
-			if not room_inclusions.is_empty():
-				if room_inclusions.get(room.room, false) == false:
-					continue
-			else:
-				if room_exceptions.get(room.room, false) == true:
-					continue
-			
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
 			
@@ -93,11 +91,19 @@ func _render() -> void:
 				var anchor = tmj.get_meta("anchor", Vector2.ZERO)
 				position_offset += anchor
 			
-			var tile_exceptions := tile_map_layer.get_meta("tile_exceptions", {}) as Dictionary
-			var tile_inclusions := tile_map_layer.get_meta("tile_inclusions", {}) as Dictionary
+			tile_map_layer.position = -position_offset * (Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE)
+			
+			if not room_inclusions.is_empty():
+				if room_inclusions.get(room.room, false) == false:
+					tmj.queue_free()
+					continue
+			else:
+				if room_exceptions.get(room.room, false) == true:
+					tmj.queue_free()
+					continue
 			
 			for child in tmj.get_children():
-				if child.name == "col" and child is TileMapLayer:
+				if child is TileMapLayer and child.name == tiled_layer:
 					var origin_tml := child as TileMapLayer
 					var cells := origin_tml.get_used_cells()
 					
@@ -121,17 +127,17 @@ func _render() -> void:
 							alternative_tile
 						)
 				elif child.name == "markers":
-					markers_post_process.emit(self, id, tile_map_layer, child)
+					markers_post_process.emit(self, tile_map_layer, child)
 			
 			tmj.queue_free()
-			tile_map_layer.position = -position_offset * (Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE)
-		post_process.emit(self, id, tile_map_layer)
+		
+		post_process.emit(self, tile_map_layer, tiled_layer)
 
 ## Do not call [code]super()[/code] here. [br]
 ## [code]super()[/code] will execute [code]tile_map_layer._post_process(self)[/code]. [br]
-func _post_process(id: int, tile_map_layer: TileMapLayer) -> void:
+func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
 	if tile_map_layer.has_method("_post_process"):
-		tile_map_layer._post_process(self, id)
+		tile_map_layer._post_process(self, tiled_layer)
 
-func _markers_post_process(id: int, tile_map_layer: TileMapLayer, markers: Node) -> void:
+func _markers_post_process(itile_map_layer: TileMapLayer, markers: Node) -> void:
 	pass
