@@ -118,6 +118,12 @@
                  "y":160
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"transformations",
+                 "type":"string",
+                 "value":"[0, 4]"
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,

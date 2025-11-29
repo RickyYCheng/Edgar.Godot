@@ -51,9 +51,18 @@ func _post_process(base_node: Node2D):
 			door[i] /= tile_size
 		doors.push_back(door)
 	
+	var transformations : PackedInt32Array
+	if lnk.has_meta("transformations"):
+		var str = lnk.get_meta("transformations")
+		var obj := JSON.parse_string(str)
+		transformations = obj
+	else:
+		transformations = [0]
+	
 	var lnk_dict := {
 		"boundary": boundary,
 		"doors": doors,
+		"transformations": transformations,
 	}
 	
 	var anchor = anchor_node.global_position / tile_size if anchor_node else Vector2.ZERO

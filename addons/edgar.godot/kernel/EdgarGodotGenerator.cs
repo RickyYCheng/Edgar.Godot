@@ -28,9 +28,9 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
                 var name = kv.Key;
                 var lnk = kv.Value;
                 var boundary = new PolygonGrid2D(lnk["boundary"].AsVector2Array().Reverse().Select(pt => new Vector2Int((int)pt.X, (int)pt.Y)));
-                var doors = lnk["doors"].AsGodotArray<Vector2[]>().Select(door => door.Select(pt => new Vector2Int((int)pt.X, (int)pt.Y)).ToArray());
+                var doors = lnk["doors"].AsGodotArray<Vector2[]>().Select(door => door.Select(pt => new Vector2Int((int)pt.X, (int)pt.Y)).ToArray()).ToArray();
 
-                var doors_list = new List<DoorGrid2D>();
+                var doors_list = new List<DoorGrid2D>(doors.Length);
                 foreach (var door in doors)
                 {
                     var pt = door[0];
@@ -40,8 +40,11 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
                         pt = door[i];
                     }
                 }
+
+                var transformations = lnk.ContainsKey("transformations") ? lnk["transformations"].AsInt32Array().Select(e => (TransformationGrid2D)e).ToList() : [TransformationGrid2D.Identity];
+
                 var manual_door = new ManualDoorModeGrid2D(doors_list);
-                var room_template = new RoomTemplateGrid2D(boundary, manual_door, name);
+                var room_template = new RoomTemplateGrid2D(boundary, manual_door, name, allowedTransformations: transformations);
                 templates.Add(room_template);
             }
             layer_templates.Add(templates);
@@ -110,7 +113,7 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
                     { "position", new Vector2(room.Position.X, room.Position.Y) },
                     { "outline", new Array(room.Outline.GetPoints().Select(pt => (Variant)new Vector2(pt.X, pt.Y))) },
                     { "is_corridor", room.IsCorridor },
-                    //{ "transformation", room.Transformation.ToString() },
+                    { "transformation", (int)room.Transformation },
                     { "doors", new Array(room.Doors.Select(door => (Variant)new Dictionary{ { "from_room", door.FromRoom }, { "to_room", door.ToRoom }, { "door_line", new Dictionary { { "from", new Vector2(door.DoorLine.From.X, door.DoorLine.From.Y) }, { "to", new Vector2(door.DoorLine.To.X, door.DoorLine.To.Y) } } } })) },
                     { "template", room.RoomTemplate.Name },
                     //{ "description", new Dictionary{ { "is_corridor", room.RoomDescription.IsCorridor }, { "templates", new Array(room.RoomDescription.RoomTemplates.Select(template => (Variant)template.Name)) } } },
