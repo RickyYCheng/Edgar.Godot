@@ -141,5 +141,3 @@ To enable a room filter, add the following meta-data to the target `TileMapLayer
 
 ### Layer filter
 See "col" in Renderer section for details.
-
-## Tileset
