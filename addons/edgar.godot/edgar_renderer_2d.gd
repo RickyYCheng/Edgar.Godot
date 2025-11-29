@@ -103,7 +103,6 @@ func _render() -> void:
 					continue
 			
 			var lnk := tmj.get_meta("lnk") as Dictionary
-			var tileswaps : Dictionary[int, Color] = lnk.get("tileswaps", {} as Dictionary[int, Color])
 
 			var origin_outline = lnk["boundary"]
 			var _origin_min := Vector2i.MAX
@@ -129,12 +128,12 @@ func _render() -> void:
 				if child is TileMapLayer and child.name == tiled_layer:
 					var origin_tml := child as TileMapLayer
 					var cells := origin_tml.get_used_cells()
-					
+
 					for cell in cells:
 						var source_id := origin_tml.get_cell_source_id(cell)
 						var atlas_coord := origin_tml.get_cell_atlas_coords(cell)
 						var alternative_tile := origin_tml.get_cell_alternative_tile(cell)
-						
+
 						var target_tile := Vector4i(source_id, atlas_coord.x, atlas_coord.y, alternative_tile)
 						if not tile_inclusions.is_empty():
 							if tile_inclusions.get(target_tile, false) == false:
@@ -142,11 +141,14 @@ func _render() -> void:
 						else:
 							if tile_exceptions.get(target_tile, false) == true:
 								continue
-						
-						if tileswaps.has(int(room.transformation)):
-							var swapping: Color = tileswaps[int(room.transformation)]
-							if atlas_coord == Vector2i(swapping.r8, swapping.g8):
-								atlas_coord = Vector2i(swapping.b8, swapping.a8)
+
+						var tile_data := origin_tml.get_cell_tile_data(cell)
+						var _str := "tileswap%d" % int(room.transformation)
+						if tile_data.has_meta(_str):
+							var swap_data := tile_data.get_meta(_str) as Color
+							source_id = swap_data.r8
+							atlas_coord = Vector2i(swap_data.g8, swap_data.b8)
+							alternative_tile = swap_data.a8
 
 						tile_map_layer.set_cell(
 							_transform_cell(cell, origin_used_rect, room.transformation) + diff, 

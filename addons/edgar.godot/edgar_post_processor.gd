@@ -59,29 +59,10 @@ func _post_process(base_node: Node2D):
 	else:
 		transformations = [0]
 	
-	var tileswaps: Dictionary[int, Color] = {}
-	if lnk.has_meta("tileswap0"):
-		tileswaps[0] = lnk.get_meta("tileswap0") as Color
-	if lnk.has_meta("tileswap1"):
-		tileswaps[1] = lnk.get_meta("tileswap1") as Color
-	if lnk.has_meta("tileswap2"):
-		tileswaps[2] = lnk.get_meta("tileswap2") as Color
-	if lnk.has_meta("tileswap3"):
-		tileswaps[3] = lnk.get_meta("tileswap3") as Color
-	if lnk.has_meta("tileswap4"):
-		tileswaps[4] = lnk.get_meta("tileswap4") as Color
-	if lnk.has_meta("tileswap5"):
-		tileswaps[5] = lnk.get_meta("tileswap5") as Color
-	if lnk.has_meta("tileswap6"):
-		tileswaps[6] = lnk.get_meta("tileswap6") as Color
-	if lnk.has_meta("tileswap7"):
-		tileswaps[7] = lnk.get_meta("tileswap7") as Color
-	
 	var lnk_dict := {
 		"boundary": boundary,
 		"doors": doors,
 		"transformations": transformations,
-		"tileswaps": tileswaps,
 	}
 	
 	var anchor = anchor_node.global_position / tile_size if anchor_node else Vector2.ZERO

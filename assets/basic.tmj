@@ -120,11 +120,6 @@
          "opacity":1,
          "properties":[
                 {
-                 "name":"tileswap4",
-                 "type":"color",
-                 "value":"#00030004"
-                }, 
-                {
                  "name":"transformations",
                  "type":"string",
                  "value":"[0, 4]"

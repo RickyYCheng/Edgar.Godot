@@ -53,15 +53,15 @@ To enable transformations, add the following meta-data to the `lnk` layer:
 > 6: Diagnal13  
 > 7: Diagnal24  
 
-Most of the time, you would want to re-map / swap the tiles according to the transformation applied to the room, to achieve this, add the following meta-data to the `lnk` layer:
-- `tileswap0`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 0
-- `tileswap1`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 1
-- `tileswap2`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 2
-- `tileswap3`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 3
-- `tileswap4`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 4
-- `tileswap5`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 5
-- `tileswap6`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 6
-- `tileswap7`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 7
+#### Tile Swapping
+Most of the time, you would want to re-map / swap the tiles according to the transformation applied to the room.  
+To achieve this, you can use tile meta-data to define the swapping rules.  
+
+> [!IMPORTANT]
+> These properties must be defined on the **Tileset** in the **Tiled Map Editor**, specifically on the individual tiles themselves.
+
+For example, `tileswap4` = `Color(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
+When a tile is rendered in a room with MirrorX transformation, it will be swapped to the tile defined in the `tileswap4` meta-data.
 
 ### col
 See "col" in Renderer section for details.

@@ -6,4 +6,14 @@
    <property name="data_is_ladder" type="bool" value="true"/>
   </properties>
  </tile>
+ <tile id="3">
+  <properties>
+   <property name="tileswap4" type="color" value="#00000400"/>
+  </properties>
+ </tile>
+ <tile id="4">
+  <properties>
+   <property name="tileswap4" type="color" value="#00000300"/>
+  </properties>
+ </tile>
 </tileset>
