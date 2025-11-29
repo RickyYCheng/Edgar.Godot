@@ -1,9 +1,9 @@
 # Edgar.Godot Reference
 
 ## Layers
-"col": The main brick layer of the map. 
-"markers": The marker layer for defining special objects for later use.
-"lnk": The layer defining the topology of room connections.
+"col": The main brick layer of the map.  
+"markers": The marker layer for defining special objects for later use.  
+"lnk": The layer defining the topology of room connections.  
 
 ### lnk
 > [!IMPORTANT]
