@@ -43,15 +43,25 @@ To enable transformations, add the following meta-data to the `lnk` layer:
 1. `transformations`: A string json containing the transformation parameters.
 	- e.g. `[0, 4]`
 
+> [!NOTE]
+> 0: Identity  
+> 1: Rotate90  
+> 2: Rotate180  
+> 3: Rotate270  
+> 4: MirrorX  
+> 5: MirrorY  
+> 6: Diagnal13  
+> 7: Diagnal24  
+
 Most of the time, you would want to re-map / swap the tiles according to the transformation applied to the room, to achieve this, add the following meta-data to the `lnk` layer:
-- tileswap0: Color(coord.x, coord.y, swap.x, swap.y) for transformation 0
-- tileswap1: Color(coord.x, coord.y, swap.x, swap.y) for transformation 1
-- tileswap2: Color(coord.x, coord.y, swap.x, swap.y) for transformation 2
-- tileswap3: Color(coord.x, coord.y, swap.x, swap.y) for transformation 3
-- tileswap4: Color(coord.x, coord.y, swap.x, swap.y) for transformation 4
-- tileswap5: Color(coord.x, coord.y, swap.x, swap.y) for transformation 5
-- tileswap6: Color(coord.x, coord.y, swap.x, swap.y) for transformation 6
-- tileswap7: Color(coord.x, coord.y, swap.x, swap.y) for transformation 7
+- `tileswap0`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 0
+- `tileswap1`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 1
+- `tileswap2`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 2
+- `tileswap3`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 3
+- `tileswap4`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 4
+- `tileswap5`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 5
+- `tileswap6`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 6
+- `tileswap7`: `Color(coord.x, coord.y, swap.x, swap.y)` for transformation 7
 
 ### col
 See "col" in Renderer section for details.
