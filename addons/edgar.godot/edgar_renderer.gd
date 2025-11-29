@@ -102,6 +102,26 @@ func _render() -> void:
 					tmj.queue_free()
 					continue
 			
+			var origin_outline = tmj.get_meta("lnk")["boundary"]
+			var _origin_min := Vector2i.MAX
+			var _origin_max := Vector2i.MIN
+			for e in origin_outline:
+				var _origin_pt := Vector2i(e)
+				_origin_min = _origin_min.min(_origin_pt)
+				_origin_max = _origin_max.max(_origin_pt)
+
+			var _target_min := Vector2i.MAX
+			var _target_max := Vector2i.MIN
+			for e in room.outline:
+				var _target_pt := Vector2i(e) + Vector2i(room.position)
+				_target_min = _target_min.min(_target_pt)
+				_target_max = _target_max.max(_target_pt)
+
+			var origin_used_rect := Rect2i(_origin_min, _origin_max - _origin_min)
+			var target_used_rect := Rect2i(_target_min, _target_max - _target_min)
+
+			var diff := target_used_rect.position - origin_used_rect.position
+
 			for child in tmj.get_children():
 				if child is TileMapLayer and child.name == tiled_layer:
 					var origin_tml := child as TileMapLayer
@@ -121,7 +141,7 @@ func _render() -> void:
 								continue
 						
 						tile_map_layer.set_cell(
-							cell + Vector2i(room.position), 
+							_transform_cell(cell, origin_used_rect, room.transformation) + diff, 
 							source_id, 
 							atlas_coord, 
 							alternative_tile
@@ -141,3 +161,23 @@ func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
 
 func _markers_post_process(itile_map_layer: TileMapLayer, markers: Node) -> void:
 	pass
+
+func _transform_cell(cell: Vector2i, used_rect: Rect2i, transformation: int) -> Vector2i:
+	match transformation:
+		0: # Identity
+			return cell
+		1: # Rotate 90
+			return Vector2i(used_rect.size.y - 1 - cell.y, cell.x)
+		2: # Rotate 180
+			return Vector2i(used_rect.size.x - 1 - cell.x, used_rect.size.y - 1 - cell.y)
+		3: # Rotate 270
+			return Vector2i(cell.y, used_rect.size.x - 1 - cell.x)
+		4: # Mirror X
+			return Vector2i(used_rect.size.x - 1 - cell.x, cell.y)
+		5: # Mirror Y
+			return Vector2i(cell.x, used_rect.size.y - 1 - cell.y)
+		6: # Diagnal 13
+			return Vector2i(cell.y, cell.x)
+		7: # Diagonal 24
+			return Vector2i(used_rect.size.y - 1 - cell.y, used_rect.size.x - 1 - cell.x)
+	return cell
