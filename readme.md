@@ -36,12 +36,9 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 - [x] Publish on the Godot Asset Library / Store
 - [x] Add examples use concrete tilesets
 - [x] Add outline message for layout.rooms to make rendering more flexible
+- [x] Add support for room transformations
 > === WILL NOT IMPLEMENT CURRENTLY ===
 - [ ] Ability to render 3d maps with 2d layouts
-
-> [!IMPORTANT]
-> Will not currently implement transformation of room shapes.  
-> Since for tilemaps, transforming the room shape would require re-arranging the tiles, which is not feasible with the current Tiled map format and Edgar's generation algorithm.
 
 ## Meta Reference
 There are some already in-used fields in the Tiled map's `properties`.  

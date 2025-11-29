@@ -102,7 +102,10 @@ func _render() -> void:
 					tmj.queue_free()
 					continue
 			
-			var origin_outline = tmj.get_meta("lnk")["boundary"]
+			var lnk := tmj.get_meta("lnk") as Dictionary
+			var tileswaps : Dictionary[int, Color] = lnk.get("tileswaps", {} as Dictionary[int, Color])
+
+			var origin_outline = lnk["boundary"]
 			var _origin_min := Vector2i.MAX
 			var _origin_max := Vector2i.MIN
 			for e in origin_outline:
@@ -140,6 +143,11 @@ func _render() -> void:
 							if tile_exceptions.get(target_tile, false) == true:
 								continue
 						
+						if tileswaps.has(int(room.transformation)):
+							var swapping: Color = tileswaps[int(room.transformation)]
+							if atlas_coord == Vector2i(swapping.r8, swapping.g8):
+								atlas_coord = Vector2i(swapping.b8, swapping.a8)
+
 						tile_map_layer.set_cell(
 							_transform_cell(cell, origin_used_rect, room.transformation) + diff, 
 							source_id, 
