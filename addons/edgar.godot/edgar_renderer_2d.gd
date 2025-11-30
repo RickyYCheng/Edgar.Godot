@@ -105,25 +105,21 @@ func _render() -> void:
 			var lnk := tmj.get_meta("lnk") as Dictionary
 
 			var origin_outline = lnk["boundary"]
-			var _origin_min := Vector2i.MAX
-			var _origin_max := Vector2i.MIN
-			for e in origin_outline:
-				var _origin_pt := Vector2i(e)
-				_origin_min = _origin_min.min(_origin_pt)
-				_origin_max = _origin_max.max(_origin_pt)
-
-			var _target_min := Vector2i.MAX
-			var _target_max := Vector2i.MIN
-			for e in room.outline:
-				var _target_pt := Vector2i(e) + Vector2i(room.position)
-				_target_min = _target_min.min(_target_pt)
-				_target_max = _target_max.max(_target_pt)
-
-			var origin_used_rect := Rect2i(_origin_min, _origin_max - _origin_min)
-			var target_used_rect := Rect2i(_target_min, _target_max - _target_min)
-
+			var origin_used_rect := Rect2i(origin_outline[0], Vector2i.ZERO)
+			var target_used_rect := Rect2i(room.outline[0] + room.position, Vector2i.ZERO)
+			
+			var cnt : int = origin_outline.size()
+			var i := 0
+			while i < cnt:
+				var _origin_pt := Vector2i(origin_outline[i])
+				origin_used_rect = origin_used_rect.expand(_origin_pt)
+				
+				var _target_pt := Vector2i(room.outline[i] + room.position)
+				target_used_rect = target_used_rect.expand(_target_pt)
+				i += 1
+			
 			var diff := target_used_rect.position - origin_used_rect.position
-
+			
 			for child in tmj.get_children():
 				if child is TileMapLayer and child.name == tiled_layer:
 					var origin_tml := child as TileMapLayer
