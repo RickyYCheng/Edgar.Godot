@@ -42,8 +42,10 @@ func _edit(object: Object) -> void:
 
 func _enter_tree() -> void:
 	
-	for i in range(20):
+	var i := 0
+	while i < 20:
 		_set_edgar_layer_project_setting(i + 1)
+		i += 1
 	
 	importer = preload("res://addons/edgar.godot/edgar_graph_importer.gd").new()
 	add_import_plugin(importer)

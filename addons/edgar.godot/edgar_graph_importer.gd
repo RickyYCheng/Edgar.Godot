@@ -54,12 +54,12 @@ func _get_import_options(path: String, preset_index: int) -> Array:
 	var options := [
 		{ "name": "reimport_layers", "default_value": false, "property_hint": PROPERTY_HINT_NONE, "hint_string": "" }
 	]
-	for i in range(20):
+	var i := 0
+	while i < 20:
 		var setting := ProjectSettings.get_setting("layer_names/edgar/layer_"+str(i+1))
-		if setting == "" or setting == null:
-			continue
-		
-		options.push_back({ "name": "layer_"+str(i+1), "default_value": EdgarLayersResource.new(), "property_hint": PROPERTY_HINT_RESOURCE_TYPE, "hint_string": "EdgarLayersResource" })
+		if setting != "" and setting != null:
+			options.push_back({ "name": "layer_"+str(i+1), "default_value": EdgarLayersResource.new(), "property_hint": PROPERTY_HINT_RESOURCE_TYPE, "hint_string": "EdgarLayersResource" })
+		i += 1
 	
 	return options
 

@@ -40,15 +40,19 @@ func _post_process(base_node: Node2D):
 	var bound_node = bound_nodes[0] # NOTE: must have a boundary node
 	
 	boundary = bound_node.polygon
-	for i in range(boundary.size()):
+	var i := 0
+	while i < boundary.size():
 		boundary[i] += bound_node.position
 		boundary[i] /= tile_size
+		i += 1
 	
 	for node in door_nodes:
 		var door : PackedVector2Array = node.points
-		for i in range(door.size()):
-			door[i] += node.position
-			door[i] /= tile_size
+		var j := 0
+		while j < door.size():
+			door[j] += node.position
+			door[j] /= tile_size
+			j += 1
 		doors.push_back(door)
 	
 	var transformations : PackedInt32Array

@@ -53,8 +53,11 @@ func get_room_cells(room: Dictionary) -> Array:
 			printerr("Unhandled case when getting room cells!")
 	var outline: PackedVector2Array
 	outline.resize(_take_cnt)
-	for i in range(_take_cnt):
+	
+	var i := 0
+	while i < _take_cnt:
 		outline[i] = _outline[i] + _position
+		i += 1
 	
 	return outline_to_cells(outline)
 
@@ -73,9 +76,13 @@ func outline_to_cells(outline: PackedVector2Array) -> PackedVector2Array:
 	var start_y := int(floor(rect.position.y))
 	var end_y := int(ceil(rect.end.y))
 	
-	for x in range(start_x, end_x):
-		for y in range(start_y, end_y):
+	var x := start_x
+	while x < end_x:
+		var y = start_y
+		while y < end_y:
 			if Geometry2D.is_point_in_polygon(Vector2(x + 0.5, y + 0.5), outline):
 				cells.append(Vector2i(x, y))
+			y += 1
+		x += 1
 	
 	return cells

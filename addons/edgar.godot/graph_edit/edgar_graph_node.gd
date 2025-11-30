@@ -42,10 +42,12 @@ var room_name: String:
 
 func _ready() -> void:
 	edgar_layer_button.clear()
-	for i in range(20):
-		var layer := ProjectSettings.get("layer_names/edgar/layer_"+str(i+1))
-		if layer == null || layer == "": continue
-		edgar_layer_button.add_item(layer)
+	var i := 0
+	while i < 20:
+		var layer := ProjectSettings.get("layer_names/edgar/layer_" + str(i + 1))
+		if layer != null and layer != "":
+			edgar_layer_button.add_item(layer)
+		i += 1
 
 func get_data():
 	return {
