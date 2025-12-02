@@ -120,8 +120,6 @@ func _render() -> void:
 				target_used_rect = target_used_rect.expand(_target_pt)
 				i += 1
 			
-			var diff := target_used_rect.position - origin_used_rect.position
-			
 			for child in tmj.get_children():
 				if child is TileMapLayer and child.name == tiled_layer:
 					var origin_tml := child as TileMapLayer
@@ -149,7 +147,7 @@ func _render() -> void:
 							alternative_tile = swap_data.a8
 
 						tile_map_layer.set_cell(
-							_transform_cell(cell, origin_used_rect, room.transformation) + diff, 
+							_transform_cell(cell, origin_used_rect, target_used_rect, room.transformation), 
 							source_id, 
 							atlas_coord, 
 							alternative_tile
@@ -176,22 +174,23 @@ func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node) -> void:
 func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 	pass
 
-func _transform_cell(cell: Vector2i, used_rect: Rect2i, transformation: int) -> Vector2i:
+func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int) -> Vector2i:
+	var diff := target_used_rect.position - origin_used_rect.position
 	match transformation:
 		0: # Identity
-			return cell
+			return cell + diff
 		1: # Rotate 90
-			return Vector2i(used_rect.size.y - 1 - cell.y, cell.x)
+			return Vector2i(origin_used_rect.size.y - 1 - cell.y, cell.x) + diff
 		2: # Rotate 180
-			return Vector2i(used_rect.size.x - 1 - cell.x, used_rect.size.y - 1 - cell.y)
+			return Vector2i(origin_used_rect.size.x - 1 - cell.x, origin_used_rect.size.y - 1 - cell.y) + diff
 		3: # Rotate 270
-			return Vector2i(cell.y, used_rect.size.x - 1 - cell.x)
+			return Vector2i(cell.y, origin_used_rect.size.x - 1 - cell.x) + diff
 		4: # Mirror X
-			return Vector2i(used_rect.size.x - 1 - cell.x, cell.y)
+			return Vector2i(origin_used_rect.size.x - 1 - cell.x, cell.y) + diff
 		5: # Mirror Y
-			return Vector2i(cell.x, used_rect.size.y - 1 - cell.y)
+			return Vector2i(cell.x, origin_used_rect.size.y - 1 - cell.y) + diff
 		6: # Diagnal 13
-			return Vector2i(cell.y, cell.x)
+			return Vector2i(cell.y, cell.x) + diff
 		7: # Diagonal 24
-			return Vector2i(used_rect.size.y - 1 - cell.y, used_rect.size.x - 1 - cell.x)
-	return cell
+			return Vector2i(origin_used_rect.size.y - 1 - cell.y, origin_used_rect.size.x - 1 - cell.x) + diff
+	return cell + diff
