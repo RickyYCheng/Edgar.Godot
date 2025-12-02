@@ -174,6 +174,7 @@ func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node) -> void:
 func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 	pass
 
+# NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
 func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int) -> Vector2i:
 	var diff := target_used_rect.position - origin_used_rect.position
 	match transformation:
