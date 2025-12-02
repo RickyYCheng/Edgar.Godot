@@ -4,6 +4,7 @@
 "col": The main brick layer of the map.  
 "markers": The marker layer for defining special objects for later use.  
 "lnk": The layer defining the topology of room connections.  
+xxx: Custom layers defined by the user.
 
 ### lnk
 > [!IMPORTANT]
@@ -82,7 +83,8 @@ For example, if you have two tilemaps in Tiled named "Ground" and "Decorations",
 
 ### Signals
 - `post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, tiled_layer: String)`
-- `markers_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, markers: Node)`
+- `marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node)`
+- `custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, layer: Node)`
 
 You can connect to or await these signals to run custom logic after rendering.
 
@@ -97,8 +99,11 @@ func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
 	# Custom per-layer post-processing
 	pass
 
-func _markers_post_process(tile_map_layer: TileMapLayer, markers: Node) -> void:
+func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node) -> void:
 	# Custom marker post-processing
+	pass
+
+func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 	pass
 ```
 - Alternatively, implement hooks directly on a `TileMapLayer`. The renderer will detect and call them:
