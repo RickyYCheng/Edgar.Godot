@@ -27,7 +27,7 @@ func _post_process(base_node: Node2D):
 			tile_size = Vector2(node.tile_set.tile_size)
 	
 	var lnk : Node2D = base_node.get_children().filter(func(node): return node.name == "lnk")[0]
-	
+
 	var boundary : PackedVector2Array
 	var doors : Array[PackedVector2Array]
 	
@@ -73,6 +73,7 @@ func _post_process(base_node: Node2D):
 	
 	base_node.set_meta("lnk", lnk_dict)
 	base_node.set_meta("anchor", anchor)
+	base_node.set_meta("tile_size", tile_size)
 	
 	base_node.remove_child(lnk)
 	lnk.queue_free()
