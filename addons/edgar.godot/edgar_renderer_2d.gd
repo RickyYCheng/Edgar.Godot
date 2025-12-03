@@ -25,6 +25,7 @@ class_name EdgarRenderer2D
 extends Node2D
 
 signal post_process(renderer: EdgarRenderer2D, tile_map_lauer: TileMapLayer, tiled_layer: String)
+## data stores coordinates relative to the tile_map_layer instead of world position.
 signal marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node, data: Variant)
 signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, layer: Node)
 
@@ -158,7 +159,7 @@ func _render() -> void:
 					for marker in child.get_children():
 						var marker_data : Variant = null
 						if marker is Marker2D:
-							var spot_position := _transform_point(marker.position / origin_tile_size, origin_used_rect, target_used_rect, room.transformation) * target_tile_size
+							var spot_position := _transform_point(marker.position / origin_tile_size, origin_used_rect, target_used_rect, room.transformation)
 							marker_data = spot_position
 						elif marker is Line2D:
 							var src_points : PackedVector2Array = marker.points
@@ -167,7 +168,7 @@ func _render() -> void:
 							points.resize(count)
 							var j := 0
 							while j < count:
-								points[j] = _transform_point(src_points[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation) * target_tile_size
+								points[j] = _transform_point(src_points[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation)
 								j += 1
 							
 							marker_data = points
@@ -178,7 +179,7 @@ func _render() -> void:
 							points.resize(count)
 							var j := 0
 							while j < count:
-								points[j] = _transform_point(src_polygon[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation) * target_tile_size
+								points[j] = _transform_point(src_polygon[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation)
 								j += 1
 							
 							marker_data = points
@@ -196,6 +197,7 @@ func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
 	if tile_map_layer.has_method("_post_process"):
 		tile_map_layer._post_process(self, tiled_layer)
 
+## data stores coordinates relative to the tile_map_layer instead of world position.
 func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node, data: Variant) -> void:
 	pass
 
