@@ -25,7 +25,7 @@ class_name EdgarRenderer2D
 extends Node2D
 
 signal post_process(renderer: EdgarRenderer2D, tile_map_lauer: TileMapLayer, tiled_layer: String)
-signal marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node)
+signal marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node, data: Variant)
 signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, layer: Node)
 
 var generator: EdgarGodotGenerator
@@ -60,7 +60,7 @@ func _generate_layout_and_render() -> void:
 
 func _init() -> void:
 	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
-	marker_post_process.connect(func(renderer, tml, marker): _marker_post_process(tml, marker))
+	marker_post_process.connect(func(renderer, tml, marker, data): _marker_post_process(tml, marker, data))
 	custom_post_process.connect(func(renderer, tml, layer): _custom_post_process(tml, layer))
 
 func _render() -> void:
@@ -120,6 +120,8 @@ func _render() -> void:
 				target_used_rect = target_used_rect.expand(_target_pt)
 				i += 1
 			
+			var origin_tile_size := Vector2(tmj.get_meta("origin_tile_size", Vector2i.ONE))
+			var target_tile_size := Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE
 			for child in tmj.get_children():
 				if child is TileMapLayer and child.name == tiled_layer:
 					var origin_tml := child as TileMapLayer
@@ -154,7 +156,33 @@ func _render() -> void:
 						)
 				elif child.name == "markers":
 					for marker in child.get_children():
-						marker_post_process.emit(self, tile_map_layer, marker)
+						var marker_data : Variant = null
+						if marker is Marker2D:
+							var spot_position := _transform_point(marker.position / origin_tile_size, origin_used_rect, target_used_rect, room.transformation) * target_tile_size
+							marker_data = spot_position
+						elif marker is Line2D:
+							var src_points : PackedVector2Array = marker.points
+							var count := src_points.size()
+							var points := PackedVector2Array()
+							points.resize(count)
+							var j := 0
+							while j < count:
+								points[j] = _transform_point(src_points[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation) * target_tile_size
+								j += 1
+							
+							marker_data = points
+						elif marker is Polygon2D:
+							var src_polygon : PackedVector2Array = marker.polygon
+							var count := src_polygon.size()
+							var points := PackedVector2Array()
+							points.resize(count)
+							var j := 0
+							while j < count:
+								points[j] = _transform_point(src_polygon[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation) * target_tile_size
+								j += 1
+							
+							marker_data = points
+						marker_post_process.emit(self, tile_map_layer, marker, marker_data)
 				else:
 					custom_post_process.emit(self, tile_map_layer, child)
 			
@@ -168,7 +196,7 @@ func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
 	if tile_map_layer.has_method("_post_process"):
 		tile_map_layer._post_process(self, tiled_layer)
 
-func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node) -> void:
+func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node, data: Variant) -> void:
 	pass
 
 func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
@@ -195,3 +223,27 @@ func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect:
 		7: # Diagonal 24
 			return Vector2i(origin_used_rect.size.y - 1 - cell.y, origin_used_rect.size.x - 1 - cell.x) + diff
 	return cell + diff
+
+# NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
+func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int) -> Vector2:
+	var diff := Vector2(target_used_rect.position - origin_used_rect.position)
+	var w := float(origin_used_rect.size.x)
+	var h := float(origin_used_rect.size.y)
+	match transformation:
+		0: # Identity
+			return point + diff
+		1: # Rotate 90
+			return Vector2(h - point.y, point.x) + diff
+		2: # Rotate 180
+			return Vector2(w - point.x, h - point.y) + diff
+		3: # Rotate 270
+			return Vector2(point.y, w - point.x) + diff
+		4: # Mirror X
+			return Vector2(w - point.x, point.y) + diff
+		5: # Mirror Y
+			return Vector2(point.x, h - point.y) + diff
+		6: # Diagnal 13
+			return Vector2(point.y, point.x) + diff
+		7: # Diagonal 24
+			return Vector2(h - point.y, w - point.x) + diff
+	return point + diff
