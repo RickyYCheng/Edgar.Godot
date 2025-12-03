@@ -25,21 +25,6 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 - Generates Godot-friendly `Dictionary` layouts utilizing the Kernel's API.
 - Includes a sample renderer for displaying generated maps on `TileMapLayer`.
 
-## Development Roadmap
-- [x] Kernel Standardization: Unified interfaces for both C# and GDExtension implementations
-- [x] Renderer Improvements
-	- [x] Pivot room selection
-	- [x] Partially render (e.g. specific layers, rooms) of the generated layout
-	- [x] Anchor system in pivot rooms for precise positioning
-- [x] Feature parity with Edgar-DotNet
-	- [x] Deterministic generation via seed management
-- [x] Publish on the Godot Asset Library / Store
-- [x] Add examples use concrete tilesets
-- [x] Add outline message for layout.rooms to make rendering more flexible
-- [x] Add support for room transformations
-> === WILL NOT IMPLEMENT CURRENTLY ===
-- [ ] Ability to render 3d maps with 2d layouts
-
 ## Meta Reference
 There are some already in-used fields in the Tiled map's `properties`.  
 They are used to define the room's metadata for Edgar.  
