@@ -3,12 +3,12 @@
 importer="Edgar Graph Importer"
 type="EdgarGraphResource"
 uid="uid://c0bllpgcsxj1o"
-path="res://.godot/imported/level.edgar-graph-7729afd07e0f7c3e807d99dab25653c2.tres"
+path="res://.godot/imported/level.edgar-graph-1f5ddb3f3f6f39706c3db80606450438.tres"
 
 [deps]
 
-source_file="res://level.edgar-graph"
-dest_files=["res://.godot/imported/level.edgar-graph-7729afd07e0f7c3e807d99dab25653c2.tres"]
+source_file="res://examples/shared/level.edgar-graph"
+dest_files=["res://.godot/imported/level.edgar-graph-1f5ddb3f3f6f39706c3db80606450438.tres"]
 
 [params]
 

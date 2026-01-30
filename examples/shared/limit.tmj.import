@@ -2,13 +2,13 @@
 
 importer="YATI"
 type="PackedScene"
-uid="uid://balbn6ypujkdf"
-path="res://.godot/imported/basic.tmj-df75c6dd927ffab52fe5ebe111ceb8b9.tscn"
+uid="uid://b2o6e04ulhyuk"
+path="res://.godot/imported/limit.tmj-f92a0d3696b7b21be32e59a7ec935644.tscn"
 
 [deps]
 
-source_file="res://assets/basic.tmj"
-dest_files=["res://.godot/imported/basic.tmj-df75c6dd927ffab52fe5ebe111ceb8b9.tscn"]
+source_file="res://examples/shared/limit.tmj"
+dest_files=["res://.godot/imported/limit.tmj-f92a0d3696b7b21be32e59a7ec935644.tscn"]
 
 [params]
 

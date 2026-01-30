@@ -4,19 +4,35 @@ using System.Linq;
 
 using Edgar.Geometry;
 using Edgar.GraphBasedGenerator.Grid2D;
-using Edgar.Legacy.Utils.Interfaces;
 
 using Godot;
 using Godot.Collections;
 
 [GlobalClass]
-public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers) : RefCounted
+public partial class EdgarGodotGenerator : RefCounted
 {
-    readonly GraphBasedGeneratorGrid2D<string> _captured_generator = new(GetLevelDescription(nodes, edges, layers));
+    readonly GraphBasedGeneratorGrid2D<string> _captured_generator;
+
+    public EdgarGodotGenerator()
+    {
+        _captured_generator = null;
+    }
+
+    private EdgarGodotGenerator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
+    {
+        var level_description = GetLevelDescription(nodes, edges, layers);
+        if (level_description != null)
+        {
+            _captured_generator = new GraphBasedGeneratorGrid2D<string>(level_description);
+        }
+    }
 
     [Pure]
     private static LevelDescriptionGrid2D<string> GetLevelDescription(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
     {
+        if (nodes == null || edges == null || layers == null)
+            return null;
+
         var level_description = new LevelDescriptionGrid2D<string>();
 
         var layer_templates = new List<List<RoomTemplateGrid2D>>(layers.Count);
@@ -103,6 +119,12 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
 
     public Dictionary generate_layout()
     {
+        if (_captured_generator == null)
+        {
+            GD.PushError("Generator is not initialized. Please provide valid nodes, edges, and layers.");
+            return [];
+        }
+
         var layout = _captured_generator.GenerateLayout();
         if (layout == null) return [];
         // NOTE: keep same with gd-extension version
@@ -130,6 +152,12 @@ public partial class EdgarGodotGenerator(Godot.Collections.Dictionary<string, Di
 
     public void inject_seed(int seed)
     {
+        if (_captured_generator == null)
+        {
+            GD.PushError("Generator is not initialized. Please provide valid nodes, edges, and layers.");
+            return;
+        }
+
         _captured_generator.InjectRandomGenerator(new System.Random(seed));
     }
 }
