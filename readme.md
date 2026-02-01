@@ -24,6 +24,10 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 - 🔄 Kernel Replaceability: Standardized interfaces that are compatible with both `C#` scripts and `GDExtension` versions.
 - Generates Godot-friendly `Dictionary` layouts utilizing the Kernel's API.
 - Includes a sample renderer for displaying generated maps on `TileMapLayer`.
+- 🌑 **Fog of War (FOW)**: Dynamic visibility system that reveals explored areas while hiding unexplored regions.
+- 🗺️ **Minimap**: Real-time minimap display for navigation and overview of generated dungeons.
+
+![FOW & Minimap Demo](docs/images/minimap.png)
 
 ## Meta Reference
 There are some already in-used fields in the Tiled map's `properties`.  
@@ -34,4 +38,4 @@ Firstly, since this project use [YATI](https://github.com/Kiamo2/YATI), please r
 After that, the specific fields for Edgar.Godot can be found in [reference](reference.md).
 
 ## Quick Start
-Please check the default scene.
+Please check the exmaples in the `examples/` folder.
