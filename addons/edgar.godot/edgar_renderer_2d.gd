@@ -24,14 +24,14 @@
 class_name EdgarRenderer2D
 extends Node2D
 
-signal post_process(renderer: EdgarRenderer2D, tile_map_lauer: TileMapLayer, tiled_layer: String)
+signal post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, tiled_layer: String)
 ## data stores coordinates relative to the tile_map_layer instead of world position.
 signal marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node, data: Variant)
 signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, layer: Node)
 
 var generator: EdgarGodotGenerator
-@export_tool_button("Generate Layout") var generate_layout_btn : Callable = _generate_layout_and_render
-@export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = _render
+@export_tool_button("Generate Layout") var generate_layout_btn : Callable = generate_layout_and_render
+@export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = render
 @export var tile_map_layers: Array[TileMapLayer] = []
 @export var level: Resource:
 	get: return level
@@ -49,22 +49,22 @@ var generator: EdgarGodotGenerator
 		if generator != null:
 			generator.inject_seed(seed)
 
-func _generate_layout() -> void:
+func generate_layout() -> void:
 	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer
 		room["is_pivot"] = level.get_meta("nodes")[room.room].is_pivot
 	
-func _generate_layout_and_render() -> void:
-	_generate_layout()
-	_render()
+func generate_layout_and_render() -> void:
+	generate_layout()
+	render()
 
 func _init() -> void:
 	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
 	marker_post_process.connect(func(renderer, tml, marker, data): _marker_post_process(tml, marker, data))
 	custom_post_process.connect(func(renderer, tml, layer): _custom_post_process(tml, layer))
 
-func _render() -> void:
+func render() -> void:
 	if layout == null:
 		printerr("[EdgarGodot] Cannot render: layout is null.")
 		return
