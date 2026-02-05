@@ -75,7 +75,10 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 	if file == null: 
 		return FAILED
 	
-	var json := JSON.parse_string(file.get_as_text())
+	var text := file.get_as_text()
+	var json_obj := JSON.new()
+	var err := json_obj.parse(text)
+	var json := json_obj.data if err == Error.OK else {"edges" = [], "layers" = [], "nodes" = []}
 	
 	var res := Resource.new()
 	
