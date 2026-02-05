@@ -70,20 +70,22 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 	if !FileAccess.file_exists(source_file):
 		printerr("Import file '" + source_file + "' not found!")
 		return ERR_FILE_NOT_FOUND
-	
+
 	var file := FileAccess.open(source_file, FileAccess.READ)
-	if file == null: 
+	if file == null:
 		return FAILED
-	
+
 	var text := file.get_as_text()
 	var json_obj := JSON.new()
 	var err := json_obj.parse(text)
 	var json := json_obj.data if err == Error.OK else {"edges" = [], "layers" = [], "nodes" = []}
-	
+
 	var res := Resource.new()
-	
+	# Store the original source file path for later reference
+	res.set_meta("source_file", source_file)
+
 	var reimport_layers := false
-	
+
 	var layers = []
 	for key in options:
 		if key == "reimport_layers":
@@ -91,11 +93,11 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 		if not options[key] is EdgarLayersResource: continue
 		var files = options[key].files.map(func(uid): return ResourceUID.get_id_path(ResourceUID.text_to_id(uid)))
 		layers.push_back(files)
-	
+
 	res.set_meta("is_edgar_graph", true)
 	res.set_meta("nodes", json["nodes"])
 	res.set_meta("edges", json["edges"])
 	res.set_meta("layers", layers if reimport_layers else json["layers"])
 	var ret := ResourceSaver.save(res, save_path + "." + _get_save_extension())
-	
+
 	return ret

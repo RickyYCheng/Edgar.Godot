@@ -15,6 +15,7 @@ script = ExtResource("1_elojy")
 edgar_graph_node_scene = ExtResource("2_x13w6")
 
 [node name="GraphEdit" type="GraphEdit" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,6 +24,30 @@ grow_horizontal = 2
 grow_vertical = 2
 right_disconnects = true
 show_zoom_label = true
+
+[node name="FilenameButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 10.0
+offset_right = -50.0
+offset_bottom = 42.0
+grow_horizontal = 0
+text = "No File Open"
+
+[node name="AddButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 10.0
+offset_right = -8.0
+offset_bottom = 42.0
+grow_horizontal = 0
+text = "+"
 
 [node name="MenuButton" type="MenuButton" parent="."]
 visible = false
@@ -38,4 +63,6 @@ script = ExtResource("2_fkgkv")
 [connection signal="delete_nodes_request" from="GraphEdit" to="." method="_on_graph_edit_delete_nodes_request"]
 [connection signal="disconnection_request" from="GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
 [connection signal="popup_request" from="GraphEdit" to="." method="_on_graph_edit_popup_request"]
+[connection signal="pressed" from="FilenameButton" to="." method="_on_filename_button_pressed"]
+[connection signal="pressed" from="AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="id_pressed" from="MenuButton" to="." method="_on_menu_button_id_pressed"]
