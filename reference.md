@@ -7,7 +7,7 @@
 xxx: Custom layers defined by the user.
 
 ### lnk
-> [!IMPORTANT]
+> [!IMPORTANT]  
 > `lnk` is used to define the topology of the room connections, which is a object layer.  
 > Only the first object in the layer is considered.  
 
@@ -24,7 +24,7 @@ A valid `Door` should be:
 1. class = "line" (built-in in `YATI`, not `Edgar.Godot`)
 2. property `lnk` = "door"
 
-> [!NOTE]
+> [!NOTE]  
 > The `Door` objects is a polyline with multiple segments.  
 > Each segment is considered as the length of the door.  
 > Example: The total height of the opening is 6, the usable height of a single door is 2. The default segments are [0,2], [2,4], [4,6], so the cooperative movement step between the two rooms is 2.  
@@ -35,7 +35,7 @@ A valid `Door` should be:
 A valid `Anchor` should be:
 1. property `lnk` = "anchor" or name = "Anchor"
 
-> [!NOTE]
+> [!NOTE]  
 > An `Anchor` marks the pivot point of a room.
 > During rendering, the position of each `TileMapLayer` is offset by the anchor of the **pivot room**.
 
@@ -44,7 +44,7 @@ To enable transformations, add the following meta-data to the `lnk` layer:
 1. `transformations`: A string json containing the transformation parameters.
 	- e.g. `[0, 4]`
 
-> [!NOTE]
+> [!NOTE]  
 > 0: Identity  
 > 1: Rotate90  
 > 2: Rotate180  
@@ -58,7 +58,7 @@ To enable transformations, add the following meta-data to the `lnk` layer:
 Most of the time, you would want to re-map / swap the tiles according to the transformation applied to the room.  
 To achieve this, you can use tile meta-data to define the swapping rules.  
 
-> [!IMPORTANT]
+> [!IMPORTANT]  
 > These properties must be defined on the **Tileset** in the **Tiled Map Editor**, specifically on the individual tiles themselves.
 
 For example, `tileswap4` = `Color(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
@@ -114,7 +114,7 @@ func _post_process(renderer: EdgarRenderer2D, tiled_layer: String) -> void:
 	pass
 ```
 
-> [!NOTE]
+> [!NOTE]  
 > Overrides are executed via signals under the hood, so you can still `await` them even when using the override approach.
 
 2) Signal-based (connect handlers)
@@ -128,11 +128,11 @@ To enable a tile filter, add the following meta-data to the target `TileMapLayer
 1. `tile_exceptions`: An `Dictionary[Vector4i, bool]` to filter the tiles that you do not want to render.  
 2. `tile_inclusions`: An `Dictionary[Vector4i, bool]` to filter the tiles that you do **only** want to render.  
 
-> [!NOTE]
+> [!NOTE]  
 > You can only use either `tile_exceptions` or `tile_inclusions` at a time.  
 > If both are provided, only `tile_inclusions` will be considered.  
 
-> [!IMPORTANT]
+> [!IMPORTANT]  
 > The key of the dictionaries should be a `Vector4i` representing the tile's source ID and alternative tile, formatted as `(source_id: int, atlas_coord: Vector2i, alternative_tile: int)`.  
 
 ### Room Filters
@@ -140,7 +140,7 @@ To enable a room filter, add the following meta-data to the target `TileMapLayer
 1. `room_exceptions`: An `Dictionary[String, bool]` to filter the rooms that you do not want to render.  
 2. `room_inclusions`: An `Dictionary[String, bool]` to filter the rooms that you do **only** want to render.
 
-> [!NOTE]
+> [!NOTE]  
 > You can only use either `room_exceptions` or `room_inclusions` at a time.  
 > If both are provided, only `room_inclusions` will be considered.  
 
