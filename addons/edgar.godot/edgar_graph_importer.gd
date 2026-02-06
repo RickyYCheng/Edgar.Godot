@@ -80,7 +80,7 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 	var err := json_obj.parse(text)
 	var json := json_obj.data if err == Error.OK else {"edges" = [], "layers" = [], "nodes" = []}
 
-	var res := Resource.new()
+	var res := EdgarGraphResource.new()
 	# Store the original source file path for later reference
 	res.set_meta("source_file", source_file)
 

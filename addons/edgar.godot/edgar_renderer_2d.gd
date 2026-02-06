@@ -33,7 +33,7 @@ var generator: EdgarGodotGenerator
 @export_tool_button("Generate Layout") var generate_layout_btn : Callable = generate_layout_and_render
 @export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = render
 @export var tile_map_layers: Array[TileMapLayer] = []
-@export var level: Resource:
+@export var level: EdgarGraphResource:
 	get: return level
 	set(v):
 		if v == null:
