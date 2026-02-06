@@ -5,13 +5,13 @@
 [ext_resource type="PackedScene" uid="uid://bcrt34q8x2dta" path="res://addons/edgar.godot/graph_edit/EdgarGraphNode.tscn" id="2_x13w6"]
 
 [node name="EdgarGraphEdit" type="Control"]
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-custom_minimum_size = Vector2(0, 180)
 script = ExtResource("1_elojy")
 edgar_graph_node_scene = ExtResource("2_x13w6")
 
@@ -26,44 +26,42 @@ grow_vertical = 2
 right_disconnects = true
 show_zoom_label = true
 
-[node name="FilenameButton" type="Button" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -260.0
+offset_left = -185.0
 offset_top = 10.0
-offset_right = -50.0
+offset_right = -10.0
 offset_bottom = 42.0
 grow_horizontal = 0
-text = "No File Open"
+alignment = 2
 
-[node name="AddButton" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
-offset_top = 10.0
-offset_right = -8.0
-offset_bottom = 42.0
-grow_horizontal = 0
-text = "+"
+[node name="FilenameButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Open File"
+
+[node name="AddButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Create File"
 
 [node name="MenuButton" type="MenuButton" parent="."]
 visible = false
 layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
-item_count = 1
+item_count = 2
 popup/item_0/text = "Add Room Node"
 popup/item_0/id = 0
+popup/item_1/text = "Delete Node"
+popup/item_1/id = 1
 script = ExtResource("2_fkgkv")
 
 [connection signal="connection_request" from="GraphEdit" to="." method="_on_graph_edit_connection_request"]
 [connection signal="delete_nodes_request" from="GraphEdit" to="." method="_on_graph_edit_delete_nodes_request"]
 [connection signal="disconnection_request" from="GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
 [connection signal="popup_request" from="GraphEdit" to="." method="_on_graph_edit_popup_request"]
-[connection signal="pressed" from="FilenameButton" to="." method="_on_filename_button_pressed"]
-[connection signal="pressed" from="AddButton" to="." method="_on_add_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/FilenameButton" to="." method="_on_filename_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
 [connection signal="id_pressed" from="MenuButton" to="." method="_on_menu_button_id_pressed"]

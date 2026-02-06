@@ -26,8 +26,8 @@ extends Control
 
 @onready var graph_edit: GraphEdit = $GraphEdit
 @onready var menu_button: MenuButton = $MenuButton
-@onready var filename_button: Button = $FilenameButton
-@onready var add_button: Button = $AddButton
+@onready var filename_button: Button = $HBoxContainer/FilenameButton
+@onready var add_button: Button = $HBoxContainer/AddButton
 
 @export var edgar_graph_node_scene : PackedScene
 var _graph_resource : Resource
@@ -140,9 +140,32 @@ func _connect_edges_deferred(edges: Array) -> void:
 			graph_edit.connect_node(connection.from_node, 0, connection.to_node, 0)
 
 func _on_menu_button_id_pressed(id: int) -> void:
-	if id == 0: _add_new_node()
+	match id:
+		0:  # Add Room Node
+			_add_new_node()
+		1:  # Delete Node
+			# Delete selected nodes
+			var nodes_to_delete : Array[StringName] = []
+			for node_name in graph_nodes:
+				if graph_nodes[node_name].is_selected():
+					nodes_to_delete.append(node_name)
+			if nodes_to_delete.size() > 0:
+				_remove_all_nodes(nodes_to_delete)
 
 func _on_graph_edit_popup_request(at_position: Vector2) -> void:
+	# Check if any node is selected
+	var has_selection := false
+	for node in graph_nodes.values():
+		if node.is_selected():
+			has_selection = true
+			break
+
+	# Update menu item visibility based on selection
+	var popup := menu_button.get_popup()
+	popup.set_item_disabled(0, false)  # "Add Room Node" is always available
+	popup.set_item_disabled(1, not has_selection)  # "Delete Node" only when has selection
+
+	# Show menu at clicked position
 	menu_button.position = at_position + Vector2(0, -menu_button.size.y)
 	menu_button.show_popup()
 
@@ -158,7 +181,13 @@ func _add_new_node(node_name:String="") -> GraphNode:
 	)
 	graph_edit.add_child(node, true)
 
-	node.room_name = node_name
+	# Use provided name or let Godot generate a unique name
+	if not node_name.is_empty():
+		node.room_name = node_name
+	else:
+		# Godot already assigned a unique name like @GraphNode@123
+		# Just use it as the room name
+		node.room_name = node.name
 
 	node.position_offset = (menu_button.position + graph_edit.scroll_offset) / graph_edit.zoom
 	if graph_edit.snapping_enabled:
@@ -214,7 +243,7 @@ func _update_visibility() -> void:
 	if has_resource:
 		filename_button.text = _original_file_path if _original_file_path != "" else "Unknown File"
 	else:
-		filename_button.text = "No File Open"
+		filename_button.text = "Open File"
 
 func _on_add_button_pressed() -> void:
 	# Open file dialog to create new .edgar-graph file
