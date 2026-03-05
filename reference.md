@@ -85,6 +85,7 @@ For example, if you have two tilemaps in Tiled named "Ground" and "Decorations",
 - `post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, tiled_layer: String)`
 - `marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node, data: Variant)`
 - `custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, layer: Node)`
+- `clear_tiles(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer)`
 
 You can connect to or await these signals to run custom logic after rendering.
 
@@ -105,6 +106,11 @@ func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node, data: Vari
 
 func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 	pass
+
+func _clear_tiles(tile_map_layer: TileMapLayer) -> void:
+	# Custom tile clearing behavior
+	# Default implementation: tile_map_layer.clear()
+	pass
 ```
 - Alternatively, implement hooks directly on a `TileMapLayer`. The renderer will detect and call them:
 ```gdscript
@@ -117,8 +123,22 @@ func _post_process(renderer: EdgarRenderer2D, tiled_layer: String) -> void:
 > [!NOTE]  
 > Overrides are executed via signals under the hood, so you can still `await` them even when using the override approach.
 
+When overriding `_clear_tiles`, call `clear(tile_map_layer)` in your implementation if you want to emit the signal and allow other handlers to run as well.
+
 2) Signal-based (connect handlers)
 
+> [!NOTE]  
+> If you connect to the `clear_tiles` signal, the default clearing behavior will still run because the default handler is already connected.  
+
+To fully override the default behavior without overriding the method, you must disconnect the default connection first:
+
+```gdscript
+for conn in renderer.clear_tiles.get_connections():
+	renderer.clear_tiles.disconnect(conn.callable) # or concrete connection that you want
+
+# Connects to your own handler
+renderer.clear_tiles.connect(_my_custom_clear_method)
+```
 
 ## Filters
 A filter is a set of conditions to determine which tiles or rooms should be rendered in the final map. This is especially useful when you have multiple layers in Tiled but only want to render specific parts in Godot, e.g., multi-layered tilemaps.  

@@ -34,6 +34,7 @@ signal post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, til
 ## data stores coordinates relative to the tile_map_layer instead of world position.
 signal marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node, data: Variant)
 signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, layer: Node)
+signal clear_tiles(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer)
 
 var generator: EdgarGodotGenerator
 var anchor_offset: Vector2
@@ -70,6 +71,7 @@ func _init() -> void:
 	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
 	marker_post_process.connect(func(renderer, tml, marker, data): _marker_post_process(tml, marker, data))
 	custom_post_process.connect(func(renderer, tml, layer): _custom_post_process(tml, layer))
+	clear_tiles.connect(func(renderer, tml): _clear_tiles(tml))
 
 func render() -> void:
 	if layout == null:
@@ -77,7 +79,7 @@ func render() -> void:
 		return
 	
 	for tile_map_layer in tile_map_layers:
-		tile_map_layer.clear()
+		clear(tile_map_layer)
 		var position_offset := Vector2.ZERO
 		for room in layout.rooms:
 			if position_offset != Vector2.ZERO:
@@ -232,6 +234,9 @@ func _marker_post_process(tile_map_layer: TileMapLayer, marker: Node, data: Vari
 func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 	pass
 
+func _clear_tiles(tile_map_layer: TileMapLayer) -> void:
+	tile_map_layer.clear()
+
 # NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
 func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int, cell_offset: Vector2i = Vector2i.ZERO) -> Vector2i:
 	var diff := target_used_rect.position - origin_used_rect.position
@@ -277,3 +282,6 @@ func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect
 		7: # Diagonal 24
 			return Vector2(h - point.y, w - point.x) + diff + Vector2(cell_offset)
 	return point + diff + Vector2(cell_offset)
+
+func clear(tile_map_layer: TileMapLayer) -> void:
+	clear_tiles.emit(self, tile_map_layer)

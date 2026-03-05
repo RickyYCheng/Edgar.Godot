@@ -10,7 +10,7 @@ func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
 		var slopes_l := tile_map_layer.get_used_cells_by_id(0, Vector2(3, 0))
 		var slopes_r := tile_map_layer.get_used_cells_by_id(0, Vector2(4, 0))
 		
-		tile_map_layer.clear()
+		clear(tile_map_layer)
 		
 		if tiled_layer == "col":
 			# NOTE: just ignore tile/room exceptions/inclusions here for simplicity
