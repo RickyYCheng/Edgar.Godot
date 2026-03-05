@@ -99,17 +99,8 @@ func _on_edgar_renderer_2d_post_process(renderer: EdgarRenderer2D, tile_map_laye
 	var fow_width := int(aabb_tile.size.x * tile_size.x)
 	var fow_height := int(aabb_tile.size.y * tile_size.y)
 
-	# Calculate target AABB in world space
-	var target_world_min := Vector2(min_x, min_y) * Vector2(tile_size)
-	var target_world_max := Vector2(max_x, max_y) * Vector2(tile_size)
-	var target_rect := Rect2(target_world_min, target_world_max - target_world_min)
-
 	# Update FogOfWar dimensions
+	# TODO: should modify position since the size was changed
 	fog_of_war.tile_size = int(tile_size.x)
 	fog_of_war.width = fow_width
 	fog_of_war.height = fow_height
-
-	# Align FogOfWar with target rect
-	var fow_rect: Rect2 = fog_of_war.get_global_rect()
-	var position_offset: Vector2 = target_rect.position - fow_rect.position
-	fog_of_war.global_position += position_offset

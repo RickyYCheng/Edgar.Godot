@@ -124,7 +124,7 @@ metadata/tiled_layer = "col"
 
 [node name="FogOfWarSprite2D" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_rfljf")
-position = Vector2(576, -228)
+position = Vector2(560, -208)
 script = ExtResource("2_xnobl")
 tile_size = 16
 fog_show_shader = ExtResource("3_a8le1")

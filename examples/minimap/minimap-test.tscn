@@ -129,6 +129,7 @@ metadata/tiled_layer = "col"
 [node name="FogOfWarSprite2D" type="Sprite2D" parent="."]
 visibility_layer = 2
 material = SubResource("ShaderMaterial_l386c")
+position = Vector2(560, -208)
 script = ExtResource("5_tjrem")
 fog_show_shader = ExtResource("6_lcq56")
 fog_blur_shader = ExtResource("4_mf1c0")
