@@ -85,22 +85,28 @@ func _on_edgar_renderer_2d_post_process(renderer: EdgarRenderer2D, tile_map_laye
 		var outline := room.outline as PackedVector2Array
 		var tf := Transform2D(0, pos + tile_map_layer.global_position / Vector2(tile_size))
 		var poly := tf * outline
-
+		
 		for point in poly:
 			min_x = min(min_x, point.x)
 			min_y = min(min_y, point.y)
 			max_x = max(max_x, point.x)
 			max_y = max(max_y, point.y)
-
+	
+	min_x += renderer.anchor_offset.x
+	min_y += renderer.anchor_offset.y
+	max_x += renderer.anchor_offset.x
+	max_y += renderer.anchor_offset.y
+	
 	# Create AABB in tile coordinates
 	var aabb_tile := Rect2(min_x, min_y, max_x - min_x, max_y - min_y)
-
+	
 	# Calculate pixel dimensions
 	var fow_width := int(aabb_tile.size.x * tile_size.x)
 	var fow_height := int(aabb_tile.size.y * tile_size.y)
-
+	
 	# Update FogOfWar dimensions
-	# TODO: should modify position since the size was changed
 	fog_of_war.tile_size = int(tile_size.x)
 	fog_of_war.width = fow_width
 	fog_of_war.height = fow_height
+	
+	fog_of_war.position = Vector2(min_x, min_y) * Vector2(tile_size) + int(fog_of_war.centered) * Vector2(fog_of_war.width, fog_of_war.height) * 0.5
