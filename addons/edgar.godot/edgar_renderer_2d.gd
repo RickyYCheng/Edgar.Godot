@@ -24,14 +24,22 @@
 class_name EdgarRenderer2D
 extends Node2D
 
+enum AnchorOffsetMode {
+	OFFSET_CELL_COORD,
+	OFFSET_TILEMAP,
+	OFFSET_TILEMAP_AND_FOLLOW_RENDERER,
+}
+
 signal post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, tiled_layer: String)
 ## data stores coordinates relative to the tile_map_layer instead of world position.
 signal marker_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, marker: Node, data: Variant)
 signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, layer: Node)
 
 var generator: EdgarGodotGenerator
-@export_tool_button("Generate Layout") var generate_layout_btn : Callable = generate_layout_and_render
+var anchor_offset: Vector2
+@export_tool_button("Generate Layout") var generate_layout_btn : Callable = generate_layout
 @export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = render
+@export var anchor_offset_mode: AnchorOffsetMode = AnchorOffsetMode.OFFSET_CELL_COORD
 @export var tile_map_layers: Array[TileMapLayer] = []
 @export var level: EdgarGraphResource:
 	get: return level
@@ -49,15 +57,14 @@ var generator: EdgarGodotGenerator
 		if generator != null:
 			generator.inject_seed(seed)
 
-func generate_layout() -> void:
+func generate_layout(_render: bool = true) -> void:
 	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer
 		room["is_pivot"] = level.get_meta("nodes")[room.room].is_pivot
 	
-func generate_layout_and_render() -> void:
-	generate_layout()
-	render()
+	if _render:
+		render()
 
 func _init() -> void:
 	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
@@ -85,16 +92,37 @@ func render() -> void:
 		var tile_inclusions := tile_map_layer.get_meta("tile_inclusions", {}) as Dictionary
 		
 		var tiled_layer := tile_map_layer.get_meta("tiled_layer", tile_map_layer.name)
+		var tile_size := Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE
+		
+		for room in layout.rooms:
+			if room.is_pivot:
+				var room_template = load(room.template)
+				var tmj: Node = room_template.instantiate()
+				var anchor = tmj.get_meta("anchor", Vector2.ZERO)
+				position_offset += anchor
+				tmj.queue_free()
+				break
+		
+		var cell_offset := Vector2i.ZERO
+		match anchor_offset_mode:
+			AnchorOffsetMode.OFFSET_CELL_COORD:
+				cell_offset = Vector2i(-position_offset)
+		
+		match anchor_offset_mode:
+			AnchorOffsetMode.OFFSET_TILEMAP:
+				tile_map_layer.position = -position_offset * tile_size
+				anchor_offset = -position_offset
+			AnchorOffsetMode.OFFSET_TILEMAP_AND_FOLLOW_RENDERER:
+				var renderer_offset := self.position - Vector2(position_offset) * tile_size
+				tile_map_layer.position = renderer_offset
+				anchor_offset = self.position / tile_size - position_offset
+			AnchorOffsetMode.OFFSET_CELL_COORD:
+				tile_map_layer.position = Vector2.ZERO
+				anchor_offset = -position_offset
 		
 		for room in layout.rooms:
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
-			
-			if room.is_pivot:
-				var anchor = tmj.get_meta("anchor", Vector2.ZERO)
-				position_offset += anchor
-			
-			tile_map_layer.position = -position_offset * (Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE)
 			
 			if not room_inclusions.is_empty():
 				if room_inclusions.get(room.room, false) == false:
@@ -150,7 +178,7 @@ func render() -> void:
 							alternative_tile = swap_data.a8
 
 						tile_map_layer.set_cell(
-							_transform_cell(cell, origin_used_rect, target_used_rect, room.transformation), 
+							_transform_cell(cell, origin_used_rect, target_used_rect, room.transformation, cell_offset), 
 							source_id, 
 							atlas_coord, 
 							alternative_tile
@@ -159,7 +187,7 @@ func render() -> void:
 					for marker in child.get_children():
 						var marker_data : Variant = null
 						if marker is Marker2D:
-							var spot_position := _transform_point(marker.position / origin_tile_size, origin_used_rect, target_used_rect, room.transformation)
+							var spot_position := _transform_point(marker.position / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, cell_offset)
 							marker_data = spot_position
 						elif marker is Line2D:
 							var src_points : PackedVector2Array = marker.points
@@ -168,7 +196,7 @@ func render() -> void:
 							points.resize(count)
 							var j := 0
 							while j < count:
-								points[j] = _transform_point(src_points[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation)
+								points[j] = _transform_point(src_points[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, cell_offset)
 								j += 1
 							
 							marker_data = points
@@ -179,7 +207,7 @@ func render() -> void:
 							points.resize(count)
 							var j := 0
 							while j < count:
-								points[j] = _transform_point(src_polygon[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation)
+								points[j] = _transform_point(src_polygon[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, cell_offset)
 								j += 1
 							
 							marker_data = points
@@ -205,47 +233,47 @@ func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 	pass
 
 # NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
-func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int) -> Vector2i:
+func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int, cell_offset: Vector2i = Vector2i.ZERO) -> Vector2i:
 	var diff := target_used_rect.position - origin_used_rect.position
 	match transformation:
 		0: # Identity
-			return cell + diff
+			return cell + diff + cell_offset
 		1: # Rotate 90
-			return Vector2i(origin_used_rect.size.y - 1 - cell.y, cell.x) + diff
+			return Vector2i(origin_used_rect.size.y - 1 - cell.y, cell.x) + diff + cell_offset
 		2: # Rotate 180
-			return Vector2i(origin_used_rect.size.x - 1 - cell.x, origin_used_rect.size.y - 1 - cell.y) + diff
+			return Vector2i(origin_used_rect.size.x - 1 - cell.x, origin_used_rect.size.y - 1 - cell.y) + diff + cell_offset
 		3: # Rotate 270
-			return Vector2i(cell.y, origin_used_rect.size.x - 1 - cell.x) + diff
+			return Vector2i(cell.y, origin_used_rect.size.x - 1 - cell.x) + diff + cell_offset
 		4: # Mirror X
-			return Vector2i(origin_used_rect.size.x - 1 - cell.x, cell.y) + diff
+			return Vector2i(origin_used_rect.size.x - 1 - cell.x, cell.y) + diff + cell_offset
 		5: # Mirror Y
-			return Vector2i(cell.x, origin_used_rect.size.y - 1 - cell.y) + diff
+			return Vector2i(cell.x, origin_used_rect.size.y - 1 - cell.y) + diff + cell_offset
 		6: # Diagnal 13
-			return Vector2i(cell.y, cell.x) + diff
+			return Vector2i(cell.y, cell.x) + diff + cell_offset
 		7: # Diagonal 24
-			return Vector2i(origin_used_rect.size.y - 1 - cell.y, origin_used_rect.size.x - 1 - cell.x) + diff
-	return cell + diff
+			return Vector2i(origin_used_rect.size.y - 1 - cell.y, origin_used_rect.size.x - 1 - cell.x) + diff + cell_offset
+	return cell + diff + cell_offset
 
 # NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
-func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int) -> Vector2:
+func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int, cell_offset: Vector2i = Vector2i.ZERO) -> Vector2:
 	var diff := Vector2(target_used_rect.position - origin_used_rect.position)
 	var w := float(origin_used_rect.size.x)
 	var h := float(origin_used_rect.size.y)
 	match transformation:
 		0: # Identity
-			return point + diff
+			return point + diff + Vector2(cell_offset)
 		1: # Rotate 90
-			return Vector2(h - point.y, point.x) + diff
+			return Vector2(h - point.y, point.x) + diff + Vector2(cell_offset)
 		2: # Rotate 180
-			return Vector2(w - point.x, h - point.y) + diff
+			return Vector2(w - point.x, h - point.y) + diff + Vector2(cell_offset)
 		3: # Rotate 270
-			return Vector2(point.y, w - point.x) + diff
+			return Vector2(point.y, w - point.x) + diff + Vector2(cell_offset)
 		4: # Mirror X
-			return Vector2(w - point.x, point.y) + diff
+			return Vector2(w - point.x, point.y) + diff + Vector2(cell_offset)
 		5: # Mirror Y
-			return Vector2(point.x, h - point.y) + diff
+			return Vector2(point.x, h - point.y) + diff + Vector2(cell_offset)
 		6: # Diagnal 13
-			return Vector2(point.y, point.x) + diff
+			return Vector2(point.y, point.x) + diff + Vector2(cell_offset)
 		7: # Diagonal 24
-			return Vector2(h - point.y, w - point.x) + diff
-	return point + diff
+			return Vector2(h - point.y, w - point.x) + diff + Vector2(cell_offset)
+	return point + diff + Vector2(cell_offset)

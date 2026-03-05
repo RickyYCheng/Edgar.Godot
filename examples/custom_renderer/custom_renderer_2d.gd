@@ -41,7 +41,10 @@ func _post_process(tile_map_layer: TileMapLayer, tiled_layer: String) -> void:
 # so the inner boundary is what we want
 # This depends on your implement / constrain details
 func get_room_cells(room: Dictionary) -> Array:
-	var _position = room.position
+	var _position := room.position as Vector2
+	match anchor_offset_mode:
+		AnchorOffsetMode.OFFSET_CELL_COORD:
+			_position += anchor_offset
 	var _outline := room.outline as PackedVector2Array
 	var _take_cnt := 0
 	match int(room.edgar_layer):
