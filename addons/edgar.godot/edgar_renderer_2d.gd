@@ -80,12 +80,12 @@ func render() -> void:
 	
 	for tile_map_layer in tile_map_layers:
 		clear(tile_map_layer)
-		var position_offset := Vector2.ZERO
+		var coord_offset := Vector2.ZERO
 		for room in layout.rooms:
-			if position_offset != Vector2.ZERO:
+			if coord_offset != Vector2.ZERO:
 				break
 			if room.is_pivot: 
-				position_offset = room.position
+				coord_offset = room.position
 		
 		var room_exceptions := tile_map_layer.get_meta("room_exceptions", {})
 		var room_inclusions := tile_map_layer.get_meta("room_inclusions", {})
@@ -101,26 +101,25 @@ func render() -> void:
 				var room_template = load(room.template)
 				var tmj: Node = room_template.instantiate()
 				var anchor = tmj.get_meta("anchor", Vector2.ZERO)
-				position_offset += anchor
+				coord_offset += anchor
 				tmj.queue_free()
 				break
 		
 		var cell_offset := Vector2i.ZERO
 		match anchor_offset_mode:
 			AnchorOffsetMode.OFFSET_CELL_COORD:
-				cell_offset = Vector2i(-position_offset)
+				cell_offset = Vector2i(-coord_offset)
 		
 		match anchor_offset_mode:
 			AnchorOffsetMode.OFFSET_TILEMAP:
-				tile_map_layer.position = -position_offset * tile_size
-				anchor_offset = -position_offset
+				tile_map_layer.position = -coord_offset * tile_size
+				anchor_offset = -coord_offset
 			AnchorOffsetMode.OFFSET_TILEMAP_AND_FOLLOW_RENDERER:
-				var renderer_offset := self.position - Vector2(position_offset) * tile_size
+				var renderer_offset := self.position - Vector2(coord_offset) * tile_size
 				tile_map_layer.position = renderer_offset
-				anchor_offset = self.position / tile_size - position_offset
+				anchor_offset = self.position / tile_size - coord_offset
 			AnchorOffsetMode.OFFSET_CELL_COORD:
-				tile_map_layer.position = Vector2.ZERO
-				anchor_offset = -position_offset
+				anchor_offset = -coord_offset
 		
 		for room in layout.rooms:
 			var room_template = load(room.template)
