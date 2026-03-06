@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2023-2025 Roland Helmerichs
+# Copyright (c) 2023-2026 Roland Helmerichs
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -278,8 +278,7 @@ func handle_layer(layer: Dictionary, parent: Node2D):
 		if layer_name != "":
 			_tilemap_layer.name = layer_name
 		_tilemap_layer.visible = layer_visible
-		if layer_offset_x > 0 or layer_offset_y > 0:
-			_tilemap_layer.position = Vector2(layer_offset_x, layer_offset_y)
+		_tilemap_layer.position = Vector2(layer_offset_x, layer_offset_y)
 		if layer_opacity < 1.0 or tint_color != "#ffffff":
 			_tilemap_layer.modulate = Color(tint_color, layer_opacity)
 		_tilemap_layer.tile_set = _tileset
@@ -618,7 +617,8 @@ func create_map_from_data(layer_data: Array, offset_x: int, offset_y: int, map_w
 						var diff_y = tile_size.y - _map_tile_height
 						if diff_y % 2 != 0:
 							diff_y += 1
-						tile_data.texture_origin = Vector2i(-diff_x/2, diff_y/2) - tile_offset
+						tile_data.texture_origin = Vector2i(-diff_x/2, diff_y/2)
+					tile_data.texture_origin -= tile_offset
 					
 					var src_data = atlas_source.get_tile_data(atlas_coords, 0)
 					create_polygons_on_alternative_tiles(src_data, tile_data, alt_id)
@@ -1280,10 +1280,15 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 				var collision_shape = CollisionShape2D.new()
 				co.add_child(collision_shape)
 				collision_shape.owner = _base_node
-				if obj.has("ellipse"):
+				if obj.has("capsule") or obj.has("ellipse"):
 					var capsule_shape = CapsuleShape2D.new()
-					capsule_shape.height = obj_height
-					capsule_shape.radius = obj_width / 2.0
+					if obj_height >= obj_width:
+						capsule_shape.height = obj_height
+						capsule_shape.radius = obj_width / 2.0
+					else:
+						capsule_shape.height = obj_width
+						capsule_shape.radius = obj_height / 2.0
+						obj_rot += 90
 					collision_shape.shape = capsule_shape
 					collision_shape.name = obj_name if obj_name != "" else "Capsule Shape"
 				else: #Rectangle
@@ -1302,9 +1307,14 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 						var scale = float(_map_tile_width) / (float(_map_tile_height) * 2 * cos_a)
 						_iso_scale = Vector2(scale, scale)
 
-					collision_shape.skew = _iso_skew
+					if obj_height >= obj_width or collision_shape.shape is RectangleShape2D:
+						collision_shape.skew = _iso_skew
+						obj_rot += _iso_rot
+					else:
+						collision_shape.skew = -_iso_skew
+						obj_rot += -90 - _iso_rot
+	
 					collision_shape.scale = _iso_scale
-					obj_rot += _iso_rot
 
 				collision_shape.position = transpose_coords(obj_width / 2.0, obj_height / 2.0, true)
 				collision_shape.rotation_degrees = obj_rot
@@ -1316,7 +1326,10 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 				if obj.has("properties"):
 					handle_properties(co, obj["properties"])
 			elif godot_type == _godot_type.NAVIGATION:
-				if obj.has("ellipse"):
+				if obj.has("capsule"):
+					print_rich("[color="+WARNING_COLOR+"] -- Capsule is unusable for NavigationRegion2D. -> Skipped[/color]")
+					CommonUtils.warning_count += 1
+				elif obj.has("ellipse"):
 					print_rich("[color="+WARNING_COLOR+"] -- Ellipse is unusable for NavigationRegion2D. -> Skipped[/color]")
 					CommonUtils.warning_count += 1
 				else:
@@ -1346,7 +1359,10 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 					if obj.has("properties"):
 						handle_properties(nav_region, obj["properties"])
 			elif godot_type == _godot_type.OCCLUDER:
-				if obj.has("ellipse"):
+				if obj.has("capsule"):
+					print_rich("[color="+WARNING_COLOR+"] -- Capsule is unusable for LightOccluder2D. -> Skipped[/color]")
+					CommonUtils.warning_count += 1
+				elif obj.has("ellipse"):
 					print_rich("[color="+WARNING_COLOR+"] -- Ellipse is unusable for LightOccluder2D. -> Skipped[/color]")
 					CommonUtils.warning_count += 1
 				else:
@@ -1367,7 +1383,10 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 					if obj.has("properties"):
 						handle_properties(light_occ, obj["properties"])
 			elif godot_type == _godot_type.POLYGON:
-				if obj.has("ellipse"):
+				if obj.has("capsule"):
+					print_rich("[color="+WARNING_COLOR+"] -- Capsule is unusable for Polygon2D. -> Skipped[/color]")
+					CommonUtils.warning_count += 1
+				elif obj.has("ellipse"):
 					print_rich("[color="+WARNING_COLOR+"] -- Ellipse is unusable for Polygon2D. -> Skipped[/color]")
 					CommonUtils.warning_count += 1
 				else:
@@ -1480,10 +1499,15 @@ func add_collision_shapes(parent: CollisionObject2D, object_group: Dictionary, t
 			collision_shape.position = Vector2(pos_x, pos_y)
 			collision_shape.scale = scale
 			var shape
-			if obj.has("ellipse") and obj["ellipse"]:
+			if (obj.has("capsule") and obj["capsule"]) or (obj.has("ellipse") and obj["ellipse"]):
 				shape = CapsuleShape2D.new()
-				shape.height = h / scale.y
-				shape.radius = w / 2.0 / scale.x
+				if h >= w:
+					shape.height = h / scale.y
+					shape.radius = w / 2.0 / scale.x
+				else:
+					shape.height = w / scale.y
+					shape.radius = h / 2.0 / scale.x
+					rot += 90
 				collision_shape.name = obj_name if obj_name != "" else "Capsule Shape"
 			else:
 				shape = RectangleShape2D.new()
@@ -1502,6 +1526,12 @@ func add_collision_shapes(parent: CollisionObject2D, object_group: Dictionary, t
 
 				var effective_rot = _iso_rot
 				var effective_skew = _iso_skew
+
+				if w > h and shape is CapsuleShape2D:
+					effective_rot = -_iso_rot
+					effective_skew = -_iso_skew
+					rot -= 90
+
 				if flippedH:
 					effective_rot = -effective_rot
 					effective_skew = -effective_skew
