@@ -27,7 +27,6 @@ extends Node2D
 enum AnchorOffsetMode {
 	OFFSET_CELL_COORD,
 	OFFSET_TILEMAP,
-	OFFSET_TILEMAP_AND_FOLLOW_RENDERER,
 }
 
 signal post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer, tiled_layer: String)
@@ -37,7 +36,6 @@ signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLay
 signal clear_tiles(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer)
 
 var generator: EdgarGodotGenerator
-var anchor_offset: Vector2
 @export_tool_button("Generate Layout") var generate_layout_btn : Callable = generate_layout
 @export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = render
 @export var anchor_offset_mode: AnchorOffsetMode = AnchorOffsetMode.OFFSET_CELL_COORD
@@ -57,6 +55,7 @@ var anchor_offset: Vector2
 		seed = sd
 		if generator != null:
 			generator.inject_seed(seed)
+@export var anchor_offset: Vector2
 
 func generate_layout(_render: bool = true) -> void:
 	layout = generator.generate_layout()
@@ -64,6 +63,21 @@ func generate_layout(_render: bool = true) -> void:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer
 		room["is_pivot"] = level.get_meta("nodes")[room.room].is_pivot
 	
+	var pivot_idx := layout.rooms.find_custom(func(r): return r.is_pivot) as int
+	if pivot_idx > 0:
+		var anchor := Vector2.ZERO
+		var pivot_room := layout.rooms[pivot_idx] as Dictionary
+		var pivot_room_template: PackedScene = load(pivot_room.template)
+		var scene_state := pivot_room_template.get_state()
+		for i in scene_state.get_node_property_count(0):
+			var prop_name := scene_state.get_node_property_name(0, i)
+			if prop_name == "metadata/anchor":
+				anchor = scene_state.get_node_property_value(0, i)
+				break
+		
+		var coord_offset: Vector2 = pivot_room.position + anchor
+		anchor_offset = -coord_offset if anchor_offset_mode == AnchorOffsetMode.OFFSET_CELL_COORD else Vector2i.ZERO
+
 	if _render:
 		render()
 
@@ -77,15 +91,9 @@ func render() -> void:
 	if layout == null:
 		printerr("[EdgarGodot] Cannot render: layout is null.")
 		return
-	
+
 	for tile_map_layer in tile_map_layers:
 		clear(tile_map_layer)
-		var coord_offset := Vector2.ZERO
-		for room in layout.rooms:
-			if coord_offset != Vector2.ZERO:
-				break
-			if room.is_pivot: 
-				coord_offset = room.position
 		
 		var room_exceptions := tile_map_layer.get_meta("room_exceptions", {})
 		var room_inclusions := tile_map_layer.get_meta("room_inclusions", {})
@@ -96,31 +104,12 @@ func render() -> void:
 		var tiled_layer := tile_map_layer.get_meta("tiled_layer", tile_map_layer.name)
 		var tile_size := Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE
 		
-		for room in layout.rooms:
-			if room.is_pivot:
-				var room_template = load(room.template)
-				var tmj: Node = room_template.instantiate()
-				var anchor = tmj.get_meta("anchor", Vector2.ZERO)
-				coord_offset += anchor
-				tmj.queue_free()
-				break
-		
-		var cell_offset := Vector2i.ZERO
-		match anchor_offset_mode:
-			AnchorOffsetMode.OFFSET_CELL_COORD:
-				cell_offset = Vector2i(-coord_offset)
-		
 		match anchor_offset_mode:
 			AnchorOffsetMode.OFFSET_TILEMAP:
-				tile_map_layer.position = -coord_offset * tile_size
-				anchor_offset = -coord_offset
-			AnchorOffsetMode.OFFSET_TILEMAP_AND_FOLLOW_RENDERER:
-				var renderer_offset := self.position - Vector2(coord_offset) * tile_size
-				tile_map_layer.position = renderer_offset
-				anchor_offset = self.position / tile_size - coord_offset
+				tile_map_layer.position = anchor_offset * tile_size
 			AnchorOffsetMode.OFFSET_CELL_COORD:
-				anchor_offset = -coord_offset
-		
+				pass
+
 		for room in layout.rooms:
 			var room_template = load(room.template)
 			var tmj: Node = room_template.instantiate()
@@ -179,7 +168,7 @@ func render() -> void:
 							alternative_tile = swap_data.a8
 
 						tile_map_layer.set_cell(
-							_transform_cell(cell, origin_used_rect, target_used_rect, room.transformation, cell_offset), 
+							_transform_cell(cell, origin_used_rect, target_used_rect, room.transformation, anchor_offset), 
 							source_id, 
 							atlas_coord, 
 							alternative_tile
@@ -188,7 +177,7 @@ func render() -> void:
 					for marker in child.get_children():
 						var marker_data : Variant = null
 						if marker is Marker2D:
-							var spot_position := _transform_point(marker.position / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, cell_offset)
+							var spot_position := _transform_point(marker.position / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, anchor_offset)
 							marker_data = spot_position
 						elif marker is Line2D:
 							var src_points : PackedVector2Array = marker.points
@@ -197,7 +186,7 @@ func render() -> void:
 							points.resize(count)
 							var j := 0
 							while j < count:
-								points[j] = _transform_point(src_points[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, cell_offset)
+								points[j] = _transform_point(src_points[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, anchor_offset)
 								j += 1
 							
 							marker_data = points
@@ -208,7 +197,7 @@ func render() -> void:
 							points.resize(count)
 							var j := 0
 							while j < count:
-								points[j] = _transform_point(src_polygon[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, cell_offset)
+								points[j] = _transform_point(src_polygon[j] / origin_tile_size, origin_used_rect, target_used_rect, room.transformation, anchor_offset)
 								j += 1
 							
 							marker_data = points

@@ -118,6 +118,7 @@ layout = {
 }]
 }
 seed = 72
+anchor_offset = Vector2(32, -24)
 metadata/_custom_type_script = "uid://cj8jnjw3vox4m"
 
 [node name="MinimapLayer" type="TileMapLayer" parent="."]

@@ -115,6 +115,7 @@ layout = {
 }]
 }
 seed = 11
+anchor_offset = Vector2(32, -14)
 metadata/_custom_type_script = "uid://cj8jnjw3vox4m"
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
