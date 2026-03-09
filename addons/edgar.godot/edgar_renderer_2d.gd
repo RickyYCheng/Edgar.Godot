@@ -57,7 +57,7 @@ var generator: EdgarGodotGenerator
 			generator.inject_seed(seed)
 @export var anchor_offset: Vector2
 
-func generate_layout(_render: bool = true) -> void:
+func generate_layout() -> void:
 	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer
@@ -77,9 +77,6 @@ func generate_layout(_render: bool = true) -> void:
 		
 		var coord_offset: Vector2 = pivot_room.position + anchor
 		anchor_offset = -coord_offset if anchor_offset_mode == AnchorOffsetMode.OFFSET_CELL_COORD else Vector2i.ZERO
-
-	if _render:
-		render()
 
 func _init() -> void:
 	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
