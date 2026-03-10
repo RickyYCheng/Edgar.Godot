@@ -95,6 +95,9 @@ func render() -> void:
 		var room_exceptions := tile_map_layer.get_meta("room_exceptions", {})
 		var room_inclusions := tile_map_layer.get_meta("room_inclusions", {})
 		
+		var edgar_layer_exceptions := tile_map_layer.get_meta("edgar_layer_exceptions", {})
+		var edgar_layer_inclusions := tile_map_layer.get_meta("edgar_layer_inclusions", {})
+		
 		var tile_exceptions := tile_map_layer.get_meta("tile_exceptions", {}) as Dictionary
 		var tile_inclusions := tile_map_layer.get_meta("tile_inclusions", {}) as Dictionary
 		
@@ -117,6 +120,16 @@ func render() -> void:
 					continue
 			else:
 				if room_exceptions.get(room.room, false) == true:
+					tmj.queue_free()
+					continue
+			
+			var room_edgar_layer: int = int(room.edgar_layer)
+			if not edgar_layer_inclusions.is_empty():
+				if edgar_layer_inclusions.get(room_edgar_layer, false) == false:
+					tmj.queue_free()
+					continue
+			else:
+				if edgar_layer_exceptions.get(room_edgar_layer, false) == true:
 					tmj.queue_free()
 					continue
 			

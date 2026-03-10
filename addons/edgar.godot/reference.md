@@ -164,6 +164,16 @@ To enable a room filter, add the following meta-data to the target `TileMapLayer
 > You can only use either `room_exceptions` or `room_inclusions` at a time.  
 > If both are provided, only `room_inclusions` will be considered.  
 
+### Edgar Layer Filters
+To enable an edgar layer filter (filter by room type), add the following meta-data to the target `TileMapLayer` node of a renderer:  
+1. `edgar_layer_exceptions`: An `Dictionary[int, bool]` to filter the edgar layers that you do not want to render.  
+2. `edgar_layer_inclusions`: An `Dictionary[int, bool]` to filter the edgar layers that you do **only** want to render.
+
+> [!NOTE]  
+> You can only use either `edgar_layer_exceptions` or `edgar_layer_inclusions` at a time.  
+> If both are provided, only `edgar_layer_inclusions` will be considered.  
+> This is useful for filtering rooms by their type (e.g., "BossRoom", "TreasureRoom") rather than individual room instances.
+
 ### Layer filter
 See [col](#col-1) in Renderer section for details.
 
