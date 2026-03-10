@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://ch3t42lnmjlnd"]
+
+[ext_resource type="TileSet" uid="uid://bqe8wtumbebnm" path="res://examples/shared/old_tile_set.tres" id="1_jm624"]
+
+[node name="Payload" type="Node2D"]
+metadata/tile_map_layers = [NodePath("col")]
+
+[node name="col" type="TileMapLayer" parent="."]
+tile_set = ExtResource("1_jm624")
+metadata/room_exceptions = {
+"Room Limit": true
+}
