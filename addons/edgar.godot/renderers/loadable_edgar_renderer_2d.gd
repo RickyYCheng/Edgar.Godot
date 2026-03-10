@@ -7,10 +7,10 @@ extends EdgarRenderer2D
 
 func _notification(what: int) -> void:
 	match what:
+		NOTIFICATION_ENTER_TREE:
+			tile_map_layers = tile_map_layers.filter(is_instance_valid)
 		NOTIFICATION_EXIT_TREE:
-			if Engine.is_editor_hint():
-				unload_content()
-				tile_map_layers = tile_map_layers.filter(func(_node): return _node.is_inside_tree())
+			unload_content()
 
 var _loaded := false
 
@@ -38,11 +38,12 @@ func unload_content() -> void:
 	if not _loaded:
 		return
 
-	var payload := find_child(payload_name, false)
+	var payload := get_node(payload_name)
 	if payload:
 		remove_child(payload)
 		payload.queue_free()
-		_loaded = false
+	
+	_loaded = false
 
 func render() -> void:
 	if not _loaded:
