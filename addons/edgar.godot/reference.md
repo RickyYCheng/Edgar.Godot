@@ -65,7 +65,7 @@ For example, `tileswap4` = `Color(source_id, atlas_x, atlas_y, alternative_tile)
 When a tile is rendered in a room with MirrorX transformation, it will be swapped to the tile defined in the `tileswap4` meta-data.
 
 ### col
-See "col" in Renderer section for details.
+See [col](#col-1) in Renderer section for details.
 
 ## Renderer
 
@@ -165,7 +165,7 @@ To enable a room filter, add the following meta-data to the target `TileMapLayer
 > If both are provided, only `room_inclusions` will be considered.  
 
 ### Layer filter
-See "col" in Renderer section for details.
+See [col](#col-1) in Renderer section for details.
 
 ## Built-in Renderers
 
