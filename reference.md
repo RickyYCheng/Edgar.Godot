@@ -166,3 +166,25 @@ To enable a room filter, add the following meta-data to the target `TileMapLayer
 
 ### Layer filter
 See "col" in Renderer section for details.
+
+## Built-in Renderers
+
+### EdgarRenderer2D
+
+> This is the base class for all 2D renderers in Edgar.Godot. See the [Renderer](#renderer) section for signals, filters, and usage details.
+
+### LoadableEdgarRenderer2D
+
+A loadable renderer that supports dynamic loading and unloading of payloads (typically `PackedScene`) for chunk-based or partition-based rendering.
+
+#### Methods
+
+- `load_content() -> void`: Loads a payload scene into the renderer.
+- `unload_content() -> void`: Unloads a previously loaded payload by its name.
+
+#### Payload Scene Requirements
+
+The **root node** of payload scene must define a `tile_map_layers` metadata property as `Array[NodePath]`. This exposes the renderable references to the renderer, which automatically validates and injects them.
+
+> [!NOTE]  
+> The renderer uses these NodePaths to manage and coordinate tile map layers across loaded payloads.
