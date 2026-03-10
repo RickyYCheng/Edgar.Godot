@@ -35,7 +35,7 @@ They are used to define the room's metadata for Edgar.
 
 Firstly, since this project use [YATI](https://github.com/Kiamo2/YATI), please refer to [YATI's reference](https://github.com/Kiamo2/YATI/blob/main/Reference.md).  
 
-After that, the specific fields for Edgar.Godot can be found in [reference](reference.md).
+After that, the specific fields for Edgar.Godot can be found in [reference](addons/edgar.godot/reference.md).
 
 ## Quick Start
 Please check the exmaples in the `examples/` folder.
