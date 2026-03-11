@@ -30,6 +30,8 @@ func load_content() -> void:
 
 	var tml_paths := payload.get_meta("tile_map_layers", []) as Array
 	var tmls := tml_paths.map(payload.get_node)
+	
+	tile_map_layers = tile_map_layers.filter(is_instance_valid)
 	tile_map_layers.append_array(tmls)
 	
 	_loaded = true
