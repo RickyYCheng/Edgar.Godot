@@ -57,6 +57,12 @@ var generator: EdgarGodotGenerator
 			generator.inject_seed(seed)
 @export var anchor_offset: Vector2
 
+func _init() -> void:
+	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
+	marker_post_process.connect(func(renderer, tml, marker, data): _marker_post_process(tml, marker, data))
+	custom_post_process.connect(func(renderer, tml, layer): _custom_post_process(tml, layer))
+	clear_tiles.connect(func(renderer, tml): _clear_tiles(tml))
+
 func generate_layout() -> void:
 	layout = generator.generate_layout()
 	for room in layout.rooms:
@@ -77,12 +83,6 @@ func generate_layout() -> void:
 		
 		var coord_offset: Vector2 = pivot_room.position + anchor
 		anchor_offset = -coord_offset if anchor_offset_mode == AnchorOffsetMode.OFFSET_CELL_COORD else Vector2i.ZERO
-
-func _init() -> void:
-	post_process.connect(func(renderer, tml, tiled_layer): _post_process(tml, tiled_layer))
-	marker_post_process.connect(func(renderer, tml, marker, data): _marker_post_process(tml, marker, data))
-	custom_post_process.connect(func(renderer, tml, layer): _custom_post_process(tml, layer))
-	clear_tiles.connect(func(renderer, tml): _clear_tiles(tml))
 
 func render() -> void:
 	if layout == null:
