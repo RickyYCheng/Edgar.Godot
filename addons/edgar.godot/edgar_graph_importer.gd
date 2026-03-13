@@ -67,37 +67,61 @@ func _get_import_order() -> int:
 	return 98
 
 func _import(source_file: String, save_path: String, options: Dictionary, platform_variants: Array, gen_files: Array) -> Error:
+	var json := _read_json(source_file, options)
+	if json.is_empty():
+		return FAILED
+
+	if options.get("reimport_layers", false):
+		var write_file := FileAccess.open(source_file, FileAccess.WRITE)
+		if write_file != null:
+			write_file.store_string(JSON.stringify(json, "  "))
+
+	var res := _create_resource(source_file, json)
+	var ret := ResourceSaver.save(res, save_path + "." + _get_save_extension())
+	return ret
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
+func load_from_src(source_file: String) -> EdgarGraphResource:
+	var json := _read_json(source_file, {})
+	if json.is_empty():
+		return null
+	return _create_resource(source_file, json)
+
+func _read_json(source_file: String, options: Dictionary) -> Dictionary:
 	if !FileAccess.file_exists(source_file):
 		printerr("Import file '" + source_file + "' not found!")
-		return ERR_FILE_NOT_FOUND
+		return {}
 
 	var file := FileAccess.open(source_file, FileAccess.READ)
 	if file == null:
-		return FAILED
+		return {}
 
 	var text := file.get_as_text()
 	var json_obj := JSON.new()
 	var err := json_obj.parse(text)
-	var json := json_obj.data if err == Error.OK else {"edges" = [], "layers" = [], "nodes" = []}
+	if err != Error.OK:
+		return {"edges": [], "layers": [], "nodes": []}
 
-	var res := EdgarGraphResource.new()
-	# Store the original source file path for later reference
-	res.set_meta("source_file", source_file)
+	var json: Dictionary = json_obj.data
 
-	var reimport_layers := false
-
-	var layers = []
+	var reimport_layers := options.get("reimport_layers", false)
+	var layers := []
 	for key in options:
-		if key == "reimport_layers":
-			reimport_layers = options[key]
 		if not options[key] is EdgarLayersResource: continue
 		var files = options[key].files.map(func(uid): return ResourceUID.get_id_path(ResourceUID.text_to_id(uid)))
 		layers.push_back(files)
 
+	if reimport_layers and not layers.is_empty():
+		json["layers"] = layers
+
+	return json
+
+func _create_resource(source_file: String, json: Dictionary) -> EdgarGraphResource:
+	var res := EdgarGraphResource.new()
+	res.set_meta("source_file", source_file)
 	res.set_meta("is_edgar_graph", true)
 	res.set_meta("nodes", json["nodes"])
 	res.set_meta("edges", json["edges"])
-	res.set_meta("layers", layers if reimport_layers else json["layers"])
-	var ret := ResourceSaver.save(res, save_path + "." + _get_save_extension())
-
-	return ret
+	res.set_meta("layers", json["layers"])
+	return res
