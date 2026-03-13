@@ -82,13 +82,13 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-func load_from_src(source_file: String) -> EdgarGraphResource:
+static func load_from_src(source_file: String) -> EdgarGraphResource:
 	var json := _read_json(source_file, {})
 	if json.is_empty():
 		return null
 	return _create_resource(source_file, json)
 
-func _read_json(source_file: String, options: Dictionary) -> Dictionary:
+static func _read_json(source_file: String, options: Dictionary) -> Dictionary:
 	if !FileAccess.file_exists(source_file):
 		printerr("Import file '" + source_file + "' not found!")
 		return {}
@@ -117,7 +117,7 @@ func _read_json(source_file: String, options: Dictionary) -> Dictionary:
 
 	return json
 
-func _create_resource(source_file: String, json: Dictionary) -> EdgarGraphResource:
+static func _create_resource(source_file: String, json: Dictionary) -> EdgarGraphResource:
 	var res := EdgarGraphResource.new()
 	res.set_meta("source_file", source_file)
 	res.set_meta("is_edgar_graph", true)
