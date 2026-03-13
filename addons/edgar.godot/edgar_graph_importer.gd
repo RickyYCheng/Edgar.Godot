@@ -82,8 +82,8 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-static func load_from_src(source_file: String) -> EdgarGraphResource:
-	var json := _read_json(source_file, {})
+static func load_from_src(source_file: String, options: Dictionary = {}) -> EdgarGraphResource:
+	var json := _read_json(source_file, options)
 	if json.is_empty():
 		return null
 	return _create_resource(source_file, json)
