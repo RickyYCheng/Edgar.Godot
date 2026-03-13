@@ -82,7 +82,7 @@ func _import(source_file: String, save_path: String, options: Dictionary, platfo
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-static func load_from_src(source_file: String, options: Dictionary = {}) -> EdgarGraphResource:
+static func load_external(source_file: String, options: Dictionary = {}) -> EdgarGraphResource:
 	var json := _read_json(source_file, options)
 	if json.is_empty():
 		return null
