@@ -49,6 +49,9 @@ var generator: EdgarGodotGenerator
 			level = v
 			generator = EdgarGodotGenerator.from_resource(level)
 			generator.inject_seed(seed)
+		if Engine.is_editor_hint():
+			generate_layout_btn = generate_layout
+			rerender_layout_btn = render
 @export var layout: Dictionary
 @export var seed: int:
 	set(sd):
@@ -64,6 +67,9 @@ func _init() -> void:
 	clear_tiles.connect(func(renderer, tml): _clear_tiles(tml))
 
 func generate_layout() -> void:
+	if not level:
+		return
+
 	layout = generator.generate_layout()
 	for room in layout.rooms:
 		room["edgar_layer"] = level.get_meta("nodes")[room.room].edgar_layer

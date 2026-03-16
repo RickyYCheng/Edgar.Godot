@@ -10,7 +10,7 @@
 [node name="LoadableEdgarRenderer2D" type="Node2D" parent="." node_paths=PackedStringArray("tile_map_layers")]
 script = ExtResource("1_kcj1l")
 payload_scene = ExtResource("2_mmwdo")
-tile_map_layers = [NodePath("Unloadable")]
+tile_map_layers = [NodePath("Unloadable"), NodePath("__loadable_edgar_renderer_2d_payload_node___unique_8f3a9b2c__/col")]
 level = ExtResource("2_noq82")
 layout = {
 "rooms": [{
@@ -29,7 +29,7 @@ layout = {
 "from_room": "Room 1",
 "to_room": "Room Limit"
 }],
-"edgar_layer": 0,
+"edgar_layer": 0.0,
 "is_corridor": false,
 "is_pivot": false,
 "outline": [Vector2(16, 16), Vector2(16, 0), Vector2(0, 0), Vector2(0, 16)],
@@ -53,7 +53,7 @@ layout = {
 "from_room": "Room 2",
 "to_room": "Room 3"
 }],
-"edgar_layer": 0,
+"edgar_layer": 0.0,
 "is_corridor": false,
 "is_pivot": false,
 "outline": [Vector2(16, -16), Vector2(0, -16), Vector2(0, 0), Vector2(16, 0)],
@@ -70,7 +70,7 @@ layout = {
 "from_room": "Room 3",
 "to_room": "Room 2"
 }],
-"edgar_layer": 0,
+"edgar_layer": 0.0,
 "is_corridor": false,
 "is_pivot": false,
 "outline": [Vector2(16, 16), Vector2(16, 0), Vector2(0, 0), Vector2(0, 16)],
@@ -87,7 +87,7 @@ layout = {
 "from_room": "Room Limit",
 "to_room": "Room 1"
 }],
-"edgar_layer": 1,
+"edgar_layer": 1.0,
 "is_corridor": false,
 "is_pivot": true,
 "outline": [Vector2(0, 0), Vector2(70, 0), Vector2(70, 60), Vector2(0, 60), Vector2(0, 0), Vector2(-1, 0), Vector2(-1, 61), Vector2(71, 61), Vector2(71, -1), Vector2(0, -1)],
