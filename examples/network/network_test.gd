@@ -9,10 +9,6 @@ extends Node2D
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
-	
-	await get_tree().process_frame
-	edgar_renderer.generate_layout()
-	edgar_renderer.render()
 
 func _input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
