@@ -6,9 +6,51 @@ extends Node2D
 @export var network_manager: NetworkManager
 @export var status_label: Label
 
+var _current_seed: int = 0
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
+	
+	multiplayer.peer_connected.connect(_on_peer_connected)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_EXIT_TREE:
+		if multiplayer.peer_connected.is_connected(_on_peer_connected):
+			multiplayer.peer_connected.disconnect(_on_peer_connected)
+
+func _on_peer_connected(id: int) -> void:
+	if not multiplayer.is_server():
+		return
+	if _current_seed == 0:
+		return
+	
+	network_manager.broadcast_task(
+		_generate_layout_task,
+		{
+			NetworkManager.BroadcastOption.PEERS: [id],
+			NetworkManager.BroadcastOption.HOST_EXECUTES: false,
+			NetworkManager.BroadcastOption.ARGS: [_current_seed]
+		}
+	)
+
+func generate_layout(_seed: int = randi()) -> void:
+	_current_seed = _seed
+	
+	if network_manager.connection_status == MultiplayerPeer.CONNECTION_CONNECTED:
+		if multiplayer.is_server():
+			network_manager.broadcast_task(
+				_generate_layout_task,
+				{NetworkManager.BroadcastOption.ARGS: [_current_seed]}
+			)
+		return
+	
+	_generate_layout_task(_current_seed)
+
+func _generate_layout_task(_seed: int) -> void:
+	edgar_renderer.seed = _seed
+	edgar_renderer.generate_layout()
+	edgar_renderer.render()
 
 func _input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
@@ -18,8 +60,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_G:
-				edgar_renderer.generate_layout()
-				edgar_renderer.render()
+				generate_layout()
 			KEY_H:
 				network_manager.start_server(12345)
 			KEY_J:
