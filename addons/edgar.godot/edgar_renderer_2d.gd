@@ -43,7 +43,7 @@ var generator: EdgarGodotGenerator
 @export var level: EdgarGraphResource:
 	get: return level
 	set(v):
-		if v == null:
+		if not v:
 			level = null
 		if EdgarGodotGenerator.resource_valid(v):
 			level = v
@@ -91,8 +91,8 @@ func generate_layout() -> void:
 		anchor_offset = -coord_offset if anchor_offset_mode == AnchorOffsetMode.OFFSET_CELL_COORD else Vector2i.ZERO
 
 func render() -> void:
-	if layout == null:
-		printerr("[EdgarGodot] Cannot render: layout is null.")
+	if not layout:
+		printerr("[EdgarGodot] Cannot render: layout is null or empty.")
 		return
 
 	for tile_map_layer in tile_map_layers:
