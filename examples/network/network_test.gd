@@ -3,6 +3,7 @@ extends Node2D
 
 @export var camera: Camera2D
 @export var edgar_renderer: EdgarRenderer2D
+
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
