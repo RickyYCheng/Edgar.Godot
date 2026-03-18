@@ -56,7 +56,7 @@ var generator: EdgarGodotGenerator
 @export var seed: int:
 	set(sd):
 		seed = sd
-		if not generator:
+		if generator:
 			generator.inject_seed(seed)
 @export var anchor_offset: Vector2
 

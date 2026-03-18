@@ -16,15 +16,15 @@ layout = {
 "rooms": [{
 "doors": [{
 "door_line": {
-"from": Vector2(16, 4),
+"from": Vector2(16, 6),
 "to": Vector2(16, 3)
 },
 "from_room": "Room 1",
 "to_room": "Room 2"
 }, {
 "door_line": {
-"from": Vector2(0, 12),
-"to": Vector2(0, 13)
+"from": Vector2(0, 11),
+"to": Vector2(0, 14)
 },
 "from_room": "Room 1",
 "to_room": "Room Limit"
@@ -33,7 +33,7 @@ layout = {
 "is_corridor": false,
 "is_pivot": false,
 "outline": [Vector2(16, 16), Vector2(16, 0), Vector2(0, 0), Vector2(0, 16)],
-"position": Vector2(-32, 1),
+"position": Vector2(-32, 0),
 "room": "Room 1",
 "template": "res://examples/shared/basic.tmj",
 "transformation": 0
@@ -41,13 +41,13 @@ layout = {
 "doors": [{
 "door_line": {
 "from": Vector2(0, -13),
-"to": Vector2(0, -12)
+"to": Vector2(0, -10)
 },
 "from_room": "Room 2",
 "to_room": "Room 1"
 }, {
 "door_line": {
-"from": Vector2(16, -4),
+"from": Vector2(16, -2),
 "to": Vector2(16, -5)
 },
 "from_room": "Room 2",
@@ -57,15 +57,15 @@ layout = {
 "is_corridor": false,
 "is_pivot": false,
 "outline": [Vector2(16, -16), Vector2(0, -16), Vector2(0, 0), Vector2(16, 0)],
-"position": Vector2(-16, 17),
+"position": Vector2(-16, 16),
 "room": "Room 2",
 "template": "res://examples/shared/basic.tmj",
 "transformation": 4
 }, {
 "doors": [{
 "door_line": {
-"from": Vector2(0, 12),
-"to": Vector2(0, 13)
+"from": Vector2(0, 11),
+"to": Vector2(0, 14)
 },
 "from_room": "Room 3",
 "to_room": "Room 2"
@@ -82,7 +82,7 @@ layout = {
 "doors": [{
 "door_line": {
 "from": Vector2(0, 54),
-"to": Vector2(0, 53)
+"to": Vector2(0, 51)
 },
 "from_room": "Room Limit",
 "to_room": "Room 1"
@@ -97,7 +97,7 @@ layout = {
 "transformation": 0
 }]
 }
-seed = 11
+seed = 10
 anchor_offset = Vector2(32, -14)
 metadata/_custom_type_script = "uid://cjess7w71ko5d"
 
