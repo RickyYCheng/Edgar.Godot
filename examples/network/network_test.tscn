@@ -1,18 +1,24 @@
-[gd_scene load_steps=7 format=4 uid="uid://guyvp6p4l5p3"]
+[gd_scene load_steps=8 format=4 uid="uid://guyvp6p4l5p3"]
 
 [ext_resource type="Script" uid="uid://r0qucc5odqhp" path="res://examples/custom_renderer/custom_renderer_2d.gd" id="1_bi72j"]
 [ext_resource type="Script" uid="uid://c7bpvrw3xdi8q" path="res://examples/network/network_test.gd" id="1_iseyo"]
 [ext_resource type="TileSet" uid="uid://bqe8wtumbebnm" path="res://examples/shared/old_tile_set.tres" id="2_gtnnp"]
+[ext_resource type="Script" uid="uid://dkhiy1soo3nph" path="res://examples/network/network_manager.gd" id="2_sjdrc"]
 [ext_resource type="Resource" uid="uid://c0bllpgcsxj1o" path="res://examples/shared/level.edgar-graph" id="3_awv7r"]
 [ext_resource type="TileSet" uid="uid://bji5n6816p5ek" path="res://examples/shared/new_tile_set.tres" id="3_iseyo"]
 [ext_resource type="Script" uid="uid://3e6tejkfjcb2" path="res://examples/network/sub_viewport.gd" id="4_gtnnp"]
 
-[node name="NetworkTest" type="Node2D" node_paths=PackedStringArray("camera", "edgar_renderer", "network_manager")]
+[node name="NetworkTest" type="Node2D" node_paths=PackedStringArray("camera", "edgar_renderer", "network_manager", "status_label")]
 visibility_layer = 3
 script = ExtResource("1_iseyo")
 camera = NodePath("Camera2D")
 edgar_renderer = NodePath("EdgarRenderer2D")
-network_manager = NodePath("")
+network_manager = NodePath("NetworkManager")
+status_label = NodePath("CanvasLayer/Control/VBoxContainer/Status")
+
+[node name="NetworkManager" type="Node" parent="."]
+script = ExtResource("2_sjdrc")
+metadata/_custom_type_script = "uid://dkhiy1soo3nph"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(192, -60)
@@ -172,6 +178,26 @@ text = "-: zoom out"
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "G: generate layout"
+
+[node name="Host" type="Label" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "H: start the host"
+
+[node name="Join" type="Label" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "J: start a client"
+
+[node name="Close" type="Label" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "C: close the network connection"
+
+[node name="Status" type="Label" parent="CanvasLayer/Control/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Status: Disconnected"
 
 [node name="ReferenceRect" type="ReferenceRect" parent="CanvasLayer/Control"]
 layout_mode = 1
