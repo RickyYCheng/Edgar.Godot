@@ -6,8 +6,6 @@ extends Node2D
 @export var network_manager: NetworkManager
 @export var status_label: Label
 
-var _current_seed: int = 0
-
 func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
@@ -22,32 +20,31 @@ func _notification(what: int) -> void:
 func _on_peer_connected(id: int) -> void:
 	if not multiplayer.is_server():
 		return
-	if _current_seed == 0:
-		return
 	
 	network_manager.broadcast_task(
 		_generate_layout_task,
 		{
 			NetworkManager.BroadcastOption.PEERS: [id],
 			NetworkManager.BroadcastOption.HOST_EXECUTES: false,
-			NetworkManager.BroadcastOption.ARGS: [_current_seed]
+			NetworkManager.BroadcastOption.ARGS: [edgar_renderer.seed]
 		}
 	)
 
 func generate_layout(_seed: int = randi()) -> void:
-	_current_seed = _seed
-	
 	if network_manager.connection_status == MultiplayerPeer.CONNECTION_CONNECTED:
 		if multiplayer.is_server():
 			network_manager.broadcast_task(
 				_generate_layout_task,
-				{NetworkManager.BroadcastOption.ARGS: [_current_seed]}
+				{NetworkManager.BroadcastOption.ARGS: [_seed]}
 			)
 		return
 	
-	_generate_layout_task(_current_seed)
+	_generate_layout_task(_seed)
 
 func _generate_layout_task(_seed: int) -> void:
+	if edgar_renderer.seed == _seed:
+		return
+	
 	edgar_renderer.seed = _seed
 	edgar_renderer.generate_layout()
 	edgar_renderer.render()

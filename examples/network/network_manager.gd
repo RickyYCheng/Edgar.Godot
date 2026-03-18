@@ -190,8 +190,9 @@ func _on_peer_disconnected(peer_id: int) -> void:
 			_pending_tasks.erase(task_id)
 
 func _process(_delta: float) -> void:
-	if peer and not multiplayer.is_server():
+	if connection_status == MultiplayerPeer.CONNECTION_CONNECTED and multiplayer.is_server():
 		return
+	
 	_check_task_timeouts()
 
 func _check_task_timeouts() -> void:

@@ -27,8 +27,8 @@
       "is_corridor_room": 0.0,
       "is_pivot": false,
       "position_offset": {
-        "x": 80.0,
-        "y": 100.0
+        "x": 180.0,
+        "y": 160.0
       }
     },
     "Room 2": {
@@ -37,7 +37,7 @@
       "is_pivot": false,
       "position_offset": {
         "x": 400.0,
-        "y": 100.0
+        "y": 160.0
       }
     },
     "Room 3": {
@@ -45,8 +45,8 @@
       "is_corridor_room": 0.0,
       "is_pivot": false,
       "position_offset": {
-        "x": 740.0,
-        "y": 100.0
+        "x": 620.0,
+        "y": 160.0
       }
     },
     "Room Limit": {
@@ -55,7 +55,7 @@
       "is_pivot": true,
       "position_offset": {
         "x": 400.0,
-        "y": 320.0
+        "y": 380.0
       }
     }
   }
