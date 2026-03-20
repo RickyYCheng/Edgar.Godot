@@ -13,7 +13,7 @@ config_version=5
 config/name="edgar.godot"
 run/main_scene="uid://c8nqeebmyvxrb"
 config/features=PackedStringArray("4.5", "C#", "GL Compatibility")
-config/icon="res://addons/edgar.godot/icon.svg"
+config/icon="uid://dqf0h3kgid2a2"
 
 [debug]
 

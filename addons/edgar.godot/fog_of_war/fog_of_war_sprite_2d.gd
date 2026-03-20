@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-@tool
+@tool @icon("res://addons/edgar.godot/icons/fog_of_war_sprite_2d.svg")
 class_name FogOfWarSprite2D
 extends Sprite2D
 

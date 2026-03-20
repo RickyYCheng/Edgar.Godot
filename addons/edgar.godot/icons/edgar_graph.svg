@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+    <defs>
+        <linearGradient id="b" x2="0" y1="2" y2="14" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#ff8dbc"/>
+            <stop offset=".4" stop-color="#7260ff"/>
+            <stop offset=".6" stop-color="#7260ff"/>
+            <stop offset="1" stop-color="#74c9ff"/>
+        </linearGradient>
+        <mask id="a" maskUnits="userSpaceOnUse">
+            <path fill="#fff" d="M11 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM6.732 5A2 2 0 0 1 7 6v1.117L9.268 6A2 2 0 0 1 9 5V3.883zM2 5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1zm5 3.883V10a2 2 0 0 1-.268 1L9 12.117V11a2 2 0 0 1 .268-1zM11 10a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
+            
+            <circle cx="2.25" cy="6.25" r=".75" style="fill:#000;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6;stroke-dasharray:none;stroke-opacity:1"/>
+            <circle cx="3.5" cy="8" r=".75" style="fill:#000;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6;stroke-dasharray:none;stroke-opacity:1"/>
+            <circle cx="4.75" cy="9.75" r=".75" style="fill:#000;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6;stroke-dasharray:none;stroke-opacity:1"/>
+            
+            <circle cx="11.25" cy="11.25" r=".75" style="fill:#000;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6;stroke-dasharray:none;stroke-opacity:1"/>
+            <circle cx="13.75" cy="13.75" r=".75" style="fill:#000;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6;stroke-dasharray:none;stroke-opacity:1"/>
+            
+            <circle cx="12.5" cy="3.5" r=".75" style="fill:#000;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6;stroke-dasharray:none;stroke-opacity:1"/>
+        </mask>
+    </defs>
+    <path d="M2 2h12v12H2Z" mask="url(#a)" style="fill:url(#b);fill-opacity:1;stroke:url(#b);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:6;stroke-dasharray:none;stroke-opacity:1"/>
+</svg>

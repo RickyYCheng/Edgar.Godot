@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-@tool
+@tool @icon("res://addons/edgar.godot/icons/edgar_renderer_2d.svg")
 class_name EdgarRenderer2D
 extends Node2D
 

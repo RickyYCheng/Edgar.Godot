@@ -20,6 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-@icon("res://addons/edgar.godot/icon.svg")
+@icon("res://addons/edgar.godot/icons/edgar_graph.svg")
 class_name EdgarGraphResource
 extends Resource
