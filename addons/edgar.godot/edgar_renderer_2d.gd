@@ -36,8 +36,8 @@ signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLay
 signal clear_tiles(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer)
 
 var generator: EdgarGodotGenerator
-@export_tool_button("Generate Layout") var generate_layout_btn : Callable = generate_layout
-@export_tool_button("Rerender Layout") var rerender_layout_btn : Callable = render
+@export_tool_button("Generate Layout") var _generate_layout_btn : Callable = generate_layout
+@export_tool_button("Rerender Layout") var _renderer_layout_btn : Callable = render
 @export var anchor_offset_mode: AnchorOffsetMode = AnchorOffsetMode.OFFSET_CELL_COORD
 @export var tile_map_layers: Array[TileMapLayer] = []
 @export var level: EdgarGraphResource:
@@ -50,8 +50,8 @@ var generator: EdgarGodotGenerator
 			generator = EdgarGodotGenerator.from_resource(level)
 			generator.inject_seed(seed)
 		if Engine.is_editor_hint():
-			generate_layout_btn = generate_layout
-			rerender_layout_btn = render
+			_generate_layout_btn = generate_layout
+			_renderer_layout_btn = render
 @export var layout: Dictionary
 @export var seed: int:
 	set(sd):
