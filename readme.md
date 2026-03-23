@@ -39,3 +39,10 @@ After that, the specific fields for Edgar.Godot can be found in [reference](addo
 
 ## Quick Start
 Please check the exmaples in the `examples/` folder.
+
+## Roadmap
+- [ ] Runtime external loading for tmx/tmj files (currently embedded in C#/GDExtension)
+- [ ] Support Godot scenes as an alternative to Tiled files
+- [ ] 3D renderer support (e.g., GridMap)
+
+> 1. https://github.com/godotengine/godot-proposals/issues/1632
