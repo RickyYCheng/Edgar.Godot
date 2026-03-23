@@ -20,7 +20,7 @@ func _generate_rnd_level_resource() -> EdgarGraphResource:
 	
 	# Randomly generate 1-3 basic rooms using the injected seed
 	var basic_room_count := rng.randi_range(1, 3)
-	var basic_room_names: Array[String] = []
+	var basic_room_names: PackedStringArray = []
 	
 	for i in basic_room_count:
 		var room_name := "Room %d" % (i + 1)
