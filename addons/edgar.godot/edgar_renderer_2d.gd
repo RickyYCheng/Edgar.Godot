@@ -45,10 +45,19 @@ var generator: EdgarGodotGenerator
 	set(v):
 		if not v:
 			level = null
+			generator = null
+			return
+		
 		if EdgarGodotGenerator.resource_valid(v):
 			level = v
 			generator = EdgarGodotGenerator.from_resource(level)
-			generator.inject_seed(seed)
+			if generator:
+				generator.inject_seed(seed)
+		else:
+			level = null
+			generator = null
+			push_error("[EdgarGodot] Invalid level resource provided.")
+		
 		if Engine.is_editor_hint():
 			_generate_layout_btn = generate_layout
 			_renderer_layout_btn = render
@@ -68,6 +77,11 @@ func _init() -> void:
 
 func generate_layout() -> void:
 	if not level:
+		push_error("[EdgarGodot] Cannot generate layout: level is null.")
+		return
+	
+	if not generator:
+		push_error("[EdgarGodot] Cannot generate layout: generator is null. Make sure level resource is valid.")
 		return
 
 	layout = generator.generate_layout()

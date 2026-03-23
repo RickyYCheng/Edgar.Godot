@@ -98,23 +98,36 @@ public partial class EdgarGodotGenerator : RefCounted
             return null;
         }
 
-        var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
-        var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
-        var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
+        try
         {
-            var result = new Godot.Collections.Dictionary<string, Dictionary> { };
-
-            foreach (var name in layer)
+            var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
+            var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
+            var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
             {
-                var tmj = GD.Load<PackedScene>(name);
-                var lnk = tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
-                result.Add(name, lnk);
-            }
+                var result = new Godot.Collections.Dictionary<string, Dictionary> { };
 
-            return result;
-        }));
+                foreach (var name in layer)
+                {
+                    var tmj = GD.Load<PackedScene>(name);
+                    if (tmj == null)
+                    {
+                        GD.PushError($"Failed to load packed scene: {name}");
+                        continue;
+                    }
+                    var lnk = tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
+                    result.Add(name, lnk);
+                }
 
-        return cons(nodes, edges, layers);
+                return result;
+            }));
+
+            return cons(nodes, edges, layers);
+        }
+        catch (System.Exception ex)
+        {
+            GD.PushError($"Failed to create generator from resource: {ex.Message}");
+            return null;
+        }
     }
 
     public Dictionary generate_layout()
