@@ -22,7 +22,7 @@ func _generate_rnd_level_resource() -> EdgarGraphResource:
 	var basic_room_count := rng.randi_range(1, 3)
 	var basic_room_names: Array[String] = []
 	
-	for i in range(basic_room_count):
+	for i in basic_room_count:
 		var room_name := "Room %d" % (i + 1)
 		basic_room_names.append(room_name)
 		nodes[room_name] = {
@@ -41,7 +41,7 @@ func _generate_rnd_level_resource() -> EdgarGraphResource:
 	}
 	
 	# Connect basic rooms linearly
-	for i in range(basic_room_names.size() - 1):
+	for i in basic_room_names.size() - 1:
 		edges.append({
 			"from_node": basic_room_names[i],
 			"to_node": basic_room_names[i + 1]
