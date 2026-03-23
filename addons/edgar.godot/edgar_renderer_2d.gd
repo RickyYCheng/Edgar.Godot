@@ -43,6 +43,10 @@ var generator: EdgarGodotGenerator
 @export var level: EdgarGraphResource:
 	get: return level
 	set(v):
+		# Disconnect from old resource
+		if level and level.changed.is_connected(_on_level_changed):
+			level.changed.disconnect(_on_level_changed)
+		
 		if not v:
 			level = null
 			generator = null
@@ -53,6 +57,8 @@ var generator: EdgarGodotGenerator
 			generator = EdgarGodotGenerator.from_resource(level)
 			if generator:
 				generator.inject_seed(seed)
+			# Connect to new resource's changed signal
+			level.changed.connect(_on_level_changed)
 		else:
 			level = null
 			generator = null
@@ -71,14 +77,13 @@ func _init() -> void:
 	custom_post_process.connect(func(renderer, tml, layer): _custom_post_process(tml, layer))
 	clear_tiles.connect(func(renderer, tml): _clear_tiles(tml))
 
+func _on_level_changed() -> void:
+	generator = EdgarGodotGenerator.from_resource(level)
+
 func generate_layout() -> void:
 	if not level:
 		push_error("[EdgarGodot] Cannot generate layout: level is null.")
 		return
-	
-	# Auto-refresh generator in editor mode to pick up resource changes
-	if Engine.is_editor_hint():
-		generator = EdgarGodotGenerator.from_resource(level)
 	
 	if not generator:
 		push_error("[EdgarGodot] Cannot generate layout: generator is null. Make sure level resource is valid.")
@@ -303,3 +308,8 @@ func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect
 
 func clear(tile_map_layer: TileMapLayer) -> void:
 	clear_tiles.emit(self, tile_map_layer)
+
+func _exit_tree() -> void:
+	# Clean up signal connections
+	if level and level.changed.is_connected(_on_level_changed):
+		level.changed.disconnect(_on_level_changed)

@@ -68,7 +68,6 @@ func save_current_graph() -> void:
 	var nodes_data := {}
 	for node_name in graph_nodes:
 		nodes_data[node_name] = graph_nodes[node_name].get_data()
-	graph_resource.set_meta("nodes", nodes_data)
 
 	# Safely get connections - use get_connection_list() to avoid internal errors
 	var edges_data := []
@@ -76,8 +75,18 @@ func save_current_graph() -> void:
 	for conn in all_conns:
 		edges_data.append({"from_node": conn.from_node, "to_node": conn.to_node})
 
+	# Check if data actually changed
+	var old_nodes = graph_resource.get_meta("nodes", {})
+	var old_edges = graph_resource.get_meta("edges", [])
+	var has_changes: bool = not (nodes_data.hash() == old_nodes.hash() and edges_data.hash() == old_edges.hash())
+
+	graph_resource.set_meta("nodes", nodes_data)
 	graph_resource.set_meta("edges", edges_data)
 	_save_graph_resource()
+
+	# Only emit changed if data actually changed
+	if has_changes:
+		graph_resource.emit_changed()
 
 func _unload_graph_resource() -> void:
 	if graph_resource == null: return
@@ -87,7 +96,6 @@ func _unload_graph_resource() -> void:
 		var nodes_data := {}
 		for node_name in graph_nodes:
 			nodes_data[node_name] = graph_nodes[node_name].get_data()
-		graph_resource.set_meta("nodes", nodes_data)
 
 		# Safely get connections - use get_connection_list() to avoid internal errors
 		var edges_data := []
@@ -95,8 +103,18 @@ func _unload_graph_resource() -> void:
 		for conn in all_conns:
 			edges_data.append({"from_node": conn.from_node, "to_node": conn.to_node})
 
+		# Check if data actually changed
+		var old_nodes = graph_resource.get_meta("nodes", {})
+		var old_edges = graph_resource.get_meta("edges", [])
+		var has_changes: bool = not (nodes_data.hash() == old_nodes.hash() and edges_data.hash() == old_edges.hash())
+
+		graph_resource.set_meta("nodes", nodes_data)
 		graph_resource.set_meta("edges", edges_data)
 		_save_graph_resource()
+
+		# Only emit changed if data actually changed
+		if has_changes:
+			graph_resource.emit_changed()
 
 	# unload
 	_remove_all_nodes(graph_nodes.keys())
