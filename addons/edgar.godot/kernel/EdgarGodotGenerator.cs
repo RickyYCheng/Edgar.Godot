@@ -11,16 +11,33 @@ using Godot.Collections;
 [GlobalClass]
 public partial class EdgarGodotGenerator : RefCounted
 {
-    readonly GraphBasedGeneratorGrid2D<string> _captured_generator;
+    GraphBasedGeneratorGrid2D<string> _captured_generator;
+    Godot.Collections.Dictionary<string, Dictionary> _nodes;
+    Array<Dictionary> _edges;
+    Array<Godot.Collections.Dictionary<string, Dictionary>> _layers;
 
     public EdgarGodotGenerator()
     {
         _captured_generator = null;
+        _nodes = null;
+        _edges = null;
+        _layers = null;
     }
 
     private EdgarGodotGenerator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
     {
-        var level_description = GetLevelDescription(nodes, edges, layers);
+        _captured_generator = null;
+        _nodes = nodes;
+        _edges = edges;
+        _layers = layers;
+    }
+
+    private void ensure_generator()
+    {
+        if (_captured_generator != null)
+            return;
+
+        var level_description = GetLevelDescription(_nodes, _edges, _layers);
         if (level_description != null)
         {
             _captured_generator = new GraphBasedGeneratorGrid2D<string>(level_description);
@@ -132,6 +149,8 @@ public partial class EdgarGodotGenerator : RefCounted
 
     public Dictionary generate_layout()
     {
+        ensure_generator();
+
         if (_captured_generator == null)
         {
             GD.PushError("Generator is not initialized. Please provide valid nodes, edges, and layers.");
@@ -165,6 +184,8 @@ public partial class EdgarGodotGenerator : RefCounted
 
     public void inject_seed(int seed)
     {
+        ensure_generator();
+
         if (_captured_generator == null)
         {
             GD.PushError("Generator is not initialized. Please provide valid nodes, edges, and layers.");
