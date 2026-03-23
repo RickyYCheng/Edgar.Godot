@@ -41,7 +41,7 @@ After that, the specific fields for Edgar.Godot can be found in [reference](addo
 Please check the exmaples in the `examples/` folder.
 
 ## Roadmap
-- ~~Runtime external loading for tmx/tmj files~~  
+- [x] ~~Runtime external loading for tmx/tmj files~~  
   > Implemented via Godot's official pck/zip packaging system
 - [ ] Godot Scene Support — Alternative to Tiled files for room definitions
 - [ ] 3D Renderer Support — Integration with GridMap and other 3D tile systems

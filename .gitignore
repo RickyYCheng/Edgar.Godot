@@ -1,5 +1,6 @@
 opencode.json
 .opencode/
+.sisyphus/
 
 # Godot 4+ specific ignores
 .godot/
