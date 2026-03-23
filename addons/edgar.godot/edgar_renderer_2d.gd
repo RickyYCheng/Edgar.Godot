@@ -90,7 +90,7 @@ func generate_layout() -> void:
 		room["is_pivot"] = level.get_meta("nodes")[room.room].is_pivot
 	
 	var pivot_idx := layout.rooms.find_custom(func(r): return r.is_pivot) as int
-	if pivot_idx > 0:
+	if pivot_idx >= 0:
 		var anchor := Vector2.ZERO
 		var pivot_room := layout.rooms[pivot_idx] as Dictionary
 		var pivot_room_template: PackedScene = load(pivot_room.template)
