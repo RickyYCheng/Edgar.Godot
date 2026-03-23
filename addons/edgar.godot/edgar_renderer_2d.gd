@@ -57,10 +57,6 @@ var generator: EdgarGodotGenerator
 			level = null
 			generator = null
 			push_error("[EdgarGodot] Invalid level resource provided.")
-		
-		if Engine.is_editor_hint():
-			_generate_layout_btn = generate_layout
-			_renderer_layout_btn = render
 @export var layout: Dictionary
 @export var seed: int:
 	set(sd):
@@ -79,6 +75,10 @@ func generate_layout() -> void:
 	if not level:
 		push_error("[EdgarGodot] Cannot generate layout: level is null.")
 		return
+	
+	# Auto-refresh generator in editor mode to pick up resource changes
+	if Engine.is_editor_hint():
+		generator = EdgarGodotGenerator.from_resource(level)
 	
 	if not generator:
 		push_error("[EdgarGodot] Cannot generate layout: generator is null. Make sure level resource is valid.")
