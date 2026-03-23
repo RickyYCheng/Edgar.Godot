@@ -28,7 +28,12 @@ var edgar_graphedit : EdgarGraphEdit
 var edgar_graphedit_button : Button
 
 func _handles(object: Object) -> bool:
-	return object is Resource and object.has_meta("is_edgar_graph")
+	if not (object is Resource and object.has_meta("is_edgar_graph")):
+		return false
+	
+	# Only handle file-based resources, ignore built-in/runtime resources
+	var path: String = object.resource_path
+	return path.ends_with(".edgar-graph")
 
 func _apply_changes() -> void:
 	# Called when user presses Ctrl+S to save
