@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bc4wiey2kc7t1" path="res://addons/edgar.godot/graph_edit/edgar_graphedit_menu_button.gd" id="2_fkgkv"]
 [ext_resource type="PackedScene" uid="uid://bcrt34q8x2dta" path="res://addons/edgar.godot/graph_edit/EdgarGraphNode.tscn" id="2_x13w6"]
 
-[node name="EdgarGraphEdit" type="Control" unique_id=265155571]
+[node name="EdgarGraphEdit" type="Control" unique_id=265155571 node_paths=PackedStringArray("graph_edit", "menu_button", "open_file_button", "create_file_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,6 +14,10 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_elojy")
+graph_edit = NodePath("GraphEdit")
+menu_button = NodePath("GraphEdit/MenuButton")
+open_file_button = NodePath("ButtonsContainer/OpenFileButton")
+create_file_button = NodePath("ButtonsContainer/CreateFileButton")
 edgar_graph_node_scene = ExtResource("2_x13w6")
 
 [node name="GraphEdit" type="GraphEdit" parent="." unique_id=232295725]
@@ -27,27 +31,7 @@ grow_vertical = 2
 right_disconnects = true
 show_zoom_label = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=824000186]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -185.0
-offset_top = 10.0
-offset_right = -10.0
-offset_bottom = 42.0
-grow_horizontal = 0
-alignment = 2
-
-[node name="FilenameButton" type="Button" parent="HBoxContainer" unique_id=340866293]
-layout_mode = 2
-text = "Open File"
-
-[node name="AddButton" type="Button" parent="HBoxContainer" unique_id=1110488755]
-layout_mode = 2
-text = "Create File"
-
-[node name="MenuButton" type="MenuButton" parent="." unique_id=846755603]
+[node name="MenuButton" type="MenuButton" parent="GraphEdit" unique_id=846755603]
 visible = false
 layout_mode = 0
 offset_right = 8.0
@@ -59,10 +43,30 @@ popup/item_1/text = "Delete Node"
 popup/item_1/id = 1
 script = ExtResource("2_fkgkv")
 
+[node name="ButtonsContainer" type="HBoxContainer" parent="." unique_id=824000186]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -185.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 42.0
+grow_horizontal = 0
+alignment = 2
+
+[node name="OpenFileButton" type="Button" parent="ButtonsContainer" unique_id=340866293]
+layout_mode = 2
+text = "Open File"
+
+[node name="CreateFileButton" type="Button" parent="ButtonsContainer" unique_id=1110488755]
+layout_mode = 2
+text = "Create File"
+
 [connection signal="connection_request" from="GraphEdit" to="." method="_on_graph_edit_connection_request"]
 [connection signal="delete_nodes_request" from="GraphEdit" to="." method="_on_graph_edit_delete_nodes_request"]
 [connection signal="disconnection_request" from="GraphEdit" to="." method="_on_graph_edit_disconnection_request"]
 [connection signal="popup_request" from="GraphEdit" to="." method="_on_graph_edit_popup_request"]
-[connection signal="pressed" from="HBoxContainer/FilenameButton" to="." method="_on_filename_button_pressed"]
-[connection signal="pressed" from="HBoxContainer/AddButton" to="." method="_on_add_button_pressed"]
-[connection signal="id_pressed" from="MenuButton" to="." method="_on_menu_button_id_pressed"]
+[connection signal="id_pressed" from="GraphEdit/MenuButton" to="." method="_on_menu_button_id_pressed"]
+[connection signal="pressed" from="ButtonsContainer/OpenFileButton" to="." method="_on_open_file_button_pressed"]
+[connection signal="pressed" from="ButtonsContainer/CreateFileButton" to="." method="_on_create_file_button_pressed"]

@@ -24,10 +24,10 @@
 class_name EdgarGraphEdit
 extends Control
 
-@onready var graph_edit: GraphEdit = $GraphEdit
-@onready var menu_button: MenuButton = $MenuButton
-@onready var filename_button: Button = $HBoxContainer/FilenameButton
-@onready var add_button: Button = $HBoxContainer/AddButton
+@export var graph_edit: GraphEdit
+@export var menu_button: MenuButton
+@export var open_file_button: Button
+@export var create_file_button: Button
 
 @export var edgar_graph_node_scene : PackedScene
 var _graph_resource : Resource
@@ -137,9 +137,9 @@ func _load_graph_resource() -> void:
 
 	# Update filename button text immediately
 	if _original_file_path != "":
-		filename_button.text = _original_file_path
+		open_file_button.text = _original_file_path
 	else:
-		filename_button.text = "Unknown File"
+		open_file_button.text = "Unknown File"
 
 	var nodes = graph_resource.get_meta("nodes")
 	var edges = graph_resource.get_meta("edges")
@@ -259,11 +259,11 @@ func _update_visibility() -> void:
 
 	# FilenameButton and AddButton are always visible
 	if has_resource:
-		filename_button.text = _original_file_path if _original_file_path != "" else "Unknown File"
+		open_file_button.text = _original_file_path if _original_file_path != "" else "Unknown File"
 	else:
-		filename_button.text = "Open File"
+		open_file_button.text = "Open File"
 
-func _on_add_button_pressed() -> void:
+func _on_create_file_button_pressed() -> void:
 	# Open file dialog to create new .edgar-graph file
 	var dialog := EditorFileDialog.new()
 	dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
@@ -312,7 +312,7 @@ func _create_empty_edgar_graph(path: String) -> void:
 	# If we reach here, the resource couldn't be loaded
 	push_error("Failed to load newly created Edgar Graph: %s" % path)
 
-func _on_filename_button_pressed() -> void:
+func _on_open_file_button_pressed() -> void:
 	# Open file dialog to open or switch to another .edgar-graph file
 	var dialog := EditorFileDialog.new()
 	dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
