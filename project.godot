@@ -19,10 +19,18 @@ run/main_scene="uid://c8nqeebmyvxrb"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
 config/icon="uid://dqf0h3kgid2a2"
 
+[autoload]
+
+DialogueManager="*uid://c3rodes2l3gxb"
+
 [debug]
 
 gdscript/warnings/unused_parameter=0
 gdscript/warnings/integer_division=0
+
+[dialogue_manager]
+
+runtime/advanced/uses_dotnet=true
 
 [display]
 
@@ -34,7 +42,7 @@ project/assembly_name="edgar.godot"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/YATI/plugin.cfg", "res://addons/edgar.godot/plugin.cfg")
+enabled=PackedStringArray("res://addons/YATI/plugin.cfg", "res://addons/dialogue_manager/plugin.cfg", "res://addons/edgar.godot/plugin.cfg")
 
 [layer_names]
 

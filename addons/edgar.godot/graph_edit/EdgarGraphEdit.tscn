@@ -1,21 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://bgvssxmr2slqt"]
+[gd_scene format=3 uid="uid://bgvssxmr2slqt"]
 
 [ext_resource type="Script" uid="uid://bl5qu75kpq3aw" path="res://addons/edgar.godot/graph_edit/edgar_graph_edit.gd" id="1_elojy"]
 [ext_resource type="Script" uid="uid://bc4wiey2kc7t1" path="res://addons/edgar.godot/graph_edit/edgar_graphedit_menu_button.gd" id="2_fkgkv"]
 [ext_resource type="PackedScene" uid="uid://bcrt34q8x2dta" path="res://addons/edgar.godot/graph_edit/EdgarGraphNode.tscn" id="2_x13w6"]
 
-[node name="EdgarGraphEdit" type="Control"]
-custom_minimum_size = Vector2(0, 180)
+[node name="EdgarGraphEdit" type="Control" unique_id=265155571]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_elojy")
 edgar_graph_node_scene = ExtResource("2_x13w6")
 
-[node name="GraphEdit" type="GraphEdit" parent="."]
+[node name="GraphEdit" type="GraphEdit" parent="." unique_id=232295725]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -26,7 +27,7 @@ grow_vertical = 2
 right_disconnects = true
 show_zoom_label = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=824000186]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -38,15 +39,15 @@ offset_bottom = 42.0
 grow_horizontal = 0
 alignment = 2
 
-[node name="FilenameButton" type="Button" parent="HBoxContainer"]
+[node name="FilenameButton" type="Button" parent="HBoxContainer" unique_id=340866293]
 layout_mode = 2
 text = "Open File"
 
-[node name="AddButton" type="Button" parent="HBoxContainer"]
+[node name="AddButton" type="Button" parent="HBoxContainer" unique_id=1110488755]
 layout_mode = 2
 text = "Create File"
 
-[node name="MenuButton" type="MenuButton" parent="."]
+[node name="MenuButton" type="MenuButton" parent="." unique_id=846755603]
 visible = false
 layout_mode = 0
 offset_right = 8.0

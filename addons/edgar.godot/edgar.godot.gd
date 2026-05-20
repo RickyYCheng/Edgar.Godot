@@ -25,7 +25,23 @@ extends EditorPlugin
 
 var importer = null
 var edgar_graphedit : EdgarGraphEdit
-var edgar_graphedit_button : Button
+
+func _has_main_screen() -> bool:
+	return true
+
+
+func _make_visible(next_visible: bool) -> void:
+	if is_instance_valid(edgar_graphedit):
+		edgar_graphedit.visible = next_visible
+
+
+func _get_plugin_name() -> String:
+	return "Edgar"
+
+
+func _get_plugin_icon() -> Texture2D:
+	return EditorInterface.get_editor_theme().get_icon("RandomNumberGenerator", "EditorIcons")
+
 
 func _handles(object: Object) -> bool:
 	if not (object is Resource and object.has_meta("is_edgar_graph")):
@@ -47,7 +63,6 @@ func _edit(object: Object) -> void:
 
 	if object is Resource and object.has_meta("is_edgar_graph"):
 		edgar_graphedit.graph_resource = object
-		make_bottom_panel_item_visible(edgar_graphedit)
 
 func _enter_tree() -> void:
 	
@@ -62,7 +77,8 @@ func _enter_tree() -> void:
 	add_tool_menu_item("Create Edgar Graph", _create_edgar_graph)
 
 	edgar_graphedit = preload("res://addons/edgar.godot/graph_edit/EdgarGraphEdit.tscn").instantiate()
-	edgar_graphedit_button = add_control_to_bottom_panel(edgar_graphedit, "Edgar Graph")
+	EditorInterface.get_editor_main_screen().add_child(edgar_graphedit)
+	_make_visible(false)
 
 func _exit_tree() -> void:
 	# Explicitly save before plugin unloads
@@ -72,8 +88,8 @@ func _exit_tree() -> void:
 	remove_import_plugin(importer)
 	importer = null
 
-	remove_control_from_bottom_panel(edgar_graphedit)
-	edgar_graphedit.queue_free()
+	if is_instance_valid(edgar_graphedit):
+		edgar_graphedit.queue_free()
 
 func _create_edgar_graph() -> void:
 	var dialog := EditorFileDialog.new()
