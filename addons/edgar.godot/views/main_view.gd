@@ -75,8 +75,8 @@ func open_resource(resource: Resource) -> void:
 	if not path in open_files:
 		open_files.append(path)
 		file_map[path] = path.get_file()
-	_refresh_files_list()
 	edgar_graph_edit.graph_resource = resource
+	_refresh_files_list()
 	_update_visibility()
 
 
