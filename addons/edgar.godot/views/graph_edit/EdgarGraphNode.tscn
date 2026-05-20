@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bcrt34q8x2dta"]
+[gd_scene format=3 uid="uid://bcrt34q8x2dta"]
 
-[ext_resource type="Script" uid="uid://bf0xdiq7xi6sd" path="res://addons/edgar.godot/graph_edit/edgar_graph_node.gd" id="1_ompx8"]
-[ext_resource type="ButtonGroup" uid="uid://dpxg8if0tlfno" path="res://addons/edgar.godot/graph_edit/is_pivot_button_group.tres" id="2_ksnd0"]
+[ext_resource type="Script" uid="uid://bf0xdiq7xi6sd" path="res://addons/edgar.godot/views/graph_edit/edgar_graph_node.gd" id="1_ompx8"]
+[ext_resource type="ButtonGroup" uid="uid://dpxg8if0tlfno" path="res://addons/edgar.godot/views/graph_edit/is_pivot_button_group.tres" id="2_ksnd0"]
 
 [node name="_GraphNode_00000" type="GraphNode"]
 title = "Edgar Graph Node"
