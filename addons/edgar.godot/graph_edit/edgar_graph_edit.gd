@@ -26,8 +26,6 @@ extends Control
 
 @export var graph_edit: GraphEdit
 @export var menu_button: MenuButton
-@export var open_file_button: Button
-@export var create_file_button: Button
 
 @export var edgar_graph_node_scene : PackedScene
 var _graph_resource : Resource
@@ -134,12 +132,6 @@ func _load_graph_resource() -> void:
 			# Try to parse from .import path
 			var original_path := _get_original_source_path(resource_path)
 			_original_file_path = original_path if original_path != "" else resource_path
-
-	# Update filename button text immediately
-	if _original_file_path != "":
-		open_file_button.text = _original_file_path
-	else:
-		open_file_button.text = "Unknown File"
 
 	var nodes = graph_resource.get_meta("nodes")
 	var edges = graph_resource.get_meta("edges")
@@ -256,81 +248,6 @@ func _update_visibility() -> void:
 
 	graph_edit.visible = has_resource
 	menu_button.visible = has_resource
-
-	# FilenameButton and AddButton are always visible
-	if has_resource:
-		open_file_button.text = _original_file_path if _original_file_path != "" else "Unknown File"
-	else:
-		open_file_button.text = "Open File"
-
-func _on_create_file_button_pressed() -> void:
-	# Open file dialog to create new .edgar-graph file
-	var dialog := EditorFileDialog.new()
-	dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
-	dialog.title = "Create Edgar Graph"
-	dialog.add_filter("*.edgar-graph", "Edgar Graph")
-
-	dialog.file_selected.connect(func(path: String):
-		dialog.queue_free()
-		_create_empty_edgar_graph(path)
-	)
-
-	dialog.canceled.connect(func(): dialog.queue_free())
-
-	EditorInterface.get_base_control().add_child(dialog)
-	dialog.popup_centered_ratio()
-
-func _create_empty_edgar_graph(path: String) -> void:
-	var empty_graph := {
-		"nodes": {},
-		"edges": [],
-		"layers": []
-	}
-	var json_str := JSON.stringify(empty_graph, "\t")
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(json_str)
-	file.close()
-
-	EditorInterface.get_resource_filesystem().scan()
-	# Wait for filesystem to scan the new file
-	await EditorInterface.get_resource_filesystem().filesystem_changed
-
-	# Wait for the importer to finish processing the file
-	var max_wait_time := 5.0  # Maximum wait time in seconds
-	var wait_time := 0.0
-	while wait_time < max_wait_time:
-		# Give the importer time to process
-		await get_tree().process_frame
-		wait_time += 0.016  # Approximate frame time
-
-		# Try to load the resource
-		var resource := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_REUSE)
-		if resource and resource is Resource and resource.has_meta("is_edgar_graph"):
-			EditorInterface.edit_resource(resource)
-			return
-
-	# If we reach here, the resource couldn't be loaded
-	push_error("Failed to load newly created Edgar Graph: %s" % path)
-
-func _on_open_file_button_pressed() -> void:
-	# Open file dialog to open or switch to another .edgar-graph file
-	var dialog := EditorFileDialog.new()
-	dialog.file_mode = EditorFileDialog.FILE_MODE_OPEN_FILE
-	dialog.title = "Open Edgar Graph" if graph_resource == null else "Switch Edgar Graph"
-	dialog.add_filter("*.edgar-graph", "Edgar Graph")
-
-	dialog.file_selected.connect(func(path: String):
-		dialog.queue_free()
-		# Load the new graph
-		var resource := ResourceLoader.load(path)
-		if resource and resource is Resource and resource.has_meta("is_edgar_graph"):
-			graph_resource = resource
-	)
-
-	dialog.canceled.connect(func(): dialog.queue_free())
-
-	EditorInterface.get_base_control().add_child(dialog)
-	dialog.popup_centered_ratio()
 
 func _on_filesystem_changed() -> void:
 	# If _original_file_path is not set, try to get it from current resource

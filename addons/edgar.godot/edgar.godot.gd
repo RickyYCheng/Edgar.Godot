@@ -23,16 +23,44 @@
 @tool
 extends EditorPlugin
 
+
 var importer = null
-var edgar_graphedit : EdgarGraphEdit
+var main_view : Control
+
+
+func _enter_tree() -> void:
+
+	var i := 0
+	while i < 20:
+		_set_edgar_layer_project_setting(i + 1)
+		i += 1
+
+	importer = preload("res://addons/edgar.godot/edgar_graph_importer.gd").new()
+	add_import_plugin(importer)
+
+	main_view = preload("res://addons/edgar.godot/views/main_view.tscn").instantiate()
+	EditorInterface.get_editor_main_screen().add_child(main_view)
+	_make_visible(false)
+
+
+func _exit_tree() -> void:
+	if is_instance_valid(main_view):
+		main_view.save_all()
+
+	remove_import_plugin(importer)
+	importer = null
+
+	if is_instance_valid(main_view):
+		main_view.queue_free()
+
 
 func _has_main_screen() -> bool:
 	return true
 
 
 func _make_visible(next_visible: bool) -> void:
-	if is_instance_valid(edgar_graphedit):
-		edgar_graphedit.visible = next_visible
+	if is_instance_valid(main_view):
+		main_view.visible = next_visible
 
 
 func _get_plugin_name() -> String:
@@ -46,94 +74,27 @@ func _get_plugin_icon() -> Texture2D:
 func _handles(object: Object) -> bool:
 	if not (object is Resource and object.has_meta("is_edgar_graph")):
 		return false
-	
-	# Only handle file-based resources, ignore built-in/runtime resources
+
 	var path: String = object.resource_path
 	return path.ends_with(".edgar-graph")
 
+
 func _apply_changes() -> void:
-	# Called when user presses Ctrl+S to save
-	if edgar_graphedit.graph_resource != null:
-		edgar_graphedit.save_current_graph()
+	if is_instance_valid(main_view):
+		main_view.save_all()
+
 
 func _edit(object: Object) -> void:
-	# If user switches to edit a different type of resource, save current graph
-	if edgar_graphedit.graph_resource != null and not (object is Resource and object.has_meta("is_edgar_graph")):
-		edgar_graphedit.save_current_graph()
-
 	if object is Resource and object.has_meta("is_edgar_graph"):
-		edgar_graphedit.graph_resource = object
+		if is_instance_valid(main_view):
+			main_view.open_resource(object)
 
-func _enter_tree() -> void:
-	
-	var i := 0
-	while i < 20:
-		_set_edgar_layer_project_setting(i + 1)
-		i += 1
-	
-	importer = preload("res://addons/edgar.godot/edgar_graph_importer.gd").new()
-	add_import_plugin(importer)
 
-	add_tool_menu_item("Create Edgar Graph", _create_edgar_graph)
-
-	edgar_graphedit = preload("res://addons/edgar.godot/graph_edit/EdgarGraphEdit.tscn").instantiate()
-	EditorInterface.get_editor_main_screen().add_child(edgar_graphedit)
-	_make_visible(false)
-
-func _exit_tree() -> void:
-	# Explicitly save before plugin unloads
-	if edgar_graphedit.graph_resource != null:
-		edgar_graphedit.save_current_graph()
-
-	remove_import_plugin(importer)
-	importer = null
-
-	if is_instance_valid(edgar_graphedit):
-		edgar_graphedit.queue_free()
-
-func _create_edgar_graph() -> void:
-	var dialog := EditorFileDialog.new()
-	dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
-	dialog.title = "Create Edgar Graph"
-	dialog.add_filter("*.edgar-graph", "Edgar Graph")
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_SCREEN_WITH_MOUSE_FOCUS
-
-	dialog.file_selected.connect(func(path: String):
-		dialog.queue_free()
-		_create_empty_edgar_graph(path)
-	)
-
-	dialog.canceled.connect(func(): dialog.queue_free())
-
-	add_child(dialog)
-	dialog.popup_centered_ratio()
-
-func _create_empty_edgar_graph(path: String) -> void:
-	var empty_graph := {
-		"nodes": [],
-		"edges": [],
-		"layers": []
-	}
-	var json_str := JSON.stringify(empty_graph, "\t")
-	var file := FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(json_str)
-	file.close()
-
-	EditorInterface.get_resource_filesystem().scan()
-
-func _set_edgar_layer_project_setting(layer_id:int):
-	var layer := "layer_"+str(layer_id)
-	var layer_setting_path := "layer_names/edgar/"+layer
-	if ProjectSettings.has_setting(layer_setting_path): 
-		var value : String = ProjectSettings.get(layer_setting_path)
+func _set_edgar_layer_project_setting(layer_id: int):
+	var layer := "layer_" + str(layer_id)
+	var layer_setting_path := "layer_names/edgar/" + layer
+	if ProjectSettings.has_setting(layer_setting_path):
+		var value: String = ProjectSettings.get(layer_setting_path)
 		if value != null: return
-	
+
 	ProjectSettings.set(layer_setting_path, "")
-	
-	#var property_info = {
-		#"name": layer_setting_path,
-		#"type": TYPE_STRING,
-		#"hint": PROPERTY_HINT_NONE,
-		#"hint_string": ""
-	#}
-	#ProjectSettings.add_property_info(property_info)

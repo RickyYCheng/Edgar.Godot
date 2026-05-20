@@ -1,0 +1,232 @@
+[gd_scene format=3 uid="uid://c8f1yuu8m0ty"]
+
+[ext_resource type="Script" uid="uid://d25v8oqrem2pm" path="res://addons/edgar.godot/views/main_view.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://bgvssxmr2slqt" path="res://addons/edgar.godot/graph_edit/EdgarGraphEdit.tscn" id="2_edit"]
+
+[sub_resource type="DPITexture" id="DPITexture_gv2ow"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5s6bw"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="MainView" type="Control" unique_id=839407430]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_main")
+
+[node name="Margin" type="MarginContainer" parent="." unique_id=1441743295]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="MainVBox" type="VBoxContainer" parent="Margin" unique_id=474456089]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TopBar" type="HBoxContainer" parent="Margin/MainVBox" unique_id=199695037]
+layout_mode = 2
+
+[node name="CreateButton" type="Button" parent="Margin/MainVBox/TopBar" unique_id=1698436109]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Create a new file"
+icon = SubResource("DPITexture_gv2ow")
+flat = true
+
+[node name="OpenButton" type="MenuButton" parent="Margin/MainVBox/TopBar" unique_id=617649748]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Open a file"
+icon = SubResource("DPITexture_gv2ow")
+item_count = 2
+popup/item_0/text = "Open..."
+popup/item_0/id = 100
+popup/item_1/text = "Clear recent files"
+popup/item_1/id = 101
+
+[node name="SaveAllButton" type="Button" parent="Margin/MainVBox/TopBar" unique_id=1423008032]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Save all files"
+disabled = true
+text = "All"
+icon = SubResource("DPITexture_gv2ow")
+flat = true
+
+[node name="Spacer" type="Control" parent="Margin/MainVBox/TopBar" unique_id=1952507448]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VersionLabel" type="Label" parent="Margin/MainVBox/TopBar" unique_id=1697978994]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.49)
+layout_mode = 2
+text = "v0.3.9"
+vertical_alignment = 1
+
+[node name="Content" type="HSplitContainer" parent="Margin/MainVBox" unique_id=127335377]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+dragger_visibility = 1
+
+[node name="SidePanel" type="VBoxContainer" parent="Margin/MainVBox/Content" unique_id=436721681]
+custom_minimum_size = Vector2(130, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FilesPanel" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel" unique_id=1939443138]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FilterEdit" type="LineEdit" parent="Margin/MainVBox/Content/SidePanel/FilesPanel" unique_id=1854541702]
+unique_name_in_owner = true
+layout_mode = 2
+placeholder_text = "Filter files"
+clear_button_enabled = true
+right_icon = SubResource("DPITexture_gv2ow")
+
+[node name="ItemList" type="ItemList" parent="Margin/MainVBox/Content/SidePanel/FilesPanel" unique_id=1751635860]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_5s6bw")
+allow_rmb_select = true
+
+[node name="FilesPopupMenu" type="PopupMenu" parent="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList" unique_id=144296585]
+unique_name_in_owner = true
+
+[node name="EditorArea" type="Control" parent="Margin/MainVBox/Content" unique_id=1479932344]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+
+[node name="EdgarGraphEdit" parent="Margin/MainVBox/Content/EditorArea" unique_id=2083538060 instance=ExtResource("2_edit")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="Banner" type="CenterContainer" parent="." unique_id=172024026]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BannerVBox" type="VBoxContainer" parent="Banner" unique_id=1619530249]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BannerTitle" type="Label" parent="Banner/BannerVBox" unique_id=892912553]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Edgar.Godot"
+horizontal_alignment = 1
+
+[node name="BannerDesc" type="Label" parent="Banner/BannerVBox" unique_id=1594555223]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "A roguelike map / level generation addon. "
+horizontal_alignment = 1
+
+[node name="BannerButtons" type="HBoxContainer" parent="Banner/BannerVBox" unique_id=1224758441]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BannerNewButton" type="Button" parent="Banner/BannerVBox/BannerButtons" unique_id=1404854102]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Graph..."
+icon = SubResource("DPITexture_gv2ow")
+
+[node name="BannerOpenButton" type="Button" parent="Banner/BannerVBox/BannerButtons" unique_id=1312339766]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Quick Open..."
+icon = SubResource("DPITexture_gv2ow")
+
+[node name="NewDialog" type="FileDialog" parent="." unique_id=557568601]
+size = Vector2i(900, 750)
+min_size = Vector2i(600, 500)
+dialog_hide_on_ok = true
+filters = PackedStringArray("*.edgar-graph ; Edgar Graph")
+
+[node name="OpenDialog" type="FileDialog" parent="." unique_id=1869678346]
+title = "Open a File"
+size = Vector2i(900, 750)
+min_size = Vector2i(600, 500)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+filters = PackedStringArray("*.edgar-graph ; Edgar Graph")
+
+[node name="QuickOpenDialog" type="ConfirmationDialog" parent="." unique_id=464955836]
+oversampling_override = 1.0
+title = "Quick Open"
+size = Vector2i(600, 900)
+min_size = Vector2i(400, 600)
+ok_button_text = "Open"
+
+[node name="VBox" type="VBoxContainer" parent="QuickOpenDialog" unique_id=455228288]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 592.0
+offset_bottom = 851.0
+size_flags_vertical = 3
+
+[node name="FilterEdit" type="LineEdit" parent="QuickOpenDialog/VBox" unique_id=1032387711]
+layout_mode = 2
+placeholder_text = "Filter files"
+clear_button_enabled = true
+
+[node name="QuickOpenList" type="ItemList" parent="QuickOpenDialog/VBox" unique_id=2147195530]
+layout_mode = 2
+size_flags_vertical = 3
+allow_rmb_select = true
+
+[connection signal="pressed" from="Margin/MainVBox/TopBar/CreateButton" to="." method="_on_create_button_pressed"]
+[connection signal="about_to_popup" from="Margin/MainVBox/TopBar/OpenButton" to="." method="_on_open_button_about_to_popup"]
+[connection signal="pressed" from="Margin/MainVBox/TopBar/SaveAllButton" to="." method="_on_save_all_button_pressed"]
+[connection signal="text_changed" from="Margin/MainVBox/Content/SidePanel/FilesPanel/FilterEdit" to="." method="_on_filter_edit_text_changed"]
+[connection signal="item_activated" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList" to="." method="_on_files_list_item_activated"]
+[connection signal="item_clicked" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList" to="." method="_on_files_list_item_clicked"]
+[connection signal="about_to_popup" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList/FilesPopupMenu" to="." method="_on_files_popup_menu_about_to_popup"]
+[connection signal="id_pressed" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList/FilesPopupMenu" to="." method="_on_files_popup_menu_id_pressed"]
+[connection signal="pressed" from="Banner/BannerVBox/BannerButtons/BannerNewButton" to="." method="_on_banner_new_pressed"]
+[connection signal="pressed" from="Banner/BannerVBox/BannerButtons/BannerOpenButton" to="." method="_on_banner_open_pressed"]
+[connection signal="confirmed" from="NewDialog" to="." method="_on_new_dialog_confirmed"]
+[connection signal="file_selected" from="NewDialog" to="." method="_on_new_dialog_file_selected"]
+[connection signal="file_selected" from="OpenDialog" to="." method="_on_open_dialog_file_selected"]
+[connection signal="confirmed" from="QuickOpenDialog" to="." method="_on_quick_open_confirmed"]
+[connection signal="text_changed" from="QuickOpenDialog/VBox/FilterEdit" to="." method="_on_quick_open_filter_changed"]
+[connection signal="item_activated" from="QuickOpenDialog/VBox/QuickOpenList" to="." method="_on_quick_open_item_activated"]
