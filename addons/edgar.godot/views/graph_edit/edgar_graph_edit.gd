@@ -51,12 +51,17 @@ func _ready() -> void:
 func _save_graph_resource() -> bool:
 	if graph_resource == null: return true
 
+	var layers_data := graph_resource.get_meta("layers", [])
+	# Strip empty trailing layers to keep JSON clean
+	while not layers_data.is_empty() and layers_data[layers_data.size() - 1].is_empty():
+		layers_data.pop_back()
+
 	var file := FileAccess.open(graph_resource.resource_path, FileAccess.WRITE)
 	if file == null: return false
 	return file.store_string(JSON.stringify({
 		"nodes": graph_resource.get_meta("nodes"),
 		"edges": graph_resource.get_meta("edges"),
-		"layers": graph_resource.get_meta("layers"),
+		"layers": layers_data,
 	}))
 
 func save_current_graph() -> void:
@@ -85,6 +90,16 @@ func save_current_graph() -> void:
 	# Only emit changed if data actually changed
 	if has_changes:
 		graph_resource.emit_changed()
+
+func get_layers() -> Array:
+	if graph_resource == null:
+		return []
+	return graph_resource.get_meta("layers", [])
+
+func set_layers(layers: Array) -> void:
+	if graph_resource == null:
+		return
+	graph_resource.set_meta("layers", layers)
 
 func _unload_graph_resource() -> void:
 	if graph_resource == null: return

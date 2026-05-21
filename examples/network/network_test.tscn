@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://c7bpvrw3xdi8q" path="res://examples/network/network_test.gd" id="1_iseyo"]
 [ext_resource type="TileSet" uid="uid://bqe8wtumbebnm" path="res://examples/shared/old_tile_set.tres" id="2_gtnnp"]
 [ext_resource type="Script" uid="uid://dkhiy1soo3nph" path="res://examples/network/network_manager.gd" id="2_sjdrc"]
-[ext_resource type="Resource" uid="uid://c0bllpgcsxj1o" path="res://examples/shared/level.edgar-graph" id="3_awv7r"]
+[ext_resource type="Resource" uid="uid://8kyqvgsg8txf" path="res://examples/shared/level.edgar-graph" id="3_awv7r"]
 [ext_resource type="TileSet" uid="uid://bji5n6816p5ek" path="res://examples/shared/new_tile_set.tres" id="3_iseyo"]
 [ext_resource type="Script" uid="uid://3e6tejkfjcb2" path="res://examples/network/sub_viewport.gd" id="4_gtnnp"]
 

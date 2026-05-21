@@ -6,7 +6,7 @@
 [ext_resource type="Shader" uid="uid://ctc8xdd6saog1" path="res://addons/edgar.godot/fog_of_war/fow_show.gdshader" id="3_a8le1"]
 [ext_resource type="Script" uid="uid://r0qucc5odqhp" path="res://examples/custom_renderer/custom_renderer_2d.gd" id="4_gwm7x"]
 [ext_resource type="TileSet" uid="uid://bqe8wtumbebnm" path="res://examples/shared/old_tile_set.tres" id="5_3a8rg"]
-[ext_resource type="Resource" uid="uid://c0bllpgcsxj1o" path="res://examples/shared/level.edgar-graph" id="5_rfljf"]
+[ext_resource type="Resource" uid="uid://8kyqvgsg8txf" path="res://examples/shared/level.edgar-graph" id="5_rfljf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rfljf"]
 shader = ExtResource("1_jvdhj")

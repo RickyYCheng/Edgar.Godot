@@ -2,7 +2,7 @@
 
 importer="Edgar Graph Importer"
 type="EdgarGraphResource"
-uid="uid://c0bllpgcsxj1o"
+uid="uid://8kyqvgsg8txf"
 path="res://.godot/imported/level.edgar-graph-1f5ddb3f3f6f39706c3db80606450438.tres"
 
 [deps]
@@ -11,9 +11,4 @@ source_file="res://examples/shared/level.edgar-graph"
 dest_files=["res://.godot/imported/level.edgar-graph-1f5ddb3f3f6f39706c3db80606450438.tres"]
 
 [params]
-
-reimport_layers=true
-layer_1=Object(Resource,"resource_local_to_scene":false,"resource_name":"","script":Resource("uid://deu24x3xgcgqg", "res://addons/edgar.godot/edgar_layers_resource.gd"),"files":Array[String](["uid://balbn6ypujkdf"]))
-
-layer_2=Object(Resource,"resource_local_to_scene":false,"resource_name":"","script":Resource("uid://deu24x3xgcgqg", "res://addons/edgar.godot/edgar_layers_resource.gd"),"files":Array[String](["uid://b2o6e04ulhyuk"]))
 

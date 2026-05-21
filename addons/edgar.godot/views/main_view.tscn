@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d25v8oqrem2pm" path="res://addons/edgar.godot/views/main_view.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://bgvssxmr2slqt" path="res://addons/edgar.godot/views/graph_edit/EdgarGraphEdit.tscn" id="2_edit"]
+[ext_resource type="Script" path="res://addons/edgar.godot/views/layers_panel.gd" id="3_layers"]
 
 [sub_resource type="DPITexture" id="DPITexture_gv2ow"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
@@ -100,26 +101,56 @@ custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="FilesPanel" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel" unique_id=1939443138]
+[node name="LayersSplit" type="VSplitContainer" parent="Margin/MainVBox/Content/SidePanel" unique_id=464584211]
+layout_mode = 2
+size_flags_vertical = 3
+dragger_visibility = 1
+
+[node name="FilesPanel" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel/LayersSplit" unique_id=1939443138]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="FilterEdit" type="LineEdit" parent="Margin/MainVBox/Content/SidePanel/FilesPanel" unique_id=1854541702]
+[node name="FilterEdit" type="LineEdit" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel" unique_id=1854541702]
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Filter files"
 clear_button_enabled = true
 right_icon = SubResource("DPITexture_gv2ow")
 
-[node name="ItemList" type="ItemList" parent="Margin/MainVBox/Content/SidePanel/FilesPanel" unique_id=1751635860]
+[node name="ItemList" type="ItemList" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel" unique_id=1751635860]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_5s6bw")
 allow_rmb_select = true
 
-[node name="FilesPopupMenu" type="PopupMenu" parent="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList" unique_id=144296585]
+[node name="FilesPopupMenu" type="PopupMenu" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel/ItemList" unique_id=144296585]
 unique_name_in_owner = true
+
+[node name="LayersPanel" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel/LayersSplit" unique_id=856483219]
+script = ExtResource("3_layers")
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LayersScroll" type="ScrollContainer" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel" unique_id=851294710]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_5s6bw")
+
+[node name="LayersVBox" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel/LayersScroll" unique_id=376587492]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LayerFileDialog" type="FileDialog" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel" unique_id=661482509]
+title = "Add File to Layer"
+size = Vector2i(900, 750)
+min_size = Vector2i(600, 500)
+ok_button_text = "选择"
+dialog_hide_on_ok = true
+file_mode = 0
+filters = PackedStringArray("*.tmj, *.tmx ; Tiled Map Files")
 
 [node name="EditorArea" type="Control" parent="Margin/MainVBox/Content" unique_id=1479932344]
 layout_mode = 2
@@ -217,11 +248,11 @@ allow_rmb_select = true
 [connection signal="pressed" from="Margin/MainVBox/TopBar/CreateButton" to="." method="_on_create_button_pressed"]
 [connection signal="about_to_popup" from="Margin/MainVBox/TopBar/OpenButton" to="." method="_on_open_button_about_to_popup"]
 [connection signal="pressed" from="Margin/MainVBox/TopBar/SaveAllButton" to="." method="_on_save_all_button_pressed"]
-[connection signal="text_changed" from="Margin/MainVBox/Content/SidePanel/FilesPanel/FilterEdit" to="." method="_on_filter_edit_text_changed"]
-[connection signal="item_activated" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList" to="." method="_on_files_list_item_activated"]
-[connection signal="item_clicked" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList" to="." method="_on_files_list_item_clicked"]
-[connection signal="about_to_popup" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList/FilesPopupMenu" to="." method="_on_files_popup_menu_about_to_popup"]
-[connection signal="id_pressed" from="Margin/MainVBox/Content/SidePanel/FilesPanel/ItemList/FilesPopupMenu" to="." method="_on_files_popup_menu_id_pressed"]
+[connection signal="text_changed" from="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel/FilterEdit" to="." method="_on_filter_edit_text_changed"]
+[connection signal="item_activated" from="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel/ItemList" to="." method="_on_files_list_item_activated"]
+[connection signal="item_clicked" from="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel/ItemList" to="." method="_on_files_list_item_clicked"]
+[connection signal="about_to_popup" from="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel/ItemList/FilesPopupMenu" to="." method="_on_files_popup_menu_about_to_popup"]
+[connection signal="id_pressed" from="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel/ItemList/FilesPopupMenu" to="." method="_on_files_popup_menu_id_pressed"]
 [connection signal="pressed" from="Banner/BannerVBox/BannerButtons/BannerNewButton" to="." method="_on_banner_new_pressed"]
 [connection signal="pressed" from="Banner/BannerVBox/BannerButtons/BannerOpenButton" to="." method="_on_banner_open_pressed"]
 [connection signal="confirmed" from="NewDialog" to="." method="_on_new_dialog_confirmed"]

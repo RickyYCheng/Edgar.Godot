@@ -52,44 +52,21 @@ func _get_option_visibility(path: String, option_name: StringName, options: Dict
 	return true
 
 func _get_import_options(path: String, preset_index: int) -> Array:
-	var options := [
-		{ "name": "reimport_layers", "default_value": false, "property_hint": PROPERTY_HINT_NONE, "hint_string": "" }
-	]
-	var i := 0
-	while i < 20:
-		var setting := ProjectSettings.get_setting("layer_names/edgar/layer_"+str(i+1))
-		if setting != "" and setting != null:
-			options.push_back({ "name": "layer_"+str(i+1), "default_value": EdgarLayersResource.new(), "property_hint": PROPERTY_HINT_RESOURCE_TYPE, "hint_string": "EdgarLayersResource" })
-		i += 1
-	
-	return options
+	return []
 
 func _get_import_order() -> int:
 	return 98
 
 func _import(source_file: String, save_path: String, options: Dictionary, platform_variants: Array, gen_files: Array) -> Error:
-	var json := _read_json(source_file, options)
+	var json := _read_json(source_file)
 	if json.is_empty():
 		return FAILED
-
-	if options.get("reimport_layers", false):
-		var write_file := FileAccess.open(source_file, FileAccess.WRITE)
-		if write_file != null:
-			write_file.store_string(JSON.stringify(json, "  "))
 
 	var res := _create_resource(source_file, json)
 	var ret := ResourceSaver.save(res, save_path + "." + _get_save_extension())
 	return ret
 
-# -----------------------------------------------------------------------------------------------------------------------------
-
-static func load_external(source_file: String, options: Dictionary = {}) -> EdgarGraphResource:
-	var json := _read_json(source_file, options)
-	if json.is_empty():
-		return null
-	return _create_resource(source_file, json)
-
-static func _read_json(source_file: String, options: Dictionary) -> Dictionary:
+static func _read_json(source_file: String) -> Dictionary:
 	if !FileAccess.file_exists(source_file):
 		printerr("Import file '" + source_file + "' not found!")
 		return {}
@@ -104,19 +81,7 @@ static func _read_json(source_file: String, options: Dictionary) -> Dictionary:
 	if err != Error.OK:
 		return {"edges": [], "layers": [], "nodes": []}
 
-	var json: Dictionary = json_obj.data
-
-	var reimport_layers := options.get("reimport_layers", false)
-	var layers := []
-	for key in options:
-		if not options[key] is EdgarLayersResource: continue
-		var files = options[key].files.map(func(uid): return ResourceUID.get_id_path(ResourceUID.text_to_id(uid)))
-		layers.push_back(files)
-
-	if reimport_layers and not layers.is_empty():
-		json["layers"] = layers
-
-	return json
+	return json_obj.data
 
 static func _create_resource(source_file: String, json: Dictionary) -> EdgarGraphResource:
 	var res := EdgarGraphResource.new()

@@ -25,6 +25,7 @@ const EdgarIcon = preload("res://addons/edgar.godot/icons/edgar_graph.svg")
 @onready var filter_edit: LineEdit = %FilterEdit
 @onready var item_list: ItemList = %ItemList
 @onready var edgar_graph_edit: EdgarGraphEdit = %EdgarGraphEdit
+@onready var layers_panel: LayersPanel = $"Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel"
 
 # Context menu
 @onready var files_popup_menu: PopupMenu = %FilesPopupMenu
@@ -48,6 +49,7 @@ func _ready() -> void:
 	_apply_theme()
 	_update_visibility()
 	open_button.get_popup().id_pressed.connect(_on_open_menu_id_pressed)
+	layers_panel.layers_changed.connect(_on_layers_changed)
 
 
 func _apply_theme() -> void:
@@ -76,6 +78,7 @@ func open_resource(resource: Resource) -> void:
 		open_files.append(path)
 		file_map[path] = path.get_file()
 	edgar_graph_edit.graph_resource = resource
+	layers_panel.refresh(resource)
 	_refresh_files_list()
 	_update_visibility()
 
@@ -101,6 +104,11 @@ func _refresh_files_list() -> void:
 			item_list.select(idx)
 
 
+func _on_layers_changed(_layers: Array) -> void:
+	# Trigger save when layers are modified in the sidebar
+	if edgar_graph_edit.graph_resource != null:
+		edgar_graph_edit.save_current_graph()
+
 func save_all() -> void:
 	# Save all open files
 	for path: String in open_files:
@@ -125,8 +133,10 @@ func close_file(path: String) -> void:
 			var resource := ResourceLoader.load(next_path)
 			if resource and resource.has_meta("is_edgar_graph"):
 				edgar_graph_edit.graph_resource = resource
+				layers_panel.refresh(resource)
 		else:
 			edgar_graph_edit.graph_resource = null
+			layers_panel.refresh(null)
 
 	_refresh_files_list()
 	_update_visibility()

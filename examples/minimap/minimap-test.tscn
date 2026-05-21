@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://r0qucc5odqhp" path="res://examples/custom_renderer/custom_renderer_2d.gd" id="1_dcebm"]
 [ext_resource type="Script" uid="uid://bx4npwv0s3gkx" path="res://examples/minimap/minimap_test.gd" id="1_rq1kn"]
 [ext_resource type="TileSet" uid="uid://bqe8wtumbebnm" path="res://examples/shared/old_tile_set.tres" id="3_hkaxf"]
-[ext_resource type="Resource" uid="uid://c0bllpgcsxj1o" path="res://examples/shared/level.edgar-graph" id="3_mf1c0"]
+[ext_resource type="Resource" uid="uid://8kyqvgsg8txf" path="res://examples/shared/level.edgar-graph" id="3_mf1c0"]
 [ext_resource type="TileSet" uid="uid://bji5n6816p5ek" path="res://examples/shared/new_tile_set.tres" id="3_sdnkj"]
 [ext_resource type="Shader" uid="uid://b0bpmeei332os" path="res://addons/edgar.godot/fog_of_war/fow_blur.gdshader" id="4_mf1c0"]
 [ext_resource type="Script" uid="uid://derjm3viwbne" path="res://examples/minimap/sub_viewport.gd" id="4_sdnkj"]
@@ -32,91 +32,6 @@ zoom = Vector2(2, 2)
 script = ExtResource("1_dcebm")
 tile_map_layers = [NodePath("../MinimapLayer"), NodePath("../TileMapLayer")]
 level = ExtResource("3_mf1c0")
-layout = {
-"rooms": [{
-"doors": [{
-"door_line": {
-"from": Vector2(16, 6),
-"to": Vector2(16, 3)
-},
-"from_room": "Room 1",
-"to_room": "Room 2"
-}, {
-"door_line": {
-"from": Vector2(0, 11),
-"to": Vector2(0, 14)
-},
-"from_room": "Room 1",
-"to_room": "Room Limit"
-}],
-"edgar_layer": 0.0,
-"is_corridor": false,
-"is_pivot": false,
-"outline": [Vector2(16, 16), Vector2(16, 0), Vector2(0, 0), Vector2(0, 16)],
-"position": Vector2(-32, 0),
-"room": "Room 1",
-"template": "res://examples/shared/basic.tmj",
-"transformation": 0
-}, {
-"doors": [{
-"door_line": {
-"from": Vector2(0, -13),
-"to": Vector2(0, -10)
-},
-"from_room": "Room 2",
-"to_room": "Room 1"
-}, {
-"door_line": {
-"from": Vector2(16, -2),
-"to": Vector2(16, -5)
-},
-"from_room": "Room 2",
-"to_room": "Room 3"
-}],
-"edgar_layer": 0.0,
-"is_corridor": false,
-"is_pivot": false,
-"outline": [Vector2(16, -16), Vector2(0, -16), Vector2(0, 0), Vector2(16, 0)],
-"position": Vector2(-16, 16),
-"room": "Room 2",
-"template": "res://examples/shared/basic.tmj",
-"transformation": 4
-}, {
-"doors": [{
-"door_line": {
-"from": Vector2(0, 11),
-"to": Vector2(0, 14)
-},
-"from_room": "Room 3",
-"to_room": "Room 2"
-}],
-"edgar_layer": 0.0,
-"is_corridor": false,
-"is_pivot": false,
-"outline": [Vector2(16, 16), Vector2(16, 0), Vector2(0, 0), Vector2(0, 16)],
-"position": Vector2(0, 0),
-"room": "Room 3",
-"template": "res://examples/shared/basic.tmj",
-"transformation": 0
-}, {
-"doors": [{
-"door_line": {
-"from": Vector2(0, 54),
-"to": Vector2(0, 51)
-},
-"from_room": "Room Limit",
-"to_room": "Room 1"
-}],
-"edgar_layer": 1.0,
-"is_corridor": false,
-"is_pivot": true,
-"outline": [Vector2(0, 0), Vector2(70, 0), Vector2(70, 60), Vector2(0, 60), Vector2(0, 0), Vector2(-1, 0), Vector2(-1, 61), Vector2(71, 61), Vector2(71, -1), Vector2(0, -1)],
-"position": Vector2(-32, -40),
-"room": "Room Limit",
-"template": "res://examples/shared/limit.tmj",
-"transformation": 0
-}]
-}
 seed = 10
 anchor_offset = Vector2(32, -14)
 metadata/_custom_type_script = "uid://cj8jnjw3vox4m"
