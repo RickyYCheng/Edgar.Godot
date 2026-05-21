@@ -164,7 +164,7 @@ func close_file(path: String) -> void:
 		if open_files.size() > 0:
 			var next_index := mini(index, open_files.size() - 1)
 			var next_path: String = open_files[next_index]
-			var resource := ResourceLoader.load(next_path)
+			var resource := load(next_path)
 			if resource and resource.has_meta("is_edgar_graph"):
 				edgar_graph_edit.graph_resource = resource
 				layers_panel.refresh(resource)
@@ -191,7 +191,7 @@ func _on_filesystem_changed() -> void:
 	# Fallback: if current resource was invalidated and we still have open files, open the first one
 	if edgar_graph_edit.graph_resource == null and open_files.size() > 0:
 		var next_path: String = open_files[0]
-		var resource := ResourceLoader.load(next_path)
+		var resource := load(next_path)
 		if resource and resource.has_meta("is_edgar_graph"):
 			edgar_graph_edit.graph_resource = resource
 			layers_panel.refresh(resource)
@@ -211,7 +211,7 @@ func _create_empty_file(path: String) -> void:
 	file.close()
 	EditorInterface.get_resource_filesystem().scan()
 	await EditorInterface.get_resource_filesystem().filesystem_changed
-	var resource := ResourceLoader.load(path)
+	var resource := load(path)
 	if resource and resource.has_meta("is_edgar_graph"):
 		EditorInterface.edit_resource(resource)
 
@@ -315,7 +315,7 @@ func _on_quick_open_confirmed() -> void:
 	var selected := quick_open_list.get_selected_items()
 	if selected.size() > 0:
 		var path: String = quick_open_list.get_item_metadata(selected[0])
-		var resource := ResourceLoader.load(path)
+		var resource := load(path)
 		if resource and resource.has_meta("is_edgar_graph"):
 			EditorInterface.edit_resource(resource)
 
@@ -323,7 +323,7 @@ func _on_quick_open_confirmed() -> void:
 func _on_quick_open_item_activated(index: int) -> void:
 	var path: String = quick_open_list.get_item_metadata(index)
 	quick_open_dialog.hide()
-	var resource := ResourceLoader.load(path)
+	var resource := load(path)
 	if resource and resource.has_meta("is_edgar_graph"):
 		EditorInterface.edit_resource(resource)
 
@@ -368,7 +368,7 @@ func _on_new_dialog_file_selected(path: String) -> void:
 
 
 func _on_open_dialog_file_selected(path: String) -> void:
-	var resource := ResourceLoader.load(path)
+	var resource := load(path)
 	if resource and resource.has_meta("is_edgar_graph"):
 		EditorInterface.edit_resource(resource)
 
@@ -386,7 +386,7 @@ func _on_files_list_item_clicked(index: int, _at_position: Vector2, mouse_button
 	var path: String = open_files[index]
 
 	if mouse_button == MOUSE_BUTTON_LEFT or mouse_button == MOUSE_BUTTON_RIGHT:
-		var resource := ResourceLoader.load(path)
+		var resource := load(path)
 		if resource and resource.has_meta("is_edgar_graph"):
 			EditorInterface.edit_resource(resource)
 
@@ -401,7 +401,7 @@ func _on_files_list_item_clicked(index: int, _at_position: Vector2, mouse_button
 func _on_files_list_item_activated(index: int) -> void:
 	if index >= 0 and index < open_files.size():
 		var path: String = open_files[index]
-		var resource := ResourceLoader.load(path)
+		var resource := load(path)
 		if resource and resource.has_meta("is_edgar_graph"):
 			EditorInterface.edit_resource(resource)
 
