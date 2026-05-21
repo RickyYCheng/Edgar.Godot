@@ -21,13 +21,18 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 ## Core Features
 - 🗺️ Converts [Tiled](https://www.mapeditor.org/) map files into Godot-compatible JSON resources, complete with metadata for procedural map generation using [YATI](https://github.com/Kiamo2/YATI).
 - ⚙️ Custom `JSON` room graph format (`*.edgar-graph`) for defining room connectivity.
+- 📝 **Visual Graph Editor**: Built-in editor for designing room graphs with layer-based room categorization and per-graph layer management.
 - 🔄 Kernel Replaceability: Standardized interfaces that are compatible with both `C#` scripts and `GDExtension` versions.
 - Generates Godot-friendly `Dictionary` layouts utilizing the Kernel's API.
 - Includes a sample renderer for displaying generated maps on `TileMapLayer`.
 - 🌑 **Fog of War (FOW)**: Dynamic visibility system that reveals explored areas while hiding unexplored regions.
 - 🗺️ **Minimap**: Real-time minimap display for navigation and overview of generated dungeons.
 
+![Edgar Designer](docs/images/edgar_designer.png)
+> Edgar Designer
+
 ![FOW & Minimap Demo](docs/images/minimap.png)
+> Fog of War and Minimap demo
 
 ## Meta Reference
 There are some already in-used fields in the Tiled map's `properties`.  

@@ -1,6 +1,6 @@
 # Edgar.Godot Reference
 
-## Layers
+## Tiled Map Layers
 "col": The main brick layer of the map.  
 "markers": The marker layer for defining special objects for later use.  
 "lnk": The layer defining the topology of room connections.  
@@ -66,6 +66,61 @@ When a tile is rendered in a room with MirrorX transformation, it will be swappe
 
 ### col
 See [col](#col-1) in Renderer section for details.
+
+## Room Graph Format
+
+`Edgar.Godot` uses a custom JSON format (`.edgar-graph`) to define room connectivity, room type categories, and their associated Tiled map files.
+
+### Structure
+
+```json
+{
+    "edges": [...],
+    "layer_names": [...],
+    "layers": [...],
+    "nodes": {...}
+}
+```
+
+#### edges
+Array of connection objects defining the topology between rooms:
+```json
+{"from_node": "Room 1", "to_node": "Room 2"}
+```
+
+#### layer_names
+Array of strings defining room type categories (e.g., `["combat", "limit"]`).  
+Each room is assigned to one category via the `edgar_layer` index in its node data.
+
+> [!NOTE]
+> Since v0.4.0, layer names are stored per-graph under the `layer_names` key. Older graphs automatically migrate from ProjectSettings on import.
+
+#### layers
+Array of arrays containing file paths to Tiled map files (`*.tmj` / `*.tmx`) for each room type.  
+Index 0 corresponds to `layer_names[0]`, and so on.
+
+#### nodes
+Dictionary mapping room names to their properties:
+
+| Property | Type | Description |
+|---|---|---|
+| `edgar_layer` | `int` | Index into `layer_names` for this room's type |
+| `is_corridor_room` | `int` | Room type category (0 = normal, 1+ = corridor variants) |
+| `is_pivot` | `bool` | Whether this room serves as the pivot for coordinate offsets |
+| `position_offset` | `Object(x, y)` | Position in the graph editor |
+
+### Graph Editor
+
+The plugin provides a visual graph editor for creating and editing `.edgar-graph` files directly in Godot.
+
+#### Layer Management
+- **Add layers**: Click the **+** button in the Layers panel
+- **Rename layers**: Click the name on a layer card
+- **Delete layers**: Click the trash icon on a layer card
+- **Assign rooms**: Use the layer dropdown on each room node
+
+> [!NOTE]
+> When a layer is deleted, nodes on that layer are reassigned to layer 0, and nodes above shift down by one.
 
 ## Renderer
 
@@ -173,6 +228,8 @@ To enable an edgar layer filter (filter by room type), add the following meta-da
 > You can only use either `edgar_layer_exceptions` or `edgar_layer_inclusions` at a time.  
 > If both are provided, only `edgar_layer_inclusions` will be considered.  
 > This is useful for filtering rooms by their type (e.g., "BossRoom", "TreasureRoom") rather than individual room instances.
+
+> See [Room Graph Format](#room-graph-format) for how `edgar_layer` indices map to layer names.
 
 ### Layer filter
 See [col](#col-1) in Renderer section for details.
