@@ -46,7 +46,9 @@ var _original_file_path := ""  # Store the original .edgar-graph file path
 
 func _ready() -> void:
 	_update_visibility()
-	EditorInterface.get_resource_filesystem().filesystem_changed.connect(_on_filesystem_changed)
+
+func set_skip_save(value: bool) -> void:
+	_skip_save = value
 
 func _save_graph_resource() -> bool:
 	if graph_resource == null: return true
@@ -134,10 +136,8 @@ func refresh_node_layer_options() -> void:
 		node.refresh_layer_options(layer_names)
 
 func _unload_graph_resource() -> void:
-	if graph_resource == null: return
-
-	# Skip saving if the file was deleted
-	if not _skip_save:
+	# Save current data if resource is still valid and not skipped
+	if graph_resource != null and not _skip_save:
 		var nodes_data := {}
 		for node_name in graph_nodes:
 			nodes_data[node_name] = graph_nodes[node_name].get_data()
@@ -161,7 +161,7 @@ func _unload_graph_resource() -> void:
 		if has_changes:
 			graph_resource.emit_changed()
 
-	# unload
+	# Always clear nodes when unloading, even if resource was already null
 	_remove_all_nodes(graph_nodes.keys())
 
 func _load_graph_resource() -> void:
@@ -301,23 +301,6 @@ func _update_visibility() -> void:
 
 	graph_edit.visible = has_resource
 	menu_button.visible = has_resource
-
-func _on_filesystem_changed() -> void:
-	# If _original_file_path is not set, try to get it from current resource
-	if _original_file_path == "" and graph_resource != null and graph_resource.has_meta("source_file"):
-		_original_file_path = graph_resource.get_meta("source_file")
-
-	# Check if the current resource file still exists
-	if _original_file_path != "":
-		var file_exists := FileAccess.file_exists(_original_file_path)
-
-		if not file_exists:
-			# File was deleted, close the editor without saving
-			_skip_save = true
-			graph_resource = null
-			_original_file_path = ""
-			_skip_save = false
-			_update_visibility()
 
 func _get_original_source_path(import_path: String) -> String:
 	# Convert imported .tres path back to original .edgar-graph path

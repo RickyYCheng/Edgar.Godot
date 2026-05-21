@@ -52,6 +52,7 @@ func _ready() -> void:
 	layers_panel.layers_changed.connect(_on_layers_changed)
 	layers_panel.layer_deleted.connect(_on_layer_deleted)
 	layers_panel.layer_structure_changed.connect(_on_layer_structure_changed)
+	EditorInterface.get_resource_filesystem().filesystem_changed.connect(_on_filesystem_changed)
 
 
 func _apply_theme() -> void:
@@ -142,8 +143,24 @@ func close_file(path: String) -> void:
 	open_files.erase(path)
 	file_map.erase(path)
 
-	# If closing the current file, switch to another or clear
-	if edgar_graph_edit.graph_resource != null and edgar_graph_edit.graph_resource.resource_path == path:
+	var file_deleted := not FileAccess.file_exists(path)
+
+	# Godot may clear resource_path when a file is deleted externally,
+	# so we also treat a resource with an empty path as "current" during deletion.
+	var is_current := false
+	if edgar_graph_edit.graph_resource != null:
+		var current_path := edgar_graph_edit.graph_resource.resource_path
+		if current_path == path:
+			is_current = true
+		elif current_path.is_empty() and file_deleted:
+			is_current = true
+
+	if file_deleted:
+		edgar_graph_edit.set_skip_save(true)
+
+	# Switch if this was the current file, or if the file was deleted externally
+	# and graph_resource is already null (Godot may clear it before filesystem_changed)
+	if is_current or (file_deleted and edgar_graph_edit.graph_resource == null):
 		if open_files.size() > 0:
 			var next_index := mini(index, open_files.size() - 1)
 			var next_path: String = open_files[next_index]
@@ -155,8 +172,31 @@ func close_file(path: String) -> void:
 			edgar_graph_edit.graph_resource = null
 			layers_panel.refresh(null)
 
+	if file_deleted:
+		edgar_graph_edit.set_skip_save(false)
+
 	_refresh_files_list()
 	_update_visibility()
+
+
+func _on_filesystem_changed() -> void:
+	var paths_to_close: Array[String] = []
+	for path: String in open_files:
+		if not FileAccess.file_exists(path):
+			paths_to_close.append(path)
+
+	for path: String in paths_to_close:
+		close_file(path)
+
+	# Fallback: if current resource was invalidated and we still have open files, open the first one
+	if edgar_graph_edit.graph_resource == null and open_files.size() > 0:
+		var next_path: String = open_files[0]
+		var resource := ResourceLoader.load(next_path)
+		if resource and resource.has_meta("is_edgar_graph"):
+			edgar_graph_edit.graph_resource = resource
+			layers_panel.refresh(resource)
+			_refresh_files_list()
+			_update_visibility()
 
 
 func _create_empty_file(path: String) -> void:
