@@ -103,3 +103,11 @@ static func _create_resource(source_file: String, json: Dictionary) -> EdgarGrap
 	res.set_meta("layer_names", layer_names)
 
 	return res
+
+static func import_external(source_file: String) -> EdgarGraphResource:
+	var json := _read_json(source_file)
+	if json.is_empty():
+		return null
+
+	var res := _create_resource(source_file, json)
+	return res
