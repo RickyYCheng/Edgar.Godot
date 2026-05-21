@@ -50,6 +50,8 @@ func _ready() -> void:
 	_update_visibility()
 	open_button.get_popup().id_pressed.connect(_on_open_menu_id_pressed)
 	layers_panel.layers_changed.connect(_on_layers_changed)
+	layers_panel.layer_deleted.connect(_on_layer_deleted)
+	layers_panel.layer_structure_changed.connect(_on_layer_structure_changed)
 
 
 func _apply_theme() -> void:
@@ -109,6 +111,21 @@ func _on_layers_changed(_layers: Array) -> void:
 	if edgar_graph_edit.graph_resource != null:
 		edgar_graph_edit.save_current_graph()
 
+
+func _on_layer_deleted(deleted_index: int) -> void:
+	# Reassign nodes that referenced the deleted layer
+	if edgar_graph_edit.graph_resource != null:
+		edgar_graph_edit.handle_layer_deleted(deleted_index)
+		edgar_graph_edit.save_current_graph()
+		edgar_graph_edit.refresh_node_layer_options()
+
+
+func _on_layer_structure_changed() -> void:
+	# Refresh node layer dropdowns and save
+	if edgar_graph_edit.graph_resource != null:
+		edgar_graph_edit.refresh_node_layer_options()
+		edgar_graph_edit.save_current_graph()
+
 func save_all() -> void:
 	# Save all open files
 	for path: String in open_files:
@@ -146,7 +163,8 @@ func _create_empty_file(path: String) -> void:
 	var empty_graph := {
 		"nodes": {},
 		"edges": [],
-		"layers": []
+		"layers": [],
+		"layer_names": ["Layer 1"]
 	}
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(empty_graph, "\t"))

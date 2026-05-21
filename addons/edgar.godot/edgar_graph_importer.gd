@@ -79,7 +79,7 @@ static func _read_json(source_file: String) -> Dictionary:
 	var json_obj := JSON.new()
 	var err := json_obj.parse(text)
 	if err != Error.OK:
-		return {"edges": [], "layers": [], "nodes": []}
+		return {"edges": [], "layers": [], "nodes": {}, "layer_names": []}
 
 	return json_obj.data
 
@@ -90,4 +90,16 @@ static func _create_resource(source_file: String, json: Dictionary) -> EdgarGrap
 	res.set_meta("nodes", json["nodes"])
 	res.set_meta("edges", json["edges"])
 	res.set_meta("layers", json["layers"])
+
+	# layer_names: migrate from ProjectSettings if missing
+	var layer_names = json.get("layer_names", [])
+	if layer_names.is_empty():
+		var layers: Array = json["layers"]
+		for i in range(layers.size()):
+			var fallback: String = ProjectSettings.get("layer_names/edgar/layer_" + str(i + 1))
+			layer_names.append(fallback if fallback != null and fallback != "" else "Layer " + str(i + 1))
+		if layer_names.is_empty():
+			layer_names = ["Layer 1"]
+	res.set_meta("layer_names", layer_names)
+
 	return res

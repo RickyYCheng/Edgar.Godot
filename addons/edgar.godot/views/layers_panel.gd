@@ -3,11 +3,14 @@ class_name LayersPanel
 extends VBoxContainer
 
 signal layers_changed(layers: Array)
+signal layer_deleted(deleted_index: int)
+signal layer_structure_changed()
 
 const SectionScene = preload("res://addons/edgar.godot/views/layer_section.tscn")
 
 @onready var layers_vbox: VBoxContainer = $"LayersScroll/LayersVBox"
 @onready var layer_file_dialog: FileDialog = $"LayerFileDialog"
+@onready var add_layer_button: Button = $"AddLayerButton"
 
 var _graph_resource: Resource = null
 var _current_layer_index: int = -1
@@ -16,6 +19,9 @@ var _current_layer_index: int = -1
 func _ready() -> void:
 	layer_file_dialog.file_selected.connect(_on_layer_file_selected)
 	layers_vbox.add_theme_constant_override("separation", 6)
+	add_layer_button.icon = get_theme_icon("Add", "EditorIcons")
+	add_layer_button.tooltip_text = "Add layer"
+	add_layer_button.pressed.connect(_on_add_layer)
 
 
 func refresh(graph_resource: Resource) -> void:
@@ -36,6 +42,8 @@ func refresh(graph_resource: Resource) -> void:
 		section.add_pressed.connect(_on_add_pressed)
 		section.browse_pressed.connect(_on_browse_pressed)
 		section.remove_pressed.connect(_on_remove_pressed)
+		section.rename_pressed.connect(_on_rename_pressed)
+		section.delete_pressed.connect(_on_delete_pressed)
 
 
 func _on_add_pressed(layer_index: int) -> void:
@@ -83,15 +91,67 @@ func _on_layer_file_selected(path: String) -> void:
 	refresh(_graph_resource)
 
 
+func _on_add_layer() -> void:
+	if _graph_resource == null:
+		return
+	var layer_names := _get_layer_names()
+	layer_names.append("Layer " + str(layer_names.size() + 1))
+	_set_layer_names(layer_names)
+	var layers := _get_layers_from_resource()
+	layers.append([])
+	_set_layers_to_resource(layers)
+	refresh(_graph_resource)
+	layer_structure_changed.emit()
+
+
+func _on_delete_pressed(layer_index: int) -> void:
+	if _graph_resource == null:
+		return
+	var layer_names := _get_layer_names()
+	if layer_names.size() <= 1:
+		return
+	layer_names.remove_at(layer_index)
+	_set_layer_names(layer_names)
+	var layers := _get_layers_from_resource()
+	if layer_index < layers.size():
+		layers.remove_at(layer_index)
+	_set_layers_to_resource(layers)
+	layer_deleted.emit(layer_index)
+	refresh(_graph_resource)
+	layer_structure_changed.emit()
+
+
+func _on_rename_pressed(layer_index: int, new_name: String) -> void:
+	if _graph_resource == null:
+		return
+	var layer_names := _get_layer_names()
+	if layer_index < layer_names.size():
+		layer_names[layer_index] = new_name
+	_set_layer_names(layer_names)
+	layer_structure_changed.emit()
+
+
 func _get_layer_names() -> Array[String]:
-	var names: Array[String] = []
-	var i := 0
-	while i < 20:
-		var layer := ProjectSettings.get("layer_names/edgar/layer_" + str(i + 1))
-		if layer != null and layer != "":
-			names.append(layer)
-		i += 1
-	return names
+	if _graph_resource == null:
+		return []
+	var names: Array = _graph_resource.get_meta("layer_names", [])
+	if names.is_empty():
+		var layers: Array = _graph_resource.get_meta("layers", [])
+		for i in range(layers.size()):
+			names.append("Layer " + str(i + 1))
+		if names.is_empty():
+			names.append("Layer 1")
+		_graph_resource.set_meta("layer_names", names)
+	var result: Array[String] = []
+	for layer_name in names:
+		result.append(str(layer_name))
+	return result
+
+
+func _set_layer_names(names: Array[String]) -> void:
+	if _graph_resource == null:
+		return
+	_graph_resource.set_meta("layer_names", names)
 
 
 func _get_layers_from_resource() -> Array:

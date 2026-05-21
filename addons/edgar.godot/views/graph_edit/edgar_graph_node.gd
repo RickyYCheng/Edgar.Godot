@@ -41,13 +41,18 @@ var room_name: String:
 		change_name.emit(old_name, room_name)
 
 func _ready() -> void:
+	pass  # Layer options are set by refresh_layer_options() from EdgarGraphEdit
+
+
+func refresh_layer_options(layer_names: Array) -> void:
+	var current_selected := edgar_layer_button.selected
 	edgar_layer_button.clear()
-	var i := 0
-	while i < 20:
-		var layer := ProjectSettings.get("layer_names/edgar/layer_" + str(i + 1))
-		if layer != null and layer != "":
-			edgar_layer_button.add_item(layer)
-		i += 1
+	for layer_name in layer_names:
+		edgar_layer_button.add_item(str(layer_name))
+	if current_selected >= 0 and current_selected < layer_names.size():
+		edgar_layer_button.select(current_selected)
+	elif layer_names.size() > 0:
+		edgar_layer_button.select(0)
 
 func get_data():
 	return {

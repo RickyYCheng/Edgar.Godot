@@ -56,12 +56,15 @@ func _save_graph_resource() -> bool:
 	while not layers_data.is_empty() and layers_data[layers_data.size() - 1].is_empty():
 		layers_data.pop_back()
 
+	var layer_names: Array = graph_resource.get_meta("layer_names", [])
+
 	var file := FileAccess.open(graph_resource.resource_path, FileAccess.WRITE)
 	if file == null: return false
 	return file.store_string(JSON.stringify({
 		"nodes": graph_resource.get_meta("nodes"),
 		"edges": graph_resource.get_meta("edges"),
 		"layers": layers_data,
+		"layer_names": layer_names,
 	}))
 
 func save_current_graph() -> void:
@@ -100,6 +103,35 @@ func set_layers(layers: Array) -> void:
 	if graph_resource == null:
 		return
 	graph_resource.set_meta("layers", layers)
+
+func get_layer_names() -> Array:
+	if graph_resource == null:
+		return []
+	return graph_resource.get_meta("layer_names", [])
+
+func set_layer_names(names: Array) -> void:
+	if graph_resource == null:
+		return
+	graph_resource.set_meta("layer_names", names)
+
+func handle_layer_deleted(deleted_index: int) -> void:
+	"""Reassign node layer indices after a layer is deleted.
+	Nodes on the deleted layer move to layer 0.
+	Nodes above the deleted layer shift down by 1."""
+	for node_name in graph_nodes:
+		var node: EdgarGraphNode = graph_nodes[node_name]
+		var current_layer: int = node.edgar_layer_button.selected
+		if current_layer == deleted_index:
+			node.edgar_layer_button.select(0)
+		elif current_layer > deleted_index:
+			node.edgar_layer_button.select(current_layer - 1)
+
+func refresh_node_layer_options() -> void:
+	"""Update all node layer dropdowns from current resource data."""
+	var layer_names := get_layer_names()
+	for node_name in graph_nodes:
+		var node: EdgarGraphNode = graph_nodes[node_name]
+		node.refresh_layer_options(layer_names)
 
 func _unload_graph_resource() -> void:
 	if graph_resource == null: return
@@ -150,11 +182,13 @@ func _load_graph_resource() -> void:
 
 	var nodes = graph_resource.get_meta("nodes")
 	var edges = graph_resource.get_meta("edges")
+	var layer_names := get_layer_names()
 
 	# First, create all nodes
 	for node_name in nodes:
 		var node := _add_new_node(node_name)
 		node.set_data(graph_resource.get_meta("nodes")[node_name])
+		node.refresh_layer_options(layer_names)
 
 	# Then, create connections - defer to next frame to ensure nodes are ready
 	_connect_edges_deferred.call_deferred(edges)
@@ -218,6 +252,10 @@ func _add_new_node(node_name:String="") -> GraphNode:
 	if graph_edit.snapping_enabled:
 		node.position_offset = Vector2i(node.position_offset / graph_edit.snapping_distance) * graph_edit.snapping_distance
 	graph_nodes[node.name] = node;
+
+	# Set layer options for new node
+	node.refresh_layer_options(get_layer_names())
+
 	return node
 
 func _rename_node_deferred(old: String, new: String, node: GraphNode) -> void:

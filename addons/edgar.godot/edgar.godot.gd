@@ -29,12 +29,6 @@ var main_view : Control
 
 
 func _enter_tree() -> void:
-
-	var i := 0
-	while i < 20:
-		_set_edgar_layer_project_setting(i + 1)
-		i += 1
-
 	importer = preload("res://addons/edgar.godot/edgar_graph_importer.gd").new()
 	add_import_plugin(importer)
 
@@ -88,13 +82,3 @@ func _edit(object: Object) -> void:
 	if object is Resource and object.has_meta("is_edgar_graph"):
 		if is_instance_valid(main_view):
 			main_view.open_resource(object)
-
-
-func _set_edgar_layer_project_setting(layer_id: int):
-	var layer := "layer_" + str(layer_id)
-	var layer_setting_path := "layer_names/edgar/" + layer
-	if ProjectSettings.has_setting(layer_setting_path):
-		var value: String = ProjectSettings.get(layer_setting_path)
-		if value != null: return
-
-	ProjectSettings.set(layer_setting_path, "")
