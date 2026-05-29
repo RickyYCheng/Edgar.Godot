@@ -16,6 +16,9 @@ public partial class EdgarGodotGenerator : RefCounted
     Array<Dictionary> _edges;
     Array<Godot.Collections.Dictionary<string, Dictionary>> _layers;
 
+    GDScript _proxy;
+    string _cached_proxy_path = "";
+
     public EdgarGodotGenerator()
     {
         _captured_generator = null;
@@ -30,6 +33,22 @@ public partial class EdgarGodotGenerator : RefCounted
         _nodes = nodes;
         _edges = edges;
         _layers = layers;
+    }
+
+    private GDScript Proxy
+    {
+        get
+        {
+            var path = ProjectSettings.GetSetting("Edgar/kernel/edgar_kernel_proxy").AsString();
+
+            if (_cached_proxy_path != path)
+            {
+                _cached_proxy_path = path;
+                _proxy = string.IsNullOrEmpty(path) ? null : GD.Load<GDScript>(path);
+            }
+
+            return _proxy;
+        }
     }
 
     private void ensure_generator()
