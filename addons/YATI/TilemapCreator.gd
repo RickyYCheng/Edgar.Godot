@@ -70,6 +70,7 @@ var _custom_data_prefix: String = ""
 var _tileset_save_path: String = ""
 var _object_groups
 var _ct: CustomTypes = null
+var _base_dictionary: Dictionary
 
 var _iso_rot: float = 0.0
 var _iso_skew: float = 0.0
@@ -150,22 +151,22 @@ func create(source_file: String):
 	if map_content == null:
 		printerr("FATAL ERROR: Tiled map file '" + source_file + "' not found.")
 		return null
-	var base_dictionary: Dictionary = preload("DictionaryBuilder.gd").new().get_dictionary(map_content, source_file)
-	_map_orientation = base_dictionary.get("orientation", "othogonal")
-	_map_width = base_dictionary.get("width", 0)
-	_map_height = base_dictionary.get("height", 0)
-	_map_tile_width = base_dictionary.get("tilewidth", 0)
-	_map_tile_height = base_dictionary.get("tileheight", 0)
-	_infinite = base_dictionary.get("infinite", false)
-	_parallax_origin_x = base_dictionary.get("parallaxoriginx", 0)
-	_parallax_origin_y = base_dictionary.get("parallaxoriginy", 0)
-	_background_color = base_dictionary.get("backgroundcolor", "")
+	_base_dictionary = preload("DictionaryBuilder.gd").new().get_dictionary(map_content, source_file)
+	_map_orientation = _base_dictionary.get("orientation", "othogonal")
+	_map_width = _base_dictionary.get("width", 0)
+	_map_height = _base_dictionary.get("height", 0)
+	_map_tile_width = _base_dictionary.get("tilewidth", 0)
+	_map_tile_height = _base_dictionary.get("tileheight", 0)
+	_infinite = _base_dictionary.get("infinite", false)
+	_parallax_origin_x = _base_dictionary.get("parallaxoriginx", 0)
+	_parallax_origin_y = _base_dictionary.get("parallaxoriginy", 0)
+	_background_color = _base_dictionary.get("backgroundcolor", "")
 
 	if _ct != null:
-		_ct.merge_custom_properties(base_dictionary, "map")
+		_ct.merge_custom_properties(_base_dictionary, "map")
 
-	if base_dictionary.has("tilesets"):
-		var tilesets = base_dictionary["tilesets"]
+	if _base_dictionary.has("tilesets"):
+		var tilesets = _base_dictionary["tilesets"]
 		for tileSet in tilesets:
 			_first_gids.append(int(tileSet["firstgid"]))
 		var tileset_creator = preload("TilesetCreator.gd").new()
@@ -190,14 +191,14 @@ func create(source_file: String):
 			_tileset.tile_shape = TileSet.TILE_SHAPE_ISOMETRIC
 			_tileset.tile_layout = TileSet.TILE_LAYOUT_DIAMOND_DOWN
 		"staggered":
-			var stagger_axis = base_dictionary.get("staggeraxis", "y")
-			var stagger_index = base_dictionary.get("staggerindex", "odd")
+			var stagger_axis = _base_dictionary.get("staggeraxis", "y")
+			var stagger_index = _base_dictionary.get("staggerindex", "odd")
 			_tileset.tile_shape = TileSet.TILE_SHAPE_ISOMETRIC
 			_tileset.tile_layout = TileSet.TILE_LAYOUT_STACKED if stagger_index == "odd" else TileSet.TILE_LAYOUT_STACKED_OFFSET
 			_tileset.tile_offset_axis = TileSet.TILE_OFFSET_AXIS_VERTICAL if stagger_axis == "x" else TileSet.TILE_OFFSET_AXIS_HORIZONTAL
 		"hexagonal":
-			var stagger_axis = base_dictionary.get("staggeraxis", "y")
-			var stagger_index = base_dictionary.get("staggerindex", "odd")
+			var stagger_axis = _base_dictionary.get("staggeraxis", "y")
+			var stagger_index = _base_dictionary.get("staggerindex", "odd")
 			_tileset.tile_shape = TileSet.TILE_SHAPE_HEXAGON
 			_tileset.tile_layout = TileSet.TILE_LAYOUT_STACKED if stagger_index == "odd" else TileSet.TILE_LAYOUT_STACKED_OFFSET
 			_tileset.tile_offset_axis = TileSet.TILE_OFFSET_AXIS_VERTICAL if stagger_axis == "x" else TileSet.TILE_OFFSET_AXIS_HORIZONTAL
@@ -217,8 +218,8 @@ func create(source_file: String):
 		_background.name = BACKGROUND_COLOR_RECT_NAME
 		_background.owner = _base_node
 	
-	if base_dictionary.has("layers"):
-		for layer in base_dictionary["layers"]:
+	if _base_dictionary.has("layers"):
+		for layer in _base_dictionary["layers"]:
 			handle_layer(layer, _base_node)
 
 	if _tileset_save_path != "":
@@ -233,8 +234,8 @@ func create(source_file: String):
 			CommonUtils.error_count += 1
 
 
-	if base_dictionary.has("properties"):
-		handle_properties(_base_node, base_dictionary["properties"])
+	if _base_dictionary.has("properties"):
+		handle_properties(_base_node, _base_dictionary["properties"])
 
 	if _parallax_background.get_child_count() == 0:
 		_base_node.remove_child(_parallax_background)
@@ -247,8 +248,8 @@ func create(source_file: String):
 
 	var ret = _base_node.get_child(0)
 	recursively_change_owner(ret, ret)
-	if base_dictionary.has("properties"):
-		handle_properties(ret, base_dictionary["properties"])
+	if _base_dictionary.has("properties"):
+		handle_properties(ret, _base_dictionary["properties"])
 	ret.name = _base_name
 	return ret
 
@@ -282,6 +283,7 @@ func handle_layer(layer: Dictionary, parent: Node2D):
 		if layer_opacity < 1.0 or tint_color != "#ffffff":
 			_tilemap_layer.modulate = Color(tint_color, layer_opacity)
 		_tilemap_layer.tile_set = _tileset
+		# Leave the old handling for the time being
 		handle_parallaxes(parent, _tilemap_layer, layer)
 		if _map_orientation == "isometric" or _map_orientation == "staggered":
 			_tilemap_layer.y_sort_enabled = true
@@ -327,8 +329,8 @@ func handle_layer(layer: Dictionary, parent: Node2D):
 			parent.add_child(layer_node)
 			layer_node.owner = _base_node
 			if layer.has("parallaxx") or layer.has("parallaxy"):
-				var par_x = layer.get("parallaxx", 0.0)
-				var par_y = layer.get("parallaxy", 0.0)
+				var par_x = layer.get("parallaxx", 1.0)
+				var par_y = layer.get("parallaxy", 1.0)
 				layer_node.scroll_scale = Vector2(par_x, par_y)
 		else:
 			layer_node = Node2D.new()
@@ -364,8 +366,8 @@ func handle_layer(layer: Dictionary, parent: Node2D):
 			parent.add_child(group_node)
 			group_node.owner = _base_node
 			if layer.has("parallaxx") or layer.has("parallaxy"):
-				var par_x = layer.get("parallaxx", 0.0)
-				var par_y = layer.get("parallaxy", 0.0)
+				var par_x = layer.get("parallaxx", 1.0)
+				var par_y = layer.get("parallaxy", 1.0)
 				group_node.scroll_scale = Vector2(par_x, par_y)
 		else:
 			group_node = Node2D.new()
@@ -388,22 +390,60 @@ func handle_layer(layer: Dictionary, parent: Node2D):
 			handle_properties(group_node, layer["properties"])
 
 	elif layer_type == "imagelayer":
-		var texture_rect = TextureRect.new()
-		handle_parallaxes(parent, texture_rect, layer)
+		var node_type = get_godot_node_type(layer)
 
-		texture_rect.name = layer.get("name", "image")
-		texture_rect.position = Vector2(layer_offset_x, layer_offset_y)
+		if node_type == _godot_type.PARALLAX:
+			var px_2d = Parallax2D.new()
+			parent.add_child(px_2d)
+			px_2d.owner = _base_node
+			px_2d.name = layer.get("name", "parallax")
+			if layer.has("parallaxx") or layer.has("parallaxy"):
+				var par_x = layer.get("parallaxx", 1.0)
+				var par_y = layer.get("parallaxy", 1.0)
+				px_2d.scroll_scale = Vector2(par_x, par_y)
+			if layer.has("repeatx") and layer["repeatx"] == 1:
+				var repeat_size_x = layer.get("imagewidth", 0)
+				if repeat_size_x > 0:
+					px_2d.repeat_size = Vector2(repeat_size_x, px_2d.repeat_size.y)
+					px_2d.repeat_times = 2
+			if layer.has("repeaty") and layer["repeaty"] == 1:
+				var repeat_size_y = layer.get("imageheight", 0)
+				if repeat_size_y > 0:
+					px_2d.repeat_size = Vector2(px_2d.repeat_size.x, repeat_size_y)
+					px_2d.repeat_times = 2
+			var texture_rect = TextureRect.new()
+			texture_rect.name = layer["image"].get_file().get_basename()
+			texture_rect.position = Vector2(layer_offset_x, layer_offset_y)
+			var imagewidth = layer.get("imagewidth", 0)
+			var imageheight = layer.get("imageheight", 0)
+			texture_rect.size = Vector2(imagewidth, imageheight)
+			if layer_opacity < 1.0 or tint_color != "#ffffff":
+				texture_rect.modulate = Color(tint_color, layer_opacity)
+			texture_rect.visible = layer_visible
+			texture_rect.texture = DataLoader.load_image(layer["image"], _base_path)
 
-		var imagewidth = layer.get("imagewidth", 0)
-		var imageheight = layer.get("imageheight", 0)
-		texture_rect.size = Vector2(imagewidth, imageheight)
-		if layer_opacity < 1.0 or tint_color != "#ffffff":
-			texture_rect.modulate = Color(tint_color, layer_opacity)
-		texture_rect.visible = layer_visible
-		texture_rect.texture = DataLoader.load_image(layer["image"], _base_path)
+			px_2d.add_child(texture_rect)
+			texture_rect.owner = _base_node
 
-		if layer.has("properties"):
-			handle_properties(texture_rect, layer["properties"])
+			if layer.has("properties"):
+				handle_properties(px_2d, layer["properties"])
+		else:
+			var texture_rect = TextureRect.new()
+			handle_parallaxes(parent, texture_rect, layer)
+
+			texture_rect.name = layer.get("name", "image")
+			texture_rect.position = Vector2(layer_offset_x, layer_offset_y)
+
+			var imagewidth = layer.get("imagewidth", 0)
+			var imageheight = layer.get("imageheight", 0)
+			texture_rect.size = Vector2(imagewidth, imageheight)
+			if layer_opacity < 1.0 or tint_color != "#ffffff":
+				texture_rect.modulate = Color(tint_color, layer_opacity)
+			texture_rect.visible = layer_visible
+			texture_rect.texture = DataLoader.load_image(layer["image"], _base_path)
+
+			if layer.has("properties"):
+				handle_properties(texture_rect, layer["properties"])
 
 func handle_parallaxes(parent: Node, layer_node: Node, layer_dict: Dictionary):
 	if layer_dict.has("parallaxx") or layer_dict.has("parallaxy"):
@@ -422,6 +462,10 @@ func handle_parallaxes(parent: Node, layer_node: Node, layer_dict: Dictionary):
 		var px_name = layer_dict.get("name", "")
 		parallax_node.name = px_name + " (PL)" if px_name != "" else "ParallaxLayer"
 		parallax_node.motion_scale = Vector2(par_x, par_y)
+		var mirror_x = layer_dict.get("imagewidth", 0) if layer_dict.get("repeatx", 0) else 0
+		var mirror_y = layer_dict.get("imageheight", 0) if layer_dict.get("repeaty", 0) else 0
+		if mirror_x != 0 or mirror_y != 0:
+			parallax_node.motion_mirroring = Vector2(mirror_x, mirror_y)
 		parallax_node.add_child(layer_node)
 	else:
 		parent.add_child(layer_node)
@@ -716,6 +760,13 @@ static func get_instance_offset(width: float, height: float, r_alignment: String
 	}.get(r_alignment, Vector2.ZERO)
 
 
+static func get_position_offset(width: float, height: float, rotation: float) -> Vector2:
+	var orig_point = Vector2(-width / 2.0, -height / 2.0)
+	var rot_rad = rotation * PI / 180.0
+	var new_point = orig_point.rotated(rot_rad)
+	return orig_point - new_point
+
+
 func convert_metadata_to_obj_properties(td: TileData, obj: Dictionary) -> void:
 	var meta_list = td.get_meta_list()
 	for meta_name in meta_list:
@@ -751,7 +802,6 @@ func convert_metadata_to_obj_properties(td: TileData, obj: Dictionary) -> void:
 					obj["properties"].append(prop_dict)
 		else:
 			obj["properties"] = [prop_dict]
-
 
 
 func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: Vector2) -> void:
@@ -1280,6 +1330,7 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 				var collision_shape = CollisionShape2D.new()
 				co.add_child(collision_shape)
 				collision_shape.owner = _base_node
+				var obj_rot_orig = obj_rot
 				if obj.has("capsule") or obj.has("ellipse"):
 					var capsule_shape = CapsuleShape2D.new()
 					if obj_height >= obj_width:
@@ -1317,6 +1368,7 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 					collision_shape.scale = _iso_scale
 
 				collision_shape.position = transpose_coords(obj_width / 2.0, obj_height / 2.0, true)
+				collision_shape.position += get_position_offset(obj_width, obj_height, obj_rot_orig)
 				collision_shape.rotation_degrees = obj_rot
 				collision_shape.visible = obj_visible
 				if _add_class_as_metadata and class_string != "":
@@ -1589,6 +1641,14 @@ func polygon_from_rectangle(width: float, height: float):
 	return polygon
 
 
+func get_rotated_polygon(polygon: Array, rotation: float) -> Array:
+	var ret = []
+	var rot_rad = rotation * PI / 180.0
+	for vertex in polygon:
+		ret.append(vertex.rotated(rot_rad))
+	return ret
+
+
 func transpose_coords(x: float, y: float, no_offset_x: bool = false):
 	if _map_orientation == "isometric":
 		var trans_x = (x - y) * _map_tile_width / _map_tile_height / 2.0
@@ -1678,6 +1738,76 @@ func get_object_group(index: int):
 	return ret
 
 
+func get_object(index: int):
+	if not _base_dictionary.has("layers"): return null
+	for layer in _base_dictionary["layers"]:
+		if not layer.has("objects"): continue
+		for obj in layer["objects"]:
+			if index == obj.get("id", 0):
+				return obj
+	return null
+
+
+func get_object_polygon(obj_id: int):
+	var obj: Dictionary = get_object(obj_id)
+	if obj == null:
+		return null
+	var obj_x = obj.get("x", 0.0)
+	var obj_y = obj.get("y", 0.0)
+	var obj_rot = obj.get("rotation", 0.0)
+	var ret = null
+	if obj.has("polygon"):
+		var pg = get_rotated_polygon(polygon_from_array(obj["polygon"]), obj_rot)
+		var i = 0
+		for vertex in pg:
+			pg[i] += Vector2(obj_x, obj_y)
+			i += 1
+		ret = PackedVector2Array(pg)
+	elif obj.has("polyline"):
+		var pl = get_rotated_polygon(polygon_from_array(obj["polyline"]), obj_rot)
+		var i = 0
+		for vertex in pl:
+			pl[i] += Vector2(obj_x, obj_y)
+			i += 1
+		ret = PackedVector2Array(pl)
+	elif obj.has("point"):
+		ret = Vector2(obj_x, obj_y)
+	elif not obj.has("ellipse") and not obj.has("capsule"):
+		# Should be a rectangle
+		var obj_width = obj.get("width", 0.0)
+		var obj_height = obj.get("height", 0.0)
+		var rect = []
+		rect.append(Vector2(0.0, 0.0))
+		rect.append(Vector2(obj_width, 0.0))
+		rect.append(Vector2(obj_width, obj_height))
+		rect.append(Vector2(0.0, obj_height))
+		var rot_rect = get_rotated_polygon(rect, obj_rot)
+		var i = 0
+		for vertex in rot_rect:
+			rot_rect[i] += Vector2(obj_x, obj_y)
+			i += 1
+		ret = PackedVector2Array(rot_rect)
+	return ret
+
+
+func handle_list_property(current_array: Array, current_value: Array):
+	for item in current_value:
+		var item_type: String = item.get("type", "string")
+		var item_val = item["value"]
+		if item_type == "list":
+			var list_val = []
+			current_array.append(list_val)
+			handle_list_property(list_val, item_val)
+		elif item_type == "object":
+			var obj = get_object_polygon(item_val)
+			if obj != null:
+				current_array.append(obj)
+			else:
+				current_array.append(CommonUtils.get_right_typed_value(item_type, str(item_val)))
+		else:
+			current_array.append(CommonUtils.get_right_typed_value(item_type, str(item_val)))
+
+
 func handle_properties(target_node: Node, properties: Array):
 	var has_children = false
 	if target_node is StaticBody2D or target_node is Area2D or target_node is CharacterBody2D or target_node is RigidBody2D or target_node is AnimatableBody2D:
@@ -1685,7 +1815,13 @@ func handle_properties(target_node: Node, properties: Array):
 	for property in properties:
 		var name: String = property.get("name", "")
 		var type: String = property.get("type", "string")
-		var val: String = str(property.get("value", ""))
+		var list_val = ""
+		var val: String = ""
+		if type == "list":
+			list_val = []
+			handle_list_property(list_val, property["value"])
+		else:
+			val = str(property.get("value", ""))
 		if name == "" or name.to_lower() == GODOT_NODE_TYPE_PROPERTY or name.to_lower() == "res_path": continue
 		if name.begins_with("__") and has_children:
 			var child_prop_dict = {}
@@ -2090,4 +2226,13 @@ func handle_properties(target_node: Node, properties: Array):
 
 		# Other properties are added as Metadata
 		else:
-			target_node.set_meta(name, CommonUtils.get_right_typed_value(type, val))
+			if type == "object":
+				var obj = get_object_polygon(int(val))
+				if obj != null:
+					target_node.set_meta(name, obj)
+				else:
+					target_node.set_meta(name, CommonUtils.get_right_typed_value(type, val))
+			elif type == "list":
+				target_node.set_meta(name, list_val)
+			else:
+				target_node.set_meta(name, CommonUtils.get_right_typed_value(type, val))
