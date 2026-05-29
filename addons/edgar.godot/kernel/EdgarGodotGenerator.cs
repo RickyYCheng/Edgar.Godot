@@ -39,7 +39,7 @@ public partial class EdgarGodotGenerator : RefCounted
     {
         get
         {
-            var path = ProjectSettings.GetSetting("Edgar/kernel/edgar_kernel_proxy").AsString();
+            var path = ProjectSettings.GetSetting("Edgar/kernel/edgar_kernel_proxy", string.Empty).AsString();
 
             if (_cached_proxy_path != path)
             {
