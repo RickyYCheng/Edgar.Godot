@@ -16,8 +16,8 @@ public partial class EdgarGodotGenerator : RefCounted
     Array<Dictionary> _edges;
     Array<Godot.Collections.Dictionary<string, Dictionary>> _layers;
 
-    GDScript _proxy;
-    string _cached_proxy_path = "";
+    static GDScript _proxy;
+    static string _cached_proxy_path = "";
 
     public EdgarGodotGenerator()
     {
@@ -35,7 +35,7 @@ public partial class EdgarGodotGenerator : RefCounted
         _layers = layers;
     }
 
-    private GDScript Proxy
+    private static GDScript Proxy
     {
         get
         {
@@ -138,19 +138,24 @@ public partial class EdgarGodotGenerator : RefCounted
         {
             var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
             var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
+            var template_cache = new Godot.Collections.Dictionary<string, Dictionary>();
             var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
             {
                 var result = new Godot.Collections.Dictionary<string, Dictionary> { };
 
                 foreach (var name in layer)
                 {
-                    var tmj = GD.Load<PackedScene>(name);
-                    if (tmj == null)
+                    if (template_cache.TryGetValue(name, out var cached))
                     {
-                        GD.PushError($"Failed to load template: {name}");
+                        result.Add(name, cached);
                         continue;
                     }
-                    var lnk = tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
+
+                    var lnk = get_lnk(name);
+                    if (lnk is null || lnk.Count == 0)
+                        continue;
+
+                    template_cache[name] = lnk;
                     result.Add(name, lnk);
                 }
 
@@ -212,5 +217,21 @@ public partial class EdgarGodotGenerator : RefCounted
         }
 
         _captured_generator.InjectRandomGenerator(new System.Random(seed));
+    }
+
+    private static Dictionary get_lnk(string template)
+    {
+        if (Proxy is not null)
+        {
+            return Proxy.Call(nameof(get_lnk), template).As<Dictionary>();
+        }
+
+        var tmj = GD.Load<PackedScene>(template);
+        if (tmj == null)
+        {
+            GD.PushError($"Failed to load template: {template}");
+            return null;
+        }
+        return tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
     }
 }
