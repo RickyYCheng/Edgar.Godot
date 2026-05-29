@@ -15,9 +15,10 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="edgar.godot"
+config/tags=PackedStringArray("addon")
 run/main_scene="uid://c8nqeebmyvxrb"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-config/icon="uid://dqf0h3kgid2a2"
+config/icon="uid://b6kb4p63e5m6t"
 
 [debug]
 
