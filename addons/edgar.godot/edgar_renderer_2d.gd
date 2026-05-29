@@ -36,6 +36,16 @@ signal custom_post_process(renderer: EdgarRenderer2D, tile_map_layer: TileMapLay
 signal clear_tiles(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer)
 
 var generator: EdgarGodotGenerator
+
+var _cached_proxy_path: String = ""
+var _proxy: GDScript
+func get_proxy() -> GDScript:
+	var path := ProjectSettings.get_setting("Edgar/kernel/edgar_kernel_proxy", "") as String
+	if _cached_proxy_path != path:
+		_cached_proxy_path = path
+		_proxy = (load(path) as GDScript) if not path.is_empty() else null
+	return _proxy
+
 @export_tool_button("Generate Layout") var _generate_layout_btn : Callable = generate_layout
 @export_tool_button("Rerender Layout") var _renderer_layout_btn : Callable = render
 @export var anchor_offset_mode: AnchorOffsetMode = AnchorOffsetMode.OFFSET_CELL_COORD
@@ -136,35 +146,34 @@ func render() -> void:
 				pass
 
 		for room in layout.rooms:
-			var room_template = load(room.template)
-			var tmj: Node = room_template.instantiate()
+			var room_node := _load_room(room.template)
 			
 			if not room_inclusions.is_empty():
 				if room_inclusions.get(room.room, false) == false:
-					tmj.queue_free()
+					room_node.queue_free()
 					continue
 			else:
 				if room_exceptions.get(room.room, false) == true:
-					tmj.queue_free()
+					room_node.queue_free()
 					continue
 			
-			var room_edgar_layer: int = int(room.edgar_layer)
+			var room_edgar_layer := int(room.edgar_layer)
 			if not edgar_layer_inclusions.is_empty():
 				if edgar_layer_inclusions.get(room_edgar_layer, false) == false:
-					tmj.queue_free()
+					room_node.queue_free()
 					continue
 			else:
 				if edgar_layer_exceptions.get(room_edgar_layer, false) == true:
-					tmj.queue_free()
+					room_node.queue_free()
 					continue
 			
-			var lnk := tmj.get_meta("lnk") as Dictionary
+			var lnk := room_node.get_meta("lnk") as Dictionary
 
-			var origin_outline = lnk["boundary"]
+			var origin_outline := lnk["boundary"] as PackedVector2Array
 			var origin_used_rect := Rect2i(origin_outline[0], Vector2i.ZERO)
 			var target_used_rect := Rect2i(room.outline[0] + room.position, Vector2i.ZERO)
 			
-			var cnt : int = origin_outline.size()
+			var cnt := origin_outline.size()
 			var i := 0
 			while i < cnt:
 				var _origin_pt := Vector2i(origin_outline[i])
@@ -174,9 +183,9 @@ func render() -> void:
 				target_used_rect = target_used_rect.expand(_target_pt)
 				i += 1
 			
-			var origin_tile_size := Vector2(tmj.get_meta("origin_tile_size", Vector2i.ONE))
+			var origin_tile_size := Vector2(room_node.get_meta("origin_tile_size", Vector2i.ONE))
 			var target_tile_size := Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE
-			for child in tmj.get_children():
+			for child in room_node.get_children():
 				if child is TileMapLayer and child.name == tiled_layer:
 					var origin_tml := child as TileMapLayer
 					var cells := origin_tml.get_used_cells()
@@ -240,7 +249,7 @@ func render() -> void:
 				else:
 					custom_post_process.emit(self, tile_map_layer, child)
 			
-			tmj.queue_free()
+			room_node.queue_free()
 		
 		post_process.emit(self, tile_map_layer, tiled_layer)
 
@@ -313,3 +322,11 @@ func _exit_tree() -> void:
 	# Clean up signal connections
 	if level and level.changed.is_connected(_on_level_changed):
 		level.changed.disconnect(_on_level_changed)
+
+func _load_room(template: String) -> Node:
+	var proxy := get_proxy()
+	
+	if proxy:
+		return proxy.call("load_room", template)
+	
+	return load(template).instantiate()

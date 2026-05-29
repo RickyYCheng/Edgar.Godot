@@ -35,20 +35,17 @@ public partial class EdgarGodotGenerator : RefCounted
         _layers = layers;
     }
 
-    private static GDScript Proxy
+    private static GDScript get_proxy()
     {
-        get
+        var path = ProjectSettings.GetSetting("Edgar/kernel/edgar_kernel_proxy", string.Empty).AsString();
+
+        if (_cached_proxy_path != path)
         {
-            var path = ProjectSettings.GetSetting("Edgar/kernel/edgar_kernel_proxy", string.Empty).AsString();
-
-            if (_cached_proxy_path != path)
-            {
-                _cached_proxy_path = path;
-                _proxy = string.IsNullOrEmpty(path) ? null : GD.Load<GDScript>(path);
-            }
-
-            return _proxy;
+            _cached_proxy_path = path;
+            _proxy = string.IsNullOrEmpty(path) ? null : GD.Load<GDScript>(path);
         }
+
+        return _proxy;
     }
 
     private void ensure_generator()
@@ -221,17 +218,19 @@ public partial class EdgarGodotGenerator : RefCounted
 
     private static Dictionary get_lnk(string template)
     {
-        if (Proxy is not null)
+        var proxy = get_proxy();
+
+        if (proxy is not null)
         {
-            return Proxy.Call(nameof(get_lnk), template).As<Dictionary>();
+            return proxy.Call(nameof(get_lnk), template).As<Dictionary>();
         }
 
-        var tmj = GD.Load<PackedScene>(template);
-        if (tmj == null)
+        var template_scene = GD.Load<PackedScene>(template);
+        if (template_scene == null)
         {
             GD.PushError($"Failed to load template: {template}");
             return null;
         }
-        return tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
+        return template_scene.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
     }
 }
