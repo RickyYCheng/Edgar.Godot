@@ -106,15 +106,8 @@ func generate_layout() -> void:
 	
 	var pivot_idx := layout.rooms.find_custom(func(r): return r.is_pivot) as int
 	if pivot_idx >= 0:
-		var anchor := Vector2.ZERO
 		var pivot_room := layout.rooms[pivot_idx] as Dictionary
-		var pivot_room_template: PackedScene = load(pivot_room.template)
-		var scene_state := pivot_room_template.get_state()
-		for i in scene_state.get_node_property_count(0):
-			var prop_name := scene_state.get_node_property_name(0, i)
-			if prop_name == "metadata/anchor":
-				anchor = scene_state.get_node_property_value(0, i)
-				break
+		var anchor := _get_anchor(pivot_room.template)
 		
 		var coord_offset: Vector2 = pivot_room.position + anchor
 		anchor_offset = -coord_offset if anchor_offset_mode == AnchorOffsetMode.OFFSET_CELL_COORD else Vector2i.ZERO
@@ -332,3 +325,21 @@ func _load_room(template: String, proxy: GDScript = null) -> Node:
 		return proxy.call("load_room", template)
 	
 	return load(template).instantiate()
+
+func _get_anchor(template: String, proxy: GDScript = null) -> Vector2:
+	if not proxy:
+		proxy = get_proxy()
+	
+	if proxy:
+		return proxy.call("get_anchor", template)
+	
+	var anchor := Vector2.ZERO
+	var pivot_room_template: PackedScene = load(template)
+	var scene_state := pivot_room_template.get_state()
+	for i in scene_state.get_node_property_count(0):
+		var prop_name := scene_state.get_node_property_name(0, i)
+		if prop_name == "metadata/anchor":
+			anchor = scene_state.get_node_property_value(0, i)
+			break
+	
+	return anchor
