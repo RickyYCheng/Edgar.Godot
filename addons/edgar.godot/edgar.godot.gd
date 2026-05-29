@@ -28,6 +28,9 @@ var importer = null
 var main_view : Control
 
 
+const KERNEL_PROXY_SETTING = "Edgar/kernel/edgar_kernel_proxy"
+
+
 func _enter_tree() -> void:
 	importer = preload("res://addons/edgar.godot/edgar_graph_importer.gd").new()
 	add_import_plugin(importer)
@@ -35,6 +38,17 @@ func _enter_tree() -> void:
 	main_view = preload("res://addons/edgar.godot/views/main_view.tscn").instantiate()
 	EditorInterface.get_editor_main_screen().add_child(main_view)
 	_make_visible(false)
+
+	if not ProjectSettings.has_setting(KERNEL_PROXY_SETTING):
+		ProjectSettings.set_setting(KERNEL_PROXY_SETTING, "")
+
+	ProjectSettings.add_property_info({
+		"name": KERNEL_PROXY_SETTING,
+		"type": TYPE_STRING,
+		"hint": PROPERTY_HINT_FILE,
+		"hint_string": "*.gd"
+	})
+	ProjectSettings.set_initial_value(KERNEL_PROXY_SETTING, "")
 
 
 func _exit_tree() -> void:
