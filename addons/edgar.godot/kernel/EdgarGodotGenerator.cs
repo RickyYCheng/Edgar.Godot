@@ -147,7 +147,7 @@ public partial class EdgarGodotGenerator : RefCounted
                     var tmj = GD.Load<PackedScene>(name);
                     if (tmj == null)
                     {
-                        GD.PushError($"Failed to load packed scene: {name}");
+                        GD.PushError($"Failed to load template: {name}");
                         continue;
                     }
                     var lnk = tmj.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
