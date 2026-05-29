@@ -124,6 +124,7 @@ func render() -> void:
 		printerr("[EdgarGodot] Cannot render: layout is null or empty.")
 		return
 
+	var proxy := get_proxy()
 	for tile_map_layer in tile_map_layers:
 		clear(tile_map_layer)
 		
@@ -146,7 +147,7 @@ func render() -> void:
 				pass
 
 		for room in layout.rooms:
-			var room_node := _load_room(room.template)
+			var room_node := _load_room(room.template, proxy)
 			
 			if not room_inclusions.is_empty():
 				if room_inclusions.get(room.room, false) == false:
@@ -323,9 +324,10 @@ func _exit_tree() -> void:
 	if level and level.changed.is_connected(_on_level_changed):
 		level.changed.disconnect(_on_level_changed)
 
-func _load_room(template: String) -> Node:
-	var proxy := get_proxy()
-	
+func _load_room(template: String, proxy: GDScript = null) -> Node:
+	if not proxy:
+		proxy = get_proxy()
+
 	if proxy:
 		return proxy.call("load_room", template)
 	

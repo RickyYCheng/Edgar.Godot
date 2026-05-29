@@ -216,9 +216,9 @@ public partial class EdgarGodotGenerator : RefCounted
         _captured_generator.InjectRandomGenerator(new System.Random(seed));
     }
 
-    private static Dictionary get_lnk(string template)
+    private static Dictionary get_lnk(string template, GDScript proxy = null)
     {
-        var proxy = get_proxy();
+        proxy ??= get_proxy();
 
         if (proxy is not null)
         {
