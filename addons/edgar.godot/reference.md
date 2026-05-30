@@ -84,8 +84,8 @@ To enable transformations, add the following meta-data to the `lnk` layer:
 > 3: Rotate270  
 > 4: MirrorX  
 > 5: MirrorY  
-> 6: Diagnal13  
-> 7: Diagnal24  
+> 6: Diagonal13  
+> 7: Diagonal24  
 
 #### Tile Swapping
 Most of the time, you would want to re-map / swap the tiles according to the transformation applied to the room.  

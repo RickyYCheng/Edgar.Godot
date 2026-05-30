@@ -287,7 +287,7 @@ func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect:
 			return Vector2i(origin_used_rect.size.x - 1 - cell.x, cell.y) + diff + cell_offset
 		5: # Mirror Y
 			return Vector2i(cell.x, origin_used_rect.size.y - 1 - cell.y) + diff + cell_offset
-		6: # Diagnal 13
+		6: # Diagonal 13
 			return Vector2i(cell.y, cell.x) + diff + cell_offset
 		7: # Diagonal 24
 			return Vector2i(origin_used_rect.size.y - 1 - cell.y, origin_used_rect.size.x - 1 - cell.x) + diff + cell_offset
@@ -311,7 +311,7 @@ func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect
 			return Vector2(w - point.x, point.y) + diff + Vector2(point_offset)
 		5: # Mirror Y
 			return Vector2(point.x, h - point.y) + diff + Vector2(point_offset)
-		6: # Diagnal 13
+		6: # Diagonal 13
 			return Vector2(point.y, point.x) + diff + Vector2(point_offset)
 		7: # Diagonal 24
 			return Vector2(h - point.y, w - point.x) + diff + Vector2(point_offset)
