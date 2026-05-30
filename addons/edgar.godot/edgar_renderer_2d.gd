@@ -24,6 +24,9 @@
 class_name EdgarRenderer2D
 extends Node2D
 
+const KERNEL_PROXY_PATH := "Edgar/kernel/edgar_kernel_proxy"
+const EDGAR_YATI_PROXY_PATH := "res://addons/edgar.godot/proxy/yati/edgar_yati_proxy.gd"
+
 enum AnchorOffsetMode {
 	OFFSET_CELL_COORD,
 	OFFSET_TILEMAP,
@@ -40,10 +43,10 @@ var generator: EdgarGodotGenerator
 var _cached_proxy_path: String = ""
 var _proxy: GDScript
 func get_proxy() -> GDScript:
-	var path := ProjectSettings.get_setting("Edgar/kernel/edgar_kernel_proxy", "") as String
+	var path := ProjectSettings.get_setting(KERNEL_PROXY_PATH, EDGAR_YATI_PROXY_PATH) as String
 	if _cached_proxy_path != path:
 		_cached_proxy_path = path
-		_proxy = (load(path) as GDScript) if not path.is_empty() else null
+		_proxy = (load(path) as GDScript) if ResourceLoader.exists(path) else null
 	return _proxy
 
 @export_tool_button("Generate Layout") var _generate_layout_btn : Callable = generate_layout

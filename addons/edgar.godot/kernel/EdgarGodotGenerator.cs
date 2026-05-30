@@ -11,6 +11,9 @@ using Godot.Collections;
 [GlobalClass]
 public partial class EdgarGodotGenerator : RefCounted
 {
+    const string KERNEL_PROXY_SETTING = "Edgar/kernel/edgar_kernel_proxy";
+    const string EDGAR_YATI_PROXY_PATH = "res://addons/edgar.godot/proxy/yati/edgar_yati_proxy.gd";
+
     GraphBasedGeneratorGrid2D<string> _captured_generator;
     Godot.Collections.Dictionary<string, Dictionary> _nodes;
     Array<Dictionary> _edges;
@@ -37,12 +40,12 @@ public partial class EdgarGodotGenerator : RefCounted
 
     private static GDScript get_proxy()
     {
-        var path = ProjectSettings.GetSetting("Edgar/kernel/edgar_kernel_proxy", string.Empty).AsString();
+        var path = ProjectSettings.GetSetting(KERNEL_PROXY_SETTING, EDGAR_YATI_PROXY_PATH).AsString();
 
         if (_cached_proxy_path != path)
         {
             _cached_proxy_path = path;
-            _proxy = string.IsNullOrEmpty(path) ? null : GD.Load<GDScript>(path);
+            _proxy = ResourceLoader.Exists(path) ? GD.Load<GDScript>(path) : null;
         }
 
         return _proxy;
