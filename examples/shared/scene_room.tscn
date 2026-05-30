@@ -10,7 +10,7 @@
 metadata/lnk = {
 "boundary": PackedVector2Array(0, 0, 16, 0, 16, 16, 0, 16),
 "doors": Array[PackedVector2Array]([PackedVector2Array(0, 14, 0, 10, 0, 6), PackedVector2Array(16, 2, 16, 6, 16, 10)]),
-"transformations": PackedInt32Array(0)
+"transformations": PackedInt32Array(0, 4)
 }
 metadata/anchor = Vector2(0, 0)
 metadata/tile_size = Vector2(16, 16)
@@ -26,7 +26,7 @@ unique_name_in_owner = true
 [node name="lnk" type="Node2D" parent="." unique_id=711971829]
 unique_name_in_owner = true
 script = ExtResource("1_th3au")
-transformations = PackedInt32Array(0)
+transformations = PackedInt32Array(0, 4)
 metadata/_custom_type_script = "uid://batc36ftx6pvx"
 
 [node name="EdgarBoundary2D" type="Polygon2D" parent="lnk" unique_id=1501102166]

@@ -198,12 +198,11 @@ func render() -> void:
 								continue
 
 						var tile_data := origin_tml.get_cell_tile_data(cell)
-						var _str := "tileswap%d" % int(room.transformation)
-						var swap_data = _get_tile_data_property(tile_data, _str)
-						if swap_data:
-							source_id = swap_data.r8
-							atlas_coord = Vector2i(swap_data.g8, swap_data.b8)
-							alternative_tile = swap_data.a8
+						var swap_data := _get_swap_data(tile_data, room.transformation)
+						if swap_data != Vector4i.MIN:
+							source_id = swap_data.x
+							atlas_coord = Vector2i(swap_data.y, swap_data.z)
+							alternative_tile = swap_data.w
 
 						tile_map_layer.set_cell(
 							_transform_cell(cell, origin_used_rect, target_used_rect, room.transformation, anchor_offset), 
@@ -329,6 +328,15 @@ func _exit_tree() -> void:
 	# Clean up signal connections
 	if level and level.changed.is_connected(_on_level_changed):
 		level.changed.disconnect(_on_level_changed)
+
+func _get_swap_data(tile_data: TileData, transformation: int) -> Vector4i:
+	var data := _get_tile_data_property(tile_data, "tileswap%d" % int(transformation))
+	if data is Color:
+		return Vector4(data.r8, data.g8, data.b8, data.a8)
+	elif data is Vector4 or data is Vector4i:
+		return data
+	
+	return Vector4i.MIN
 
 func _get_tile_data_property(tile_data: TileData, key: String) -> Variant:
 	if tile_data.has_custom_data(key):

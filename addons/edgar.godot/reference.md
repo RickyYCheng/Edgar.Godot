@@ -33,13 +33,63 @@ Create a `.gd` script implementing the three contract methods, then set `Edgar/k
 
 ---
 
-## Tiled Map Layers
+## Making room templates
+
+### Godot 2D scenes
+
+The native godot 2d scene is supported in edgar.godot.  
+To implement plain text loading instead of `\*.tscn/\*.scn`, please check [tiled-mapeditor](#tiled-map-layers). 
+
+---
+
+Use `Project > Tools > Create Edgar Room Template Scene 2D` to create a template room based on godot scene 2d. 
+
+To provide the geometry messages for edgar, please adjust the `EdgarBoundary2D` and `EdgarAnchor2D` node.  
+
+To define doors, put multiple `EdgarDoor2D` under `EdgarDesigner2D` (the `lnk` node). And make it multi-polyline to define door segments. And voilà!  
+
+> [!NOTE]
+> The default proxy `edgar_yati_proxy` has the ability to handle it.  
+> Nothing need to change.  
+
+#### lnk
+
+> [!IMPORTANT]  
+> `lnk` is used to define the topology of the room connections, which is a `Dictionary`. 
+
+##### Boundary
+
+The boundary must be a clock-wise polygon, with each segment being orthogonal. 
+
+#### Door
+
+> [!NOTE]  
+> The `Door` objects is a polyline with multiple segments.  
+> Each segment is considered as the length of the door.  
+> Example: The total height of the opening is 6, the usable height of a single door is 2. The default segments are [0,2], [2,4], [4,6], so the cooperative movement step between the two rooms is 2.  
+> If an additional independent `Door` is added with overlapping segments [1,3], [3,5], then the full set of usable segments becomes [0,2], [1,3], [2,4], [3,5], [4,6], and the minimal alignment step decreases to 1. This makes the movement unit along that edge smaller, increases the number of alignment positions, and enriches possible generation combinations.  
+> Summary: Adding overlapping segments reduces the minimal step size, enabling finer control and more generation possibilities.
+
+The doors segments must be orthogonal. 
+
+#### Anchor
+
+> [!NOTE]  
+> An `Anchor` marks the pivot point of a room.
+> During rendering, the position of each `TileMapLayer` is offset by the anchor of the **pivot room**.
+
+### Tiled Map Layers
+
+Alternatively, you could use the `Tiled-mapeditor` instead of [godot scene](#godot-2d-scenes). 
+
+---
+
 "col": The main brick layer of the map.  
 "markers": The marker layer for defining special objects for later use.  
 "lnk": The layer defining the topology of room connections.  
 xxx: Custom layers defined by the user.
 
-### lnk
+#### lnk
 > [!IMPORTANT]  
 > `lnk` is used to define the topology of the room connections, which is a object layer.  
 > Only the first object in the layer is considered.  
@@ -47,12 +97,12 @@ xxx: Custom layers defined by the user.
 A valid `lnk` layer should be:
 1. name = "lnk"
 
-#### Boundary
+##### Boundary
 A valid `Boundary` should be:
 1. class = "polygon" (built-in in `YATI`, not `Edgar.Godot`)
 2. property `lnk` = "boundary" or name = "Boundary"
 
-#### Door
+##### Door
 A valid `Door` should be:
 1. class = "line" (built-in in `YATI`, not `Edgar.Godot`)
 2. property `lnk` = "door"
@@ -64,7 +114,7 @@ A valid `Door` should be:
 > If an additional independent `Door` is added with overlapping segments [1,3], [3,5], then the full set of usable segments becomes [0,2], [1,3], [2,4], [3,5], [4,6], and the minimal alignment step decreases to 1. This makes the movement unit along that edge smaller, increases the number of alignment positions, and enriches possible generation combinations.  
 > Summary: Adding overlapping segments reduces the minimal step size, enabling finer control and more generation possibilities.
 
-#### Anchor
+##### Anchor
 A valid `Anchor` should be:
 1. property `lnk` = "anchor" or name = "Anchor"
 
@@ -72,7 +122,7 @@ A valid `Anchor` should be:
 > An `Anchor` marks the pivot point of a room.
 > During rendering, the position of each `TileMapLayer` is offset by the anchor of the **pivot room**.
 
-#### Transformations
+##### Transformations
 To enable transformations, add the following meta-data to the `lnk` layer:
 1. `transformations`: A string json containing the transformation parameters.
 	- e.g. `[0, 4]`
@@ -87,17 +137,7 @@ To enable transformations, add the following meta-data to the `lnk` layer:
 > 6: Diagonal13  
 > 7: Diagonal24  
 
-#### Tile Swapping
-Most of the time, you would want to re-map / swap the tiles according to the transformation applied to the room.  
-To achieve this, you can use tile meta-data to define the swapping rules.  
-
-> [!IMPORTANT]  
-> These properties must be defined on the **Tileset** in the **Tiled Map Editor**, specifically on the individual tiles themselves.
-
-For example, `tileswap4` = `Color(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
-When a tile is rendered in a room with MirrorX transformation, it will be swapped to the tile defined in the `tileswap4` meta-data.
-
-### col
+#### col
 See [col](#col-1) in Renderer section for details.
 
 ## Room Graph Format
@@ -227,6 +267,18 @@ for conn in renderer.clear_tiles.get_connections():
 # Connects to your own handler
 renderer.clear_tiles.connect(_my_custom_clear_method)
 ```
+
+### Tile Swapping
+Most of the time, you would want to re-map / swap the tiles according to the transformation applied to the room.  
+To achieve this, you can use tile meta-data to define the swapping rules.  
+
+> [!IMPORTANT]  
+> These properties must be defined on the **Tileset** in the **Tiled Map Editor (tiled)** or **Tileset Panel (godot)**, specifically on the individual tiles themselves.
+
+- In **Godot** *Custom Data Layer*, `tileswap4` = `Vector4(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
+- In **Tiled** *Custom Properties*, `tileswap4` = `Color(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
+
+When a tile is rendered in a room with MirrorX transformation, it will be swapped to the tile defined in the `tileswap4` meta-data.
 
 ## Filters
 A filter is a set of conditions to determine which tiles or rooms should be rendered in the final map. This is especially useful when you have multiple layers in Tiled but only want to render specific parts in Godot, e.g., multi-layered tilemaps.  
