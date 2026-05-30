@@ -1,5 +1,38 @@
 # Edgar.Godot Reference
 
+## Proxy System
+
+A **proxy** is a GDScript that handles loading room templates. It decouples the renderer from the file format — swap the proxy to support different room sources (Tiled maps, Godot scenes, etc.) without changing the renderer.
+
+### Contract
+
+A proxy script must expose these static methods:
+
+| Method | Returns | Description |
+|---|---|---|
+| `load_room(template: String, post_processor: String) -> Node` | `Node` | Load a room template, run post-processing, return the node tree |
+| `get_anchor(template: String) -> Vector2` | `Vector2` | Return the room's anchor position in tile coordinates |
+| `get_lnk(template: String) -> Dictionary` | `{ "boundary", "doors", "transformations" }` | Return the room's lnk topology metadata |
+
+> [!NOTE]
+> The proxy contract is duck-typed — there is no base class to extend. Any `.gd` script with the three methods above qualifies.
+
+### Configuration
+
+Set via **Project Settings** → `Edgar/kernel/edgar_kernel_proxy` (a file path to a `.gd` script).
+
+Default: `res://addons/edgar.godot/proxy/yati/edgar_yati_proxy.gd`
+
+### Built-in: YATI Proxy
+
+The default proxy handles Tiled maps (`.tmx` / `.tmj`). It bundles YATI runtime under `proxy/yati/runtime/` and extracts room metadata via `EdgarMetaParser` without creating Godot nodes for the metadata pass.
+
+### Writing a Custom Proxy
+
+Create a `.gd` script implementing the three contract methods, then set `Edgar/kernel/edgar_kernel_proxy` to its path.
+
+---
+
 ## Tiled Map Layers
 "col": The main brick layer of the map.  
 "markers": The marker layer for defining special objects for later use.  
