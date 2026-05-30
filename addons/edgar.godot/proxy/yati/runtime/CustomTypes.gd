@@ -20,9 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class_name CustomTypes
-
 extends RefCounted
+
+const DataLoader := preload("DataLoader.gd")
+const CommonUtils := preload("CommonUtils.gd")
+const DictionaryBuilder := preload("DictionaryBuilder.gd")
 
 var _custom_types = null
 
@@ -33,7 +35,7 @@ func load_custom_types(project_file: String):
 		CommonUtils.error_count += 1
 		return
 
-	var project_file_as_dictionary: Dictionary = preload("DictionaryBuilder.gd").new().get_dictionary(proj_file_content, project_file)
+	var project_file_as_dictionary: Dictionary = DictionaryBuilder.new().get_dictionary(proj_file_content, project_file)
 	if project_file_as_dictionary.has("propertyTypes"):
 		_custom_types = project_file_as_dictionary["propertyTypes"]
 

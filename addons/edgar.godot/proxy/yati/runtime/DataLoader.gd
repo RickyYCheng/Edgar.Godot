@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-class_name DataLoader
+const CommonUtils := preload("CommonUtils.gd")
 
 static var zip_file: String
 

@@ -22,6 +22,12 @@
 
 extends RefCounted
 
+const CustomTypes := preload("CustomTypes.gd")
+const DataLoader := preload("DataLoader.gd")
+const CommonUtils := preload("CommonUtils.gd")
+const DictionaryBuilder := preload("DictionaryBuilder.gd")
+const TilesetCreator := preload("TilesetCreator.gd")
+
 const FLIPPED_HORIZONTALLY_FLAG = 0x80000000
 const FLIPPED_VERTICALLY_FLAG = 0x40000000
 const FLIPPED_DIAGONALLY_FLAG = 0x20000000
@@ -150,7 +156,7 @@ func create(source_file: String):
 	if map_content == null:
 		printerr("FATAL ERROR: Tiled map file '" + source_file + "' not found.")
 		return null
-	_base_dictionary = preload("DictionaryBuilder.gd").new().get_dictionary(map_content, source_file)
+	_base_dictionary = DictionaryBuilder.new().get_dictionary(map_content, source_file)
 	_map_orientation = _base_dictionary.get("orientation", "othogonal")
 	_map_width = _base_dictionary.get("width", 0)
 	_map_height = _base_dictionary.get("height", 0)
@@ -168,11 +174,11 @@ func create(source_file: String):
 		var tilesets = _base_dictionary["tilesets"]
 		for tileSet in tilesets:
 			_first_gids.append(int(tileSet["firstgid"]))
-		var tileset_creator = preload("TilesetCreator.gd").new()
+		var tileset_creator = TilesetCreator.new()
 		tileset_creator.set_base_path(source_file)
 		tileset_creator.set_map_parameters(Vector2i(_map_tile_width, _map_tile_height))
 		if _ct != null:
-			tileset_creator.set_custom_types(_ct)	
+			tileset_creator.set_custom_types(_ct)
 		if _map_wangset_to_terrain:
 			tileset_creator.map_wangset_to_terrain()
 		tileset_creator.set_custom_data_prefix(_custom_data_prefix)
@@ -846,12 +852,12 @@ func handle_object(obj: Dictionary, layer_node: Node, tileset: TileSet, offset: 
 			CommonUtils.error_count += 1
 			template_dict = {}
 		else:
-			template_dict = preload("DictionaryBuilder.gd").new().get_dictionary(template_content, template_file)
+			template_dict = DictionaryBuilder.new().get_dictionary(template_content, template_file)
 
 		var template_tileset = null
 		if template_dict.has("tilesets"):
 			var tilesets = template_dict["tilesets"]
-			var tileset_creator = preload("TilesetCreator.gd").new()
+			var tileset_creator = TilesetCreator.new()
 			tileset_creator.set_base_path(template_file_full_path)
 			tileset_creator.set_map_parameters(Vector2i(_map_tile_width, _map_tile_height))
 			if _map_wangset_to_terrain:

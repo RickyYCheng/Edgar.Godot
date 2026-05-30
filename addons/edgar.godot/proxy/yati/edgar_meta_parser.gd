@@ -22,9 +22,8 @@
 
 extends RefCounted
 
-const DATA_LOADER_PATH := "./runtime/DataLoader.gd"
-const DICT_BUILDER_PATH := "./runtime/DictionaryBuilder.gd"
-
+const DictionaryBuilder := preload("./runtime/DictionaryBuilder.gd")
+const DataLoader := preload("./runtime/DataLoader.gd")
 
 ## Parse a Tiled map file and return Edgar room metadata directly from the dictionary.
 ## Returns: { "anchor": Vector2, "lnk": Dictionary, "tile_size": Vector2 }
@@ -33,12 +32,12 @@ const DICT_BUILDER_PATH := "./runtime/DictionaryBuilder.gd"
 static func parse(template_path: String) -> Dictionary:
 	var base_path := template_path.get_base_dir()
 
-	var map_content = preload(DATA_LOADER_PATH).get_tiled_file_content(template_path, base_path)
+	var map_content = DataLoader.get_tiled_file_content(template_path, base_path)
 	if map_content == null:
 		printerr("EdgarMetaParser: Tiled map file '" + template_path + "' not found.")
 		return {}
 
-	var dict = preload(DICT_BUILDER_PATH).new().get_dictionary(map_content, template_path)
+	var dict = DictionaryBuilder.new().get_dictionary(map_content, template_path)
 	if dict == null:
 		printerr("EdgarMetaParser: Failed to parse Tiled map '" + template_path + "'.")
 		return {}

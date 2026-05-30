@@ -22,6 +22,11 @@
 
 extends RefCounted
 
+const CustomTypes := preload("CustomTypes.gd")
+const DataLoader := preload("DataLoader.gd")
+const CommonUtils := preload("CommonUtils.gd")
+const DictionaryBuilder := preload("DictionaryBuilder.gd")
+
 const WARNING_COLOR = "yellow"
 const CUSTOM_DATA_INTERNAL = "__internal__"
 const GODOT_ATLAS_ID_PROPERTY = "godot_atlas_id"
@@ -52,7 +57,7 @@ var _object_groups_counter: int = 0
 var _tileset_orientation
 var _map_wangset_to_terrain: bool = false
 var _custom_data_prefix: String
-var _ct: CustomTypes = null
+var _ct = null
 var _current_first_gid = -1
 
 
@@ -72,7 +77,7 @@ func set_map_parameters(map_tile_size: Vector2i):
 	_map_tile_size = map_tile_size
 
 
-func set_custom_types(ct: CustomTypes):
+func set_custom_types(ct):
 	_ct = ct
 
 
@@ -103,7 +108,7 @@ func create_from_dictionary_array(tileSets: Array):
 
 			_base_path_tileset = _base_path_map.path_join(source_file).get_base_dir()
  
-			tile_set_dict = preload("DictionaryBuilder.gd").new().get_dictionary(tiled_file_content, source_file)
+			tile_set_dict = DictionaryBuilder.new().get_dictionary(tiled_file_content, source_file)
 			if tile_set_dict != null and tile_set.has("firstgid"):
 				tile_set_dict["firstgid"] = tile_set["firstgid"]
 	
