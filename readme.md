@@ -4,22 +4,23 @@
 > **WIP**: This project is currently under active development. Features and implementations are subject to change.
 
 ## Overview
-`Edgar.Godot` is a GDScript toolkit that integrates the [Edgar-DotNet](https://github.com/OndrejNepozitek/Edgar-DotNet) procedural level generation algorithm into Godot. It converts Tiled maps and custom room graph resources into Godot-ready data for runtime Rogue-like dungeon assembly, with a replaceable kernel supporting both C# and GDExtension implementations.
+`Edgar.Godot` is a GDScript toolkit that integrates the [Edgar-DotNet](https://github.com/OndrejNepozitek/Edgar-DotNet) procedural level generation algorithm into Godot. It converts **Godot Scenes**/**Tiled maps** and custom room graph resources into Godot-ready data for runtime Rogue-like dungeon assembly, with a replaceable kernel supporting both C# and GDExtension implementations.
 
 Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph resources (`*.edgar-graph`) that define room connectivity and metadata.
 
-> [!IMPORTANT]
+> [!IMPORTANT]  
 > [YATI](https://github.com/Kiamo2/YATI) is no longer needed as a separate addon — its runtime is now bundled via `preload`. The original YATI addon can coexist without conflict, and may be safely kept or removed.
+> 
+> Native Godot scene (`.tscn`) is supported now for 2d scenes.  
+> Check [godot 2d scene references](./addons/edgar.godot/reference.md#godot-2d-scenes)  
 
-> [!NOTE]
-> Native Godot scene (`.tscn`) support as an alternative to Tiled room definitions is currently under design.  
->  
+> [!IMPORTANT]  
 > Uses the C#/.NET types via [Edgar.Aot](https://github.com/RickyYCheng/Edgar.Aot); requires a .NET-enabled Godot build.  
 >  
 > For the native GDExtension version, see [Edgar.GDExtension](https://github.com/RickyYCheng/Edgar.GDExtension).  
 
 ## Core Features
-- 🗺️ Converts [Tiled](https://www.mapeditor.org/) map files into Godot-compatible JSON resources, complete with metadata for procedural map generation. [YATI](https://github.com/Kiamo2/YATI) runtime is bundled — no separate addon installation needed.
+- 🗺️ Converts **Godot scene** or **[Tiled](https://www.mapeditor.org/) map files** into Godot-compatible JSON resources, complete with metadata for procedural map generation. 
 - ⚙️ Custom `JSON` room graph format (`*.edgar-graph`) for defining room connectivity.
 - 📝 **Visual Graph Editor**: Built-in editor for designing room graphs with layer-based room categorization and per-graph layer management.
 - 🔄 Kernel Replaceability: Standardized interfaces that are compatible with both `C#` scripts and `GDExtension` versions.
