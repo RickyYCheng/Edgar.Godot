@@ -2,8 +2,6 @@
 class_name EdgarDoor2D
 extends Line2D
 
-@export var segment_size := 1
-
 func _init() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 	
