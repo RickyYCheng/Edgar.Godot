@@ -40,9 +40,8 @@ func _update_metadata() -> void:
 	if owner_node == null:
 		return
 
-	var tile_size_v2 := Vector2(tile_size)
-
 	# --- Boundary ---
+	var tile_size_v2 := Vector2(tile_size)
 	var boundary_points: PackedVector2Array
 	for child in get_children():
 		if child is EdgarBoundary2D:

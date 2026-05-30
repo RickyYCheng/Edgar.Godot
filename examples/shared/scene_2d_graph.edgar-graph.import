@@ -1,0 +1,14 @@
+[remap]
+
+importer="Edgar Graph Importer"
+type="EdgarGraphResource"
+uid="uid://bms8lr1u4re71"
+path="res://.godot/imported/scene_2d_graph.edgar-graph-ee78e11b37560b556d16e87dc623cda3.tres"
+
+[deps]
+
+source_file="res://examples/shared/scene_2d_graph.edgar-graph"
+dest_files=["res://.godot/imported/scene_2d_graph.edgar-graph-ee78e11b37560b556d16e87dc623cda3.tres"]
+
+[params]
+
