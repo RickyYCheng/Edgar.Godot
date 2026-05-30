@@ -14,11 +14,11 @@
                  "polyline":[
                         {
                          "x":0,
-                         "y":224
+                         "y":120
                         }, 
                         {
                          "x":0,
-                         "y":296
+                         "y":168
                         }],
                  "properties":[
                         {
@@ -40,11 +40,11 @@
                  "polyline":[
                         {
                          "x":0,
-                         "y":224
+                         "y":160
                         }, 
                         {
                          "x":0,
-                         "y":296
+                         "y":208
                         }],
                  "properties":[
                         {
@@ -65,12 +65,12 @@
                  "name":"Door 2",
                  "polyline":[
                         {
-                         "x":224,
-                         "y":-24
+                         "x":96,
+                         "y":-88
                         }, 
                         {
-                         "x":224,
-                         "y":-96
+                         "x":96,
+                         "y":-136
                         }],
                  "properties":[
                         {
@@ -91,11 +91,11 @@
                  "name":"Door 1",
                  "polyline":[
                         {
-                         "x":224,
-                         "y":-24
+                         "x":96,
+                         "y":-48
                         }, 
                         {
-                         "x":224,
+                         "x":96,
                          "y":-96
                         }],
                  "properties":[
@@ -118,19 +118,19 @@
                  "polygon":[
                         {
                          "x":0,
-                         "y":224
+                         "y":96
                         }, 
                         {
                          "x":0,
                          "y":-160
                         }, 
                         {
-                         "x":384,
+                         "x":256,
                          "y":-160
                         }, 
                         {
-                         "x":384,
-                         "y":224
+                         "x":256,
+                         "y":96
                         }],
                  "properties":[
                         {
@@ -210,13 +210,13 @@
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
- "tileheight":24,
+ "tileheight":16,
  "tilesets":[
         {
          "firstgid":1,
          "source":"col.tsx"
         }],
- "tilewidth":24,
+ "tilewidth":16,
  "type":"map",
  "version":"1.10",
  "width":30
