@@ -138,7 +138,7 @@ public partial class EdgarGodotGenerator : RefCounted
         {
             var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
             var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
-            var template_cache = new Godot.Collections.Dictionary<string, Dictionary>();
+            var cache = new Godot.Collections.Dictionary<string, Dictionary>();
             var proxy = get_proxy();
             var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
             {
@@ -146,7 +146,7 @@ public partial class EdgarGodotGenerator : RefCounted
 
                 foreach (var name in layer)
                 {
-                    if (template_cache.TryGetValue(name, out var cached))
+                    if (cache.TryGetValue(name, out var cached))
                     {
                         result.Add(name, cached);
                         continue;
@@ -156,7 +156,7 @@ public partial class EdgarGodotGenerator : RefCounted
                     if (lnk is null || lnk.Count == 0)
                         continue;
 
-                    template_cache[name] = lnk;
+                    cache[name] = lnk;
                     result.Add(name, lnk);
                 }
 
