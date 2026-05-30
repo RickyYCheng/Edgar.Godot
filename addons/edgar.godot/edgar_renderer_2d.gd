@@ -199,8 +199,8 @@ func render() -> void:
 
 						var tile_data := origin_tml.get_cell_tile_data(cell)
 						var _str := "tileswap%d" % int(room.transformation)
-						if tile_data.has_meta(_str):
-							var swap_data := tile_data.get_meta(_str) as Color
+						var swap_data = _get_tile_data_property(tile_data, _str)
+						if swap_data:
 							source_id = swap_data.r8
 							atlas_coord = Vector2i(swap_data.g8, swap_data.b8)
 							alternative_tile = swap_data.a8
@@ -329,6 +329,16 @@ func _exit_tree() -> void:
 	# Clean up signal connections
 	if level and level.changed.is_connected(_on_level_changed):
 		level.changed.disconnect(_on_level_changed)
+
+func _get_tile_data_property(tile_data: TileData, key: String) -> Variant:
+	if tile_data.has_custom_data(key):
+		var custom_data := tile_data.get_custom_data(key)
+		return custom_data
+	if tile_data.has_meta(key):
+		var meta_data := tile_data.get_meta(key) as Color
+		return meta_data
+	
+	return null
 
 func _load_room(template: String, proxy: GDScript = null) -> Node:
 	if not proxy:
