@@ -152,27 +152,23 @@ func render() -> void:
 				pass
 
 		for room in layout.rooms:
-			var room_node := _load_room(room.template, proxy)
-			
+			# Filter rooms before instantiation to avoid unnecessary load+free
 			if not room_inclusions.is_empty():
 				if room_inclusions.get(room.room, false) == false:
-					room_node.queue_free()
 					continue
 			else:
 				if room_exceptions.get(room.room, false) == true:
-					room_node.queue_free()
 					continue
 			
 			var room_edgar_layer := int(room.edgar_layer)
 			if not edgar_layer_inclusions.is_empty():
 				if edgar_layer_inclusions.get(room_edgar_layer, false) == false:
-					room_node.queue_free()
 					continue
 			else:
 				if edgar_layer_exceptions.get(room_edgar_layer, false) == true:
-					room_node.queue_free()
 					continue
 			
+			var room_node := _load_room(room.template, proxy)
 			var lnk := room_node.get_meta("lnk") as Dictionary
 
 			var origin_outline := lnk["boundary"] as PackedVector2Array
