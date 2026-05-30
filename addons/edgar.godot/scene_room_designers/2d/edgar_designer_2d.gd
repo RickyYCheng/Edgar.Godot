@@ -10,7 +10,7 @@ extends Node2D
 		return tile_set.tile_size if tile_set else Vector2i(16, 16)
 
 ## Transformation flags passed to the generated room, stored in lnk metadata.
-@export var transformations := PackedInt32Array([0])
+@export var transformations: PackedInt32Array = [0]
 
 
 func _ready() -> void:
