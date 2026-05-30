@@ -20,7 +20,7 @@ Edgar.Godot consumes map files (`*.tscn` / `*.scn` / `*.tmx` / `*.tmj`) and cust
 > For the native GDExtension version, see [Edgar.GDExtension](https://github.com/RickyYCheng/Edgar.GDExtension).  
 
 ## Core Features
-- 🗺️ Converts **Godot scene** or **[Tiled](https://www.mapeditor.org/) map files** into Godot-compatible JSON resources, complete with metadata for procedural map generation. 
+- 🗺️ Converts **Godot scene** or **[Tiled](https://www.mapeditor.org/) map files** into Godot-compatible templates, complete with metadata for procedural map generation. 
 - ⚙️ Custom `JSON` room graph format (`*.edgar-graph`) for defining room connectivity.
 - 📝 **Visual Graph Editor**: Built-in editor for designing room graphs with layer-based room categorization and per-graph layer management.
 - 🔄 Kernel Replaceability: Standardized interfaces that are compatible with both `C#` scripts and `GDExtension` versions.
