@@ -26,6 +26,7 @@ extends EditorPlugin
 
 var importer = null
 var main_view: Control
+var _room_template_2d_file_dialog: EditorFileDialog
 
 
 const EdgarGraphImporter := preload("res://addons/edgar.godot/edgar_graph_importer.gd")
@@ -52,6 +53,8 @@ func _enter_tree() -> void:
 	})
 	ProjectSettings.set_initial_value(KERNEL_PROXY_SETTING, EDGAR_YATI_PROXY_PATH)
 
+	add_tool_menu_item("Create Edgar Room Template Scene 2D", _on_create_room_template_2d)
+
 
 func _exit_tree() -> void:
 	if is_instance_valid(main_view):
@@ -59,6 +62,11 @@ func _exit_tree() -> void:
 
 	remove_import_plugin(importer)
 	importer = null
+
+	remove_tool_menu_item("Create Edgar Room Template Scene 2D")
+
+	if is_instance_valid(_room_template_2d_file_dialog):
+		_room_template_2d_file_dialog.queue_free()
 
 	if is_instance_valid(main_view):
 		main_view.queue_free()
@@ -98,3 +106,41 @@ func _edit(object: Object) -> void:
 	if object is Resource and object.has_meta("is_edgar_graph"):
 		if is_instance_valid(main_view):
 			main_view.open_resource(object)
+
+
+func _on_create_room_template_2d() -> void:
+	if not is_instance_valid(_room_template_2d_file_dialog):
+		_room_template_2d_file_dialog = EditorFileDialog.new()
+		_room_template_2d_file_dialog.file_mode = EditorFileDialog.FILE_MODE_SAVE_FILE
+		_room_template_2d_file_dialog.access = EditorFileDialog.ACCESS_RESOURCES
+		_room_template_2d_file_dialog.filters = PackedStringArray(["*.tscn ; Scene Files"])
+		_room_template_2d_file_dialog.title = "Save Room Template Scene 2D As"
+		_room_template_2d_file_dialog.current_file = "new_room_scene_2d.tscn"
+		_room_template_2d_file_dialog.file_selected.connect(_on_room_template_2d_path_selected)
+		EditorInterface.get_base_control().add_child(_room_template_2d_file_dialog)
+	_room_template_2d_file_dialog.popup_centered_ratio(0.5)
+
+
+func _on_room_template_2d_path_selected(target_path: String) -> void:
+	var template_path := "res://addons/edgar.godot/scene_room_designers/2d/room_scene_2d.tscn"
+
+	var source := FileAccess.open(template_path, FileAccess.READ)
+	if source == null:
+		push_error("Edgar: Failed to open room template: " + template_path)
+		return
+	var content := source.get_as_text()
+	source.close()
+
+	# Strip uid to avoid resource UID conflicts — Godot regenerates on import
+	var regex := RegEx.new()
+	regex.compile(' uid="[^"]*"')
+	content = regex.sub(content, "", true)
+
+	var target := FileAccess.open(target_path, FileAccess.WRITE)
+	if target == null:
+		push_error("Edgar: Failed to write to: " + target_path)
+		return
+	target.store_string(content)
+	target.close()
+
+	EditorInterface.get_resource_filesystem().scan_sources()

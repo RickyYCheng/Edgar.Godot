@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://q6u42qledcbl"]
+
+[ext_resource type="Script" uid="uid://batc36ftx6pvx" path="res://addons/edgar.godot/scene_room_designers/2d/edgar_designer_2d.gd" id="1_th3au"]
+[ext_resource type="Script" uid="uid://cs5q0q73ulxsy" path="res://addons/edgar.godot/scene_room_designers/2d/geometry_2d/edgar_boundary_2d.gd" id="2_mou25"]
+[ext_resource type="Script" uid="uid://com1gcxrxar8p" path="res://addons/edgar.godot/scene_room_designers/2d/geometry_2d/edgar_anchor_2d.gd" id="4_t7v2r"]
+
+[node name="RoomScene2D" type="Node2D" unique_id=1980751444]
+metadata/lnk = {
+"boundary": PackedVector2Array(),
+"doors": Array[PackedVector2Array]([]),
+"transformations": PackedInt32Array(0)
+}
+metadata/anchor = Vector2(0, 0)
+metadata/tile_size = Vector2(16, 16)
+
+[node name="col" type="TileMapLayer" parent="." unique_id=1499028804]
+unique_name_in_owner = true
+
+[node name="markers" type="Node2D" parent="." unique_id=529358010]
+unique_name_in_owner = true
+
+[node name="lnk" type="Node2D" parent="." unique_id=711971829]
+unique_name_in_owner = true
+script = ExtResource("1_th3au")
+transformations = PackedInt32Array(0)
+metadata/_custom_type_script = "uid://batc36ftx6pvx"
+
+[node name="EdgarBoundary2D" type="Polygon2D" parent="lnk" unique_id=1501102166]
+process_mode = 4
+color = Color(1, 0.8, 0.6, 0.3137255)
+script = ExtResource("2_mou25")
+metadata/_custom_type_script = "uid://cs5q0q73ulxsy"
+
+[node name="EdgarAnchor2D" type="Marker2D" parent="lnk" unique_id=2132346434]
+process_mode = 4
+script = ExtResource("4_t7v2r")
+metadata/_custom_type_script = "uid://com1gcxrxar8p"
