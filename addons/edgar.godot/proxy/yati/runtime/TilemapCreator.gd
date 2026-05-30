@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-@tool
 extends RefCounted
 
 const FLIPPED_HORIZONTALLY_FLAG = 0x80000000
@@ -562,7 +561,7 @@ func create_polygons_on_alternative_tiles(source_data: TileData, target_data: Ti
 			occ = source_data.get_occluder_polygon(layer_id, 0)
 		else:
 			occ = source_data.get_occluder(layer_id)
-			if occ == null: continue
+		if occ == null: continue
 		var pts = occ.polygon
 		var pts_new: PackedVector2Array
 		var i = 0
@@ -1942,7 +1941,6 @@ func handle_properties(target_node: Node, properties: Array):
 			target_node.screen_offset = Vector2(float(val), target_node.screen_offset.y)
 		elif name.to_lower() == "screen_offset_y" and (type == "float" or type == "int") and target_node is Parallax2D:
 			target_node.screen_offset = Vector2(target_node.screen_offset.x, float(val))
-
 		# CollisionObject2D properties
 		elif name.to_lower() == "disable_mode" and type == "int" and target_node is CollisionObject2D:
 			if int(val) < 3:

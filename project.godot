@@ -8,6 +8,10 @@
 
 config_version=5
 
+[Edgar]
+
+kernel/edgar_kernel_proxy="uid://bg8f6qhdnxo3s"
+
 [animation]
 
 compatibility/default_parent_skeleton_in_mesh_instance_3d=true
@@ -39,7 +43,7 @@ project/assembly_name="edgar.godot"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/YATI/plugin.cfg", "res://addons/edgar.godot/plugin.cfg")
+enabled=PackedStringArray("res://addons/edgar.godot/plugin.cfg")
 
 [rendering]
 
