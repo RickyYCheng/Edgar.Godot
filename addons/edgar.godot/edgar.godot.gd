@@ -25,14 +25,16 @@ extends EditorPlugin
 
 
 var importer = null
-var main_view : Control
+var main_view: Control
 
 
-const KERNEL_PROXY_SETTING = "Edgar/kernel/edgar_kernel_proxy"
+const EdgarGraphImporter := preload("res://addons/edgar.godot/edgar_graph_importer.gd")
+const KERNEL_PROXY_SETTING := "Edgar/kernel/edgar_kernel_proxy"
+const EDGAR_YATI_PROXY_PATH := "res://addons/edgar.godot/proxy/yati/edgar_yati_proxy.gd"
 
 
 func _enter_tree() -> void:
-	importer = preload("res://addons/edgar.godot/edgar_graph_importer.gd").new()
+	importer = EdgarGraphImporter.new()
 	add_import_plugin(importer)
 
 	main_view = preload("res://addons/edgar.godot/views/main_view.tscn").instantiate()
@@ -40,7 +42,7 @@ func _enter_tree() -> void:
 	_make_visible(false)
 
 	if not ProjectSettings.has_setting(KERNEL_PROXY_SETTING):
-		ProjectSettings.set_setting(KERNEL_PROXY_SETTING, "")
+		ProjectSettings.set_setting(KERNEL_PROXY_SETTING, EDGAR_YATI_PROXY_PATH)
 
 	ProjectSettings.add_property_info({
 		"name": KERNEL_PROXY_SETTING,
@@ -48,7 +50,7 @@ func _enter_tree() -> void:
 		"hint": PROPERTY_HINT_FILE,
 		"hint_string": "*.gd"
 	})
-	ProjectSettings.set_initial_value(KERNEL_PROXY_SETTING, "")
+	ProjectSettings.set_initial_value(KERNEL_PROXY_SETTING, EDGAR_YATI_PROXY_PATH)
 
 
 func _exit_tree() -> void:

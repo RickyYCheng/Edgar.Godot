@@ -21,7 +21,6 @@
 # SOFTWARE.
 
 @tool
-class_name EdgarGraphImporter
 extends EditorImportPlugin
 
 func _get_importer_name() -> String:
