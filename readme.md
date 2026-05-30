@@ -50,7 +50,7 @@ Please check the exmaples in the `examples/` folder.
   - [x] Remove bundled `YATI` addon version
 - [ ] Godot Scene Support — Alternative to Tiled files for room definitions
   - [x] Add proxy support to customize loading procedures
-  - [ ] Add `*.tscn/*.scn` support for main screen graph-edit
+  - [x] Add `*.tscn/*.scn` support for main screen graph-edit
   - [x] Add edgar extractor for godot scenes
   - [ ] Add godot scene proxy
 - [ ] 3D Renderer Support — Integration with GridMap and other 3D tile systems

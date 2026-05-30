@@ -155,7 +155,7 @@ min_size = Vector2i(600, 500)
 ok_button_text = "选择"
 dialog_hide_on_ok = true
 file_mode = 0
-filters = PackedStringArray("*.tmj, *.tmx ; Tiled Map Files")
+filters = PackedStringArray("*.tmj, *.tmx ; Tiled Map Files", "*.tscn, *.scn ; Edgar Room Scene Files")
 
 [node name="EditorArea" type="Control" parent="Margin/MainVBox/Content" unique_id=1479932344]
 layout_mode = 2

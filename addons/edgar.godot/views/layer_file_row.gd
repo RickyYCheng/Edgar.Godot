@@ -32,6 +32,19 @@ func setup(p_layer_index: int, p_file_index: int, path: String, file_exists: boo
 	if not file_exists:
 		path_label.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3))
 		file_icon.texture = get_theme_icon("FileBroken", "EditorIcons")
+	else:
+		file_icon.texture = _get_file_icon(path)
+
+
+func _get_file_icon(path: String) -> Texture2D:
+	var ext := path.get_extension().to_lower()
+	match ext:
+		"tscn", "scn":
+			return get_theme_icon("PackedScene", "EditorIcons")
+		"tmj", "tmx":
+			return get_theme_icon("File", "EditorIcons")
+		_:
+			return get_theme_icon("File", "EditorIcons")
 
 
 func _on_browse() -> void:

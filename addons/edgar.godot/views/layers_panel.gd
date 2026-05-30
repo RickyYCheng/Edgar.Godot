@@ -72,6 +72,10 @@ func _on_remove_pressed(layer_index: int, file_index: int) -> void:
 
 
 func _on_layer_file_selected(path: String) -> void:
+	if path.get_extension() in ["tscn", "scn"]:
+		if not _validate_edgar_room_scene(path):
+			return
+
 	var layers := _get_layers_from_resource()
 	if _current_layer_index < 0:
 		return
@@ -89,6 +93,40 @@ func _on_layer_file_selected(path: String) -> void:
 		layers[_current_layer_index] = files
 	_set_layers_to_resource(layers)
 	refresh(_graph_resource)
+
+
+## Validates that a .tscn/.scn scene conforms to the Edgar room convention:
+## the root node must have "lnk", "anchor", and "tile_size" metadata.
+func _validate_edgar_room_scene(path: String) -> bool:
+	var scene: PackedScene = load(path)
+	if scene == null:
+		push_warning("Edgar: Failed to load scene: " + path)
+		return false
+
+	var state := scene.get_state()
+	if state.get_node_count() == 0:
+		push_warning("Edgar: Scene has no nodes: " + path)
+		return false
+
+	# Check root node (index 0) for required metadata
+	var has_lnk := false
+	var has_anchor := false
+	var has_tile_size := false
+	for i in range(state.get_node_property_count(0)):
+		var prop_name: String = state.get_node_property_name(0, i)
+		match prop_name:
+			"metadata/lnk":
+				has_lnk = true
+			"metadata/anchor":
+				has_anchor = true
+			"metadata/tile_size":
+				has_tile_size = true
+
+	if not (has_lnk and has_anchor and has_tile_size):
+		push_warning("Edgar: Scene does not conform to Edgar room convention (missing lnk/anchor/tile_size metadata): " + path)
+		return false
+
+	return true
 
 
 func _on_add_layer() -> void:
