@@ -12,8 +12,10 @@ Edgar.Godot consumes Tiled map files (`*.tmx` / `*.tmj`) and custom JSON graph r
 > [YATI](https://github.com/Kiamo2/YATI) is no longer needed as a separate addon — its runtime is now bundled via `preload`. The original YATI addon can coexist without conflict, and may be safely kept or removed.
 
 > [!NOTE]
-> Native Godot scene (`.tscn`) support as an alternative to Tiled room definitions is currently under design.
+> Native Godot scene (`.tscn`) support as an alternative to Tiled room definitions is currently under design.  
+>  
 > Uses the C#/.NET types via [Edgar.Aot](https://github.com/RickyYCheng/Edgar.Aot); requires a .NET-enabled Godot build.  
+>  
 > For the native GDExtension version, see [Edgar.GDExtension](https://github.com/RickyYCheng/Edgar.GDExtension).  
 
 ## Core Features
