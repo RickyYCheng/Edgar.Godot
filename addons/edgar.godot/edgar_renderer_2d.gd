@@ -113,15 +113,17 @@ func generate_layout() -> void:
 		var anchor := _get_anchor(pivot_room.template)
 		var transformation := int(pivot_room.transformation)
 		
-		if transformation != 0:
-			var proxy := get_proxy()
-			var lnk := _get_lnk(pivot_room.template, proxy)
-			var boundary := lnk.get("boundary", PackedVector2Array()) as PackedVector2Array
-			if not boundary.is_empty():
-				var origin_rect := _rect_from_boundary(boundary)
-				anchor = _transform_anchor(anchor, transformation, Vector2(origin_rect.size))
+		var proxy := get_proxy()
+		var lnk := _get_lnk(pivot_room.template, proxy)
+		var boundary := lnk.get("boundary", PackedVector2Array()) as PackedVector2Array
+		if not boundary.is_empty():
+			var origin_rect := _rect_from_boundary(boundary)
+			var target_rect := _rect_from_boundary(pivot_room.outline, pivot_room.position)
+			anchor = _transform_anchor(anchor, transformation, origin_rect, target_rect)
+		else:
+			anchor = pivot_room.position + anchor
 		
-		var coord_offset: Vector2 = pivot_room.position + anchor
+		var coord_offset: Vector2 = anchor
 		anchor_offset = -coord_offset if anchor_offset_mode == AnchorOffsetMode.OFFSET_CELL_COORD else Vector2i.ZERO
 
 func render() -> void:
@@ -173,14 +175,7 @@ func render() -> void:
 
 			var origin_outline := lnk["boundary"] as PackedVector2Array
 			var origin_used_rect := _rect_from_boundary(origin_outline)
-			var target_used_rect := Rect2i(room.outline[0] + room.position, Vector2i.ZERO)
-			
-			var cnt := room.outline.size() as int
-			var i := 0
-			while i < cnt:
-				var _target_pt := Vector2i(room.outline[i] + room.position)
-				target_used_rect = target_used_rect.expand(_target_pt)
-				i += 1
+			var target_used_rect := _rect_from_boundary(room.outline, room.position)
 			
 			var origin_tile_size := Vector2(room_node.get_meta("origin_tile_size", Vector2i.ONE))
 			var target_tile_size := Vector2(tile_map_layer.tile_set.tile_size) if tile_map_layer.tile_set else Vector2.ONE
@@ -268,12 +263,12 @@ func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 func _clear_tiles(tile_map_layer: TileMapLayer) -> void:
 	tile_map_layer.clear()
 
-func _rect_from_boundary(boundary: PackedVector2Array) -> Rect2i:
+func _rect_from_boundary(boundary: PackedVector2Array, offset := Vector2.ZERO) -> Rect2i:
 	if boundary.is_empty():
 		return Rect2i()
-	var rect := Rect2i(Vector2i(boundary[0]), Vector2i.ZERO)
+	var rect := Rect2i(Vector2i(boundary[0] + offset), Vector2i.ZERO)
 	for pt in boundary:
-		rect = rect.expand(Vector2i(pt))
+		rect = rect.expand(Vector2i(pt + offset))
 	return rect
 
 # NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
@@ -299,34 +294,33 @@ func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect:
 	return cell + diff + cell_offset
 
 # NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
-func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int, cell_offset: Vector2i = Vector2i.ZERO) -> Vector2:
+func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int, point_offset: Vector2i = Vector2i.ZERO) -> Vector2:
 	var diff := Vector2(target_used_rect.position - origin_used_rect.position)
 	var w := float(origin_used_rect.size.x)
 	var h := float(origin_used_rect.size.y)
 	match transformation:
 		0: # Identity
-			return point + diff + Vector2(cell_offset)
+			return point + diff + Vector2(point_offset)
 		1: # Rotate 90
-			return Vector2(h - point.y, point.x) + diff + Vector2(cell_offset)
+			return Vector2(h - point.y, point.x) + diff + Vector2(point_offset)
 		2: # Rotate 180
-			return Vector2(w - point.x, h - point.y) + diff + Vector2(cell_offset)
+			return Vector2(w - point.x, h - point.y) + diff + Vector2(point_offset)
 		3: # Rotate 270
-			return Vector2(point.y, w - point.x) + diff + Vector2(cell_offset)
+			return Vector2(point.y, w - point.x) + diff + Vector2(point_offset)
 		4: # Mirror X
-			return Vector2(w - point.x, point.y) + diff + Vector2(cell_offset)
+			return Vector2(w - point.x, point.y) + diff + Vector2(point_offset)
 		5: # Mirror Y
-			return Vector2(point.x, h - point.y) + diff + Vector2(cell_offset)
+			return Vector2(point.x, h - point.y) + diff + Vector2(point_offset)
 		6: # Diagnal 13
-			return Vector2(point.y, point.x) + diff + Vector2(cell_offset)
+			return Vector2(point.y, point.x) + diff + Vector2(point_offset)
 		7: # Diagonal 24
-			return Vector2(h - point.y, w - point.x) + diff + Vector2(cell_offset)
-	return point + diff + Vector2(cell_offset)
+			return Vector2(h - point.y, w - point.x) + diff + Vector2(point_offset)
+	return point + diff + Vector2(point_offset)
 
-func _transform_anchor(anchor: Vector2, transformation: int, room_size: Vector2) -> Vector2:
-	if transformation == 0:
-		return anchor
-	var rect := Rect2i(Vector2i.ZERO, Vector2i(room_size))
-	return _transform_point(anchor, rect, rect, transformation, Vector2i.ZERO)
+func _transform_anchor(anchor: Vector2, transformation: int, origin_rect: Rect2i, target_rect: Rect2i) -> Vector2:
+	var rel_anchor := anchor - Vector2(origin_rect.position)
+	var zero_rect := Rect2i(Vector2i.ZERO, origin_rect.size)
+	return _transform_point(rel_anchor, zero_rect, target_rect, transformation, Vector2i.ZERO)
 
 func clear(tile_map_layer: TileMapLayer) -> void:
 	clear_tiles.emit(self, tile_map_layer)

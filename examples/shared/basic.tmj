@@ -144,6 +144,24 @@
                  "width":0,
                  "x":0,
                  "y":160
+                }, 
+                {
+                 "height":0,
+                 "id":16,
+                 "name":"Anchor",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"lnk",
+                         "type":"string",
+                         "value":"anchor"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":0,
+                 "y":224
                 }],
          "opacity":1,
          "properties":[
@@ -206,7 +224,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":16,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
