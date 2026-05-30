@@ -111,6 +111,15 @@ func generate_layout() -> void:
 	if pivot_idx >= 0:
 		var pivot_room := layout.rooms[pivot_idx] as Dictionary
 		var anchor := _get_anchor(pivot_room.template)
+		var transformation := int(pivot_room.transformation)
+		
+		if transformation != 0:
+			var proxy := get_proxy()
+			var lnk := _get_lnk(pivot_room.template, proxy)
+			var boundary := lnk.get("boundary", PackedVector2Array()) as PackedVector2Array
+			if not boundary.is_empty():
+				var origin_rect := _rect_from_boundary(boundary)
+				anchor = _transform_anchor(anchor, transformation, Vector2(origin_rect.size))
 		
 		var coord_offset: Vector2 = pivot_room.position + anchor
 		anchor_offset = -coord_offset if anchor_offset_mode == AnchorOffsetMode.OFFSET_CELL_COORD else Vector2i.ZERO
@@ -167,15 +176,12 @@ func render() -> void:
 			var lnk := room_node.get_meta("lnk") as Dictionary
 
 			var origin_outline := lnk["boundary"] as PackedVector2Array
-			var origin_used_rect := Rect2i(origin_outline[0], Vector2i.ZERO)
+			var origin_used_rect := _rect_from_boundary(origin_outline)
 			var target_used_rect := Rect2i(room.outline[0] + room.position, Vector2i.ZERO)
 			
-			var cnt := origin_outline.size()
+			var cnt := room.outline.size() as int
 			var i := 0
 			while i < cnt:
-				var _origin_pt := Vector2i(origin_outline[i])
-				origin_used_rect = origin_used_rect.expand(_origin_pt)
-				
 				var _target_pt := Vector2i(room.outline[i] + room.position)
 				target_used_rect = target_used_rect.expand(_target_pt)
 				i += 1
@@ -266,6 +272,14 @@ func _custom_post_process(tile_map_layer: TileMapLayer, layer: Node) -> void:
 func _clear_tiles(tile_map_layer: TileMapLayer) -> void:
 	tile_map_layer.clear()
 
+func _rect_from_boundary(boundary: PackedVector2Array) -> Rect2i:
+	if boundary.is_empty():
+		return Rect2i()
+	var rect := Rect2i(Vector2i(boundary[0]), Vector2i.ZERO)
+	for pt in boundary:
+		rect = rect.expand(Vector2i(pt))
+	return rect
+
 # NOTE: origin_used_rect is not transformed, target_used_rect is transformed.
 func _transform_cell(cell: Vector2i, origin_used_rect: Rect2i, target_used_rect: Rect2i, transformation: int, cell_offset: Vector2i = Vector2i.ZERO) -> Vector2i:
 	var diff := target_used_rect.position - origin_used_rect.position
@@ -312,6 +326,12 @@ func _transform_point(point: Vector2, origin_used_rect: Rect2i, target_used_rect
 			return Vector2(h - point.y, w - point.x) + diff + Vector2(cell_offset)
 	return point + diff + Vector2(cell_offset)
 
+func _transform_anchor(anchor: Vector2, transformation: int, room_size: Vector2) -> Vector2:
+	if transformation == 0:
+		return anchor
+	var rect := Rect2i(Vector2i.ZERO, Vector2i(room_size))
+	return _transform_point(anchor, rect, rect, transformation, Vector2i.ZERO)
+
 func clear(tile_map_layer: TileMapLayer) -> void:
 	clear_tiles.emit(self, tile_map_layer)
 
@@ -346,3 +366,18 @@ func _get_anchor(template: String, proxy: GDScript = null) -> Vector2:
 			break
 	
 	return anchor
+
+func _get_lnk(template: String, proxy: GDScript = null) -> Dictionary:
+	if not proxy:
+		proxy = get_proxy()
+	
+	if proxy:
+		return proxy.call("get_lnk", template)
+	
+	var pivot_room_template: PackedScene = load(template)
+	var scene_state := pivot_room_template.get_state()
+	for i in scene_state.get_node_property_count(0):
+		var prop_name := scene_state.get_node_property_name(0, i)
+		if prop_name == "metadata/lnk":
+			return scene_state.get_node_property_value(0, i)
+	return {}

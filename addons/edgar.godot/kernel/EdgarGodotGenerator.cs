@@ -235,6 +235,13 @@ public partial class EdgarGodotGenerator : RefCounted
             GD.PushError($"Failed to load template: {template}");
             return null;
         }
-        return template_scene.GetState().GetNodePropertyValue(0, 0).AsGodotDictionary();
+        var scene_state = template_scene.GetState();
+        for (var i = 0; i < scene_state.GetNodePropertyCount(0); i++)
+        {
+            var prop_name = scene_state.GetNodePropertyName(0, i);
+            if (prop_name == "metadata/lnk")
+                return scene_state.GetNodePropertyValue(0, i).AsGodotDictionary();
+        }
+        return null;
     }
 }
