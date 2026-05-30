@@ -4,13 +4,16 @@
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xtivw"]
 texture = ExtResource("1_y8njq")
-0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
 3:0/0 = 0
 3:0/0/custom_data_0 = Vector4i(0, 4, 0, 0)
 4:0/0 = 0
 4:0/0/custom_data_0 = Vector4i(0, 3, 0, 0)
+0:0/0 = 0
+0:0/0/custom_data_0 = Vector4i(-1, 0, 0, 0)
+1:0/0 = 0
+1:0/0/custom_data_0 = Vector4i(-1, 0, 0, 0)
+2:0/0 = 0
+2:0/0/custom_data_0 = Vector4i(-1, 0, 0, 0)
 
 [resource]
 resource_name = "old_tile_set"

@@ -199,7 +199,7 @@ func render() -> void:
 
 						var tile_data := origin_tml.get_cell_tile_data(cell)
 						var swap_data := _get_swap_data(tile_data, room.transformation)
-						if swap_data != Vector4i.MIN:
+						if swap_data.x >= 0:
 							source_id = swap_data.x
 							atlas_coord = Vector2i(swap_data.y, swap_data.z)
 							alternative_tile = swap_data.w
@@ -336,7 +336,7 @@ func _get_swap_data(tile_data: TileData, transformation: int) -> Vector4i:
 	elif data is Vector4 or data is Vector4i:
 		return data
 	
-	return Vector4i.MIN
+	return Vector4i(-1, 0, 0, 0)
 
 func _get_tile_data_property(tile_data: TileData, key: String) -> Variant:
 	if tile_data.has_custom_data(key):

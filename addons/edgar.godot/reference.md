@@ -14,7 +14,7 @@ A proxy script must expose these static methods:
 | `get_anchor(template: String) -> Vector2` | `Vector2` | Return the room's anchor position in tile coordinates |
 | `get_lnk(template: String) -> Dictionary` | `{ "boundary", "doors", "transformations" }` | Return the room's lnk topology metadata |
 
-> [!NOTE]
+> [!NOTE]  
 > The proxy contract is duck-typed — there is no base class to extend. Any `.gd` script with the three methods above qualifies.
 
 ### Configuration
@@ -48,7 +48,7 @@ To provide the geometry messages for edgar, please adjust the `EdgarBoundary2D` 
 
 To define doors, put multiple `EdgarDoor2D` under `EdgarDesigner2D` (the `lnk` node). And make it multi-polyline to define door segments. And voilà!  
 
-> [!NOTE]
+> [!NOTE]  
 > The default proxy `edgar_yati_proxy` has the ability to handle it.  
 > Nothing need to change.  
 
@@ -165,7 +165,7 @@ Array of connection objects defining the topology between rooms:
 Array of strings defining room type categories (e.g., `["combat", "limit"]`).  
 Each room is assigned to one category via the `edgar_layer` index in its node data.
 
-> [!NOTE]
+> [!NOTE]  
 > Since v0.4.0, layer names are stored per-graph under the `layer_names` key. Older graphs automatically migrate from ProjectSettings on import.
 
 #### layers
@@ -192,7 +192,7 @@ The plugin provides a visual graph editor for creating and editing `.edgar-graph
 - **Delete layers**: Click the trash icon on a layer card
 - **Assign rooms**: Use the layer dropdown on each room node
 
-> [!NOTE]
+> [!NOTE]  
 > When a layer is deleted, nodes on that layer are reassigned to layer 0, and nodes above shift down by one.
 
 ## Renderer
@@ -206,7 +206,7 @@ To achieve this, you need to set the meta-data `tiled_layer` on each `TileMapLay
 
 For example, if you have two tilemaps in Tiled named "Ground" and "Decorations", you would create two `TileMapLayer` nodes under the renderer, each with the `tiled_layer` meta-data set to "Ground" and "Decorations" respectively.
 
-> [!NOTE]
+> [!NOTE]  
 > For simplicity, you can name the `TileMapLayer` nodes the same as their corresponding Tiled layers. For example, a `TileMapLayer` node named "col" would have the `tiled_layer` meta-data set to "col".
 
 ### Signals
@@ -275,7 +275,9 @@ To achieve this, you can use tile meta-data to define the swapping rules.
 > [!IMPORTANT]  
 > These properties must be defined on the **Tileset** in the **Tiled Map Editor (tiled)** or **Tileset Panel (godot)**, specifically on the individual tiles themselves.
 
-- In **Godot** *Custom Data Layer*, `tileswap4` = `Vector4(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
+- In **Godot** *Custom Data Layer*, `tileswap4` = `Vector4i(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
+> [!NOTE]  
+> To disable the swapping for some tiles, set the `x` component of it to be negative (e.g. `-1`)
 - In **Tiled** *Custom Properties*, `tileswap4` = `Color(source_id, atlas_x, atlas_y, alternative_tile)` defines the swapping rule for MirrorX (4) transformation.  
 
 When a tile is rendered in a room with MirrorX transformation, it will be swapped to the tile defined in the `tileswap4` meta-data.
