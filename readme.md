@@ -29,7 +29,7 @@ Edgar.Godot consumes map files (`*.tscn` / `*.scn` / `*.tmx` / `*.tmj`) and cust
 - 🌑 **Fog of War (FOW)**: Dynamic visibility system that reveals explored areas while hiding unexplored regions.
 - 🗺️ **Minimap**: Real-time minimap display for navigation and overview of generated dungeons.
 
-![Edgar Designer](docs/images/edgar_designer.png)
+![alt text](docs/images/edgar_designer.png)
 > Edgar Designer
 
 ![FOW & Minimap Demo](docs/images/minimap.png)
