@@ -24,9 +24,6 @@
 class_name EdgarRenderer2D
 extends Node2D
 
-const KERNEL_PROXY_PATH := "Edgar/kernel/edgar_kernel_proxy"
-const EDGAR_YATI_PROXY_PATH := "res://addons/edgar.godot/proxy/yati/edgar_yati_proxy.gd"
-
 enum AnchorOffsetMode {
 	OFFSET_CELL_COORD,
 	OFFSET_TILEMAP,
