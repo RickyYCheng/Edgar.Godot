@@ -6,9 +6,8 @@
 
 [node name="SceneRoomLevelTest" type="Node2D" unique_id=132052667]
 
-[node name="EdgarRenderer2D" type="Node2D" parent="." unique_id=1844973639 node_paths=PackedStringArray("tile_map_layers")]
+[node name="EdgarRenderer2D" type="Node2D" parent="." unique_id=1844973639]
 script = ExtResource("1_762sn")
-tile_map_layers = [NodePath("../col")]
 level = ExtResource("2_q5phe")
 layout = {
 "rooms": [{

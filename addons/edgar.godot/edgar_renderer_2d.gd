@@ -40,15 +40,6 @@ signal clear_tiles(renderer: EdgarRenderer2D, tile_map_layer: TileMapLayer)
 
 var generator: EdgarGodotGenerator
 
-var _cached_proxy_path: String = ""
-var _proxy: GDScript
-func get_proxy() -> GDScript:
-	var path := ProjectSettings.get_setting(KERNEL_PROXY_PATH, EDGAR_YATI_PROXY_PATH) as String
-	if _cached_proxy_path != path:
-		_cached_proxy_path = path
-		_proxy = (load(path) as GDScript) if ResourceLoader.exists(path) else null
-	return _proxy
-
 @export_tool_button("Generate Layout") var _generate_layout_btn : Callable = generate_layout
 @export_tool_button("Rerender Layout") var _renderer_layout_btn : Callable = render
 @export var anchor_offset_mode: AnchorOffsetMode = AnchorOffsetMode.OFFSET_CELL_COORD
@@ -113,7 +104,7 @@ func generate_layout() -> void:
 		var anchor := _get_anchor(pivot_room.template)
 		var transformation := int(pivot_room.transformation)
 		
-		var proxy := get_proxy()
+		var proxy := EdgarGodot.get_proxy()
 		var lnk := _get_lnk(pivot_room.template, proxy)
 		var boundary := lnk.get("boundary", PackedVector2Array()) as PackedVector2Array
 		if not boundary.is_empty():
@@ -131,7 +122,7 @@ func render() -> void:
 		printerr("[EdgarGodot] Cannot render: layout is null or empty.")
 		return
 
-	var proxy := get_proxy()
+	var proxy := EdgarGodot.get_proxy()
 	for tile_map_layer in tile_map_layers:
 		clear(tile_map_layer)
 		
@@ -350,7 +341,7 @@ func _get_tile_data_property(tile_data: TileData, key: String) -> Variant:
 
 func _load_room(template: String, proxy: GDScript = null) -> Node:
 	if not proxy:
-		proxy = get_proxy()
+		proxy = EdgarGodot.get_proxy()
 
 	if proxy:
 		return proxy.call("load_room", template)
@@ -359,7 +350,7 @@ func _load_room(template: String, proxy: GDScript = null) -> Node:
 
 func _get_anchor(template: String, proxy: GDScript = null) -> Vector2:
 	if not proxy:
-		proxy = get_proxy()
+		proxy = EdgarGodot.get_proxy()
 	
 	if proxy:
 		return proxy.call("get_anchor", template)
@@ -377,7 +368,7 @@ func _get_anchor(template: String, proxy: GDScript = null) -> Vector2:
 
 func _get_lnk(template: String, proxy: GDScript = null) -> Dictionary:
 	if not proxy:
-		proxy = get_proxy()
+		proxy = EdgarGodot.get_proxy()
 	
 	if proxy:
 		return proxy.call("get_lnk", template)

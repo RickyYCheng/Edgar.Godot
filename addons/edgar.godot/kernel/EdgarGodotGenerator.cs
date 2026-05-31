@@ -11,16 +11,10 @@ using Godot.Collections;
 [GlobalClass]
 public partial class EdgarGodotGenerator : RefCounted
 {
-    const string KERNEL_PROXY_SETTING = "Edgar/kernel/edgar_kernel_proxy";
-    const string EDGAR_YATI_PROXY_PATH = "res://addons/edgar.godot/proxy/yati/edgar_yati_proxy.gd";
-
     GraphBasedGeneratorGrid2D<string> _captured_generator;
     Godot.Collections.Dictionary<string, Dictionary> _nodes;
     Array<Dictionary> _edges;
     Array<Godot.Collections.Dictionary<string, Dictionary>> _layers;
-
-    static GDScript _proxy;
-    static string _cached_proxy_path = "";
 
     public EdgarGodotGenerator()
     {
@@ -36,19 +30,6 @@ public partial class EdgarGodotGenerator : RefCounted
         _nodes = nodes;
         _edges = edges;
         _layers = layers;
-    }
-
-    private static GDScript get_proxy()
-    {
-        var path = ProjectSettings.GetSetting(KERNEL_PROXY_SETTING, EDGAR_YATI_PROXY_PATH).AsString();
-
-        if (_cached_proxy_path != path)
-        {
-            _cached_proxy_path = path;
-            _proxy = ResourceLoader.Exists(path) ? GD.Load<GDScript>(path) : null;
-        }
-
-        return _proxy;
     }
 
     private void ensure_generator()
@@ -139,7 +120,7 @@ public partial class EdgarGodotGenerator : RefCounted
             var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
             var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
             var cache = new Godot.Collections.Dictionary<string, Dictionary>();
-            var proxy = get_proxy();
+            var proxy = EdgarGodot.get_proxy();
             var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
             {
                 var result = new Godot.Collections.Dictionary<string, Dictionary> { };
@@ -222,7 +203,7 @@ public partial class EdgarGodotGenerator : RefCounted
 
     private static Dictionary get_lnk(string template, GDScript proxy = null)
     {
-        proxy ??= get_proxy();
+        proxy ??= EdgarGodot.get_proxy();
 
         if (proxy is not null)
         {
