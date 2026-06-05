@@ -147,6 +147,6 @@ func _apply_theme() -> void:
 	header_style.content_margin_top = 4
 	header_style.content_margin_right = 8
 	header_style.content_margin_bottom = 4
-	header_style.bg_color = base.lerp(contrast, 0.2)
+	header_style.bg_color = base.lerp(contrast, 0.1)
 	header_style.set_corner_radius_all(3)
 	header_panel.add_theme_stylebox_override("panel", header_style)

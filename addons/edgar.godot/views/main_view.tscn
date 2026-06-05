@@ -2,13 +2,24 @@
 
 [ext_resource type="Script" uid="uid://d25v8oqrem2pm" path="res://addons/edgar.godot/views/main_view.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://bgvssxmr2slqt" path="res://addons/edgar.godot/views/graph_edit/EdgarGraphEdit.tscn" id="2_edit"]
-[ext_resource type="Script" path="res://addons/edgar.godot/views/layers_panel.gd" id="3_layers"]
+[ext_resource type="Script" uid="uid://bfuk5g54kj6ib" path="res://addons/edgar.godot/views/layers_panel.gd" id="3_layers"]
 
-[sub_resource type="DPITexture" id="DPITexture_gv2ow"]
+[sub_resource type="DPITexture" id="DPITexture_5s6bw"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
 "
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5s6bw"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5vc4j"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x0wgi"]
 content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
@@ -55,14 +66,14 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Create a new file"
-icon = SubResource("DPITexture_gv2ow")
+icon = SubResource("DPITexture_5s6bw")
 flat = true
 
 [node name="OpenButton" type="MenuButton" parent="Margin/MainVBox/TopBar" unique_id=617649748]
 unique_name_in_owner = true
 layout_mode = 2
 tooltip_text = "Open a file"
-icon = SubResource("DPITexture_gv2ow")
+icon = SubResource("DPITexture_5s6bw")
 item_count = 2
 popup/item_0/text = "Open..."
 popup/item_0/id = 100
@@ -75,7 +86,7 @@ layout_mode = 2
 tooltip_text = "Save all files"
 disabled = true
 text = "All"
-icon = SubResource("DPITexture_gv2ow")
+icon = SubResource("DPITexture_5s6bw")
 flat = true
 
 [node name="Spacer" type="Control" parent="Margin/MainVBox/TopBar" unique_id=1952507448]
@@ -86,7 +97,7 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.49)
 layout_mode = 2
-text = "v0.3.11"
+text = "v0.5.7"
 vertical_alignment = 1
 
 [node name="Content" type="HSplitContainer" parent="Margin/MainVBox" unique_id=127335377]
@@ -108,6 +119,7 @@ theme_override_constants/separation = 0
 [node name="PropertyHeader" type="PanelContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661236]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5vc4j")
 
 [node name="PropertyHeaderHBox" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyHeader" unique_id=953661241]
 layout_mode = 2
@@ -116,12 +128,13 @@ theme_override_constants/separation = 4
 [node name="PropertyCollapseButton" type="Button" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyHeader/PropertyHeaderHBox" unique_id=953661237]
 unique_name_in_owner = true
 layout_mode = 2
+icon = SubResource("DPITexture_5s6bw")
 flat = true
 
 [node name="PropertyHeaderLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyHeader/PropertyHeaderHBox" unique_id=953661238]
 layout_mode = 2
-text = "Level Properties"
 size_flags_horizontal = 3
+text = "Level Properties"
 
 [node name="PropertyContent" type="MarginContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661239]
 unique_name_in_owner = true
@@ -140,17 +153,13 @@ theme_override_constants/separation = 4
 
 [node name="DistanceLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/DistanceRow" unique_id=953661229]
 layout_mode = 2
-text = "Min Room Distance"
 tooltip_text = "Minimum distance between rooms in the generated layout"
+text = "Min Room Distance"
 
 [node name="MinimumRoomDistanceSpinBox" type="SpinBox" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/DistanceRow" unique_id=953661226]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-min_value = 0.0
-max_value = 100.0
-step = 1.0
-value = 0.0
 
 [node name="RepeatDefaultRow" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox" unique_id=953661230]
 layout_mode = 2
@@ -158,13 +167,14 @@ theme_override_constants/separation = 4
 
 [node name="RepeatDefaultLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatDefaultRow" unique_id=953661231]
 layout_mode = 2
-text = "Repeat Default"
 tooltip_text = "Default room template repeat mode (null = system default NoRepeat)"
+text = "Repeat Default"
 
 [node name="RepeatDefaultOption" type="OptionButton" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatDefaultRow" unique_id=953661232]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+selected = 3
 item_count = 4
 popup/item_0/text = "Default"
 popup/item_0/id = 0
@@ -174,7 +184,6 @@ popup/item_2/text = "NoImmediate"
 popup/item_2/id = 2
 popup/item_3/text = "NoRepeat"
 popup/item_3/id = 3
-selected = 3
 
 [node name="RepeatOverrideRow" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox" unique_id=953661233]
 layout_mode = 2
@@ -182,13 +191,14 @@ theme_override_constants/separation = 4
 
 [node name="RepeatOverrideLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatOverrideRow" unique_id=953661234]
 layout_mode = 2
-text = "Repeat Override"
 tooltip_text = "Override room template repeat mode (null = don't override)"
+text = "Repeat Override"
 
 [node name="RepeatOverrideOption" type="OptionButton" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatOverrideRow" unique_id=953661235]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+selected = 0
 item_count = 4
 popup/item_0/text = "Default"
 popup/item_0/id = 0
@@ -198,13 +208,6 @@ popup/item_2/text = "NoImmediate"
 popup/item_2/id = 2
 popup/item_3/text = "NoRepeat"
 popup/item_3/id = 3
-selected = 0
-layout_mode = 2
-size_flags_horizontal = 3
-min_value = 0.0
-max_value = 100.0
-step = 1.0
-value = 0.0
 
 [node name="LayersSplit" type="VSplitContainer" parent="Margin/MainVBox/Content/SidePanel" unique_id=464584211]
 layout_mode = 2
@@ -220,41 +223,45 @@ unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Filter files"
 clear_button_enabled = true
-right_icon = SubResource("DPITexture_gv2ow")
+right_icon = SubResource("DPITexture_5s6bw")
 
 [node name="ItemList" type="ItemList" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel" unique_id=1751635860]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_5s6bw")
+theme_override_styles/panel = SubResource("StyleBoxFlat_x0wgi")
 allow_rmb_select = true
 
 [node name="FilesPopupMenu" type="PopupMenu" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/FilesPanel/ItemList" unique_id=144296585]
 unique_name_in_owner = true
 
 [node name="LayersPanel" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel/LayersSplit" unique_id=856483219]
-script = ExtResource("3_layers")
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("3_layers")
 
 [node name="LayersScroll" type="ScrollContainer" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel" unique_id=851294710]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_x0wgi")
 horizontal_scroll_mode = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_5s6bw")
 
 [node name="LayersVBox" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel/LayersScroll" unique_id=376587492]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 6
 
 [node name="AddLayerButton" type="Button" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel" unique_id=912345678]
 unique_name_in_owner = true
 layout_mode = 2
+tooltip_text = "Add layer"
+icon = SubResource("DPITexture_5s6bw")
 flat = true
 
 [node name="LayerFileDialog" type="FileDialog" parent="Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel" unique_id=661482509]
-title = "Add File to Layer"
+title = "Open a File"
 size = Vector2i(900, 750)
 min_size = Vector2i(600, 500)
 ok_button_text = "选择"
@@ -308,13 +315,13 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 text = "New Graph..."
-icon = SubResource("DPITexture_gv2ow")
+icon = SubResource("DPITexture_5s6bw")
 
 [node name="BannerOpenButton" type="Button" parent="Banner/BannerVBox/BannerButtons" unique_id=1312339766]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Quick Open..."
-icon = SubResource("DPITexture_gv2ow")
+icon = SubResource("DPITexture_5s6bw")
 
 [node name="NewDialog" type="FileDialog" parent="." unique_id=557568601]
 size = Vector2i(900, 750)
