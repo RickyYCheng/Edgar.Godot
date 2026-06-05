@@ -64,5 +64,5 @@ Please check the exmaples in the `examples/` folder.
 
 ### Edgar-Dotnet Functionalities
 - [x] Cover `Edgar-Dotnet`'s minimun room distance
-- [ ] Cover `Edgar-Dotnet`'s repeat mode for rooms
+- [x] Cover `Edgar-Dotnet`'s repeat mode for rooms
 - [ ] Simplify `Edgar-Dotnet` corridor design
