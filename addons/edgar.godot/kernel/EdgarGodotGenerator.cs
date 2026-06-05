@@ -52,8 +52,10 @@ public partial class EdgarGodotGenerator : RefCounted
         if (nodes == null || edges == null || layers == null)
             return null;
 
-        var level_description = new LevelDescriptionGrid2D<string>();
-        level_description.MinimumRoomDistance = minimum_room_distance;
+        var level_description = new LevelDescriptionGrid2D<string>()
+        {
+            MinimumRoomDistance = minimum_room_distance
+        };
 
         var layer_templates = new List<List<RoomTemplateGrid2D>>(layers.Count);
         foreach (var layer in layers)
