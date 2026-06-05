@@ -15,6 +15,7 @@ public partial class EdgarGodotGenerator : RefCounted
     Godot.Collections.Dictionary<string, Dictionary> _nodes;
     Array<Dictionary> _edges;
     Array<Godot.Collections.Dictionary<string, Dictionary>> _layers;
+    int _minimum_room_distance;
 
     public EdgarGodotGenerator()
     {
@@ -24,12 +25,13 @@ public partial class EdgarGodotGenerator : RefCounted
         _layers = null;
     }
 
-    private EdgarGodotGenerator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
+    private EdgarGodotGenerator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0)
     {
         _captured_generator = null;
         _nodes = nodes;
         _edges = edges;
         _layers = layers;
+        _minimum_room_distance = minimum_room_distance;
     }
 
     private void ensure_generator()
@@ -37,7 +39,7 @@ public partial class EdgarGodotGenerator : RefCounted
         if (_captured_generator != null)
             return;
 
-        var level_description = GetLevelDescription(_nodes, _edges, _layers);
+        var level_description = GetLevelDescription(_nodes, _edges, _layers, _minimum_room_distance);
         if (level_description != null)
         {
             _captured_generator = new GraphBasedGeneratorGrid2D<string>(level_description);
@@ -45,12 +47,13 @@ public partial class EdgarGodotGenerator : RefCounted
     }
 
     [Pure]
-    private static LevelDescriptionGrid2D<string> GetLevelDescription(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
+    private static LevelDescriptionGrid2D<string> GetLevelDescription(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0)
     {
         if (nodes == null || edges == null || layers == null)
             return null;
 
         var level_description = new LevelDescriptionGrid2D<string>();
+        level_description.MinimumRoomDistance = minimum_room_distance;
 
         var layer_templates = new List<List<RoomTemplateGrid2D>>(layers.Count);
         foreach (var layer in layers)
@@ -104,8 +107,8 @@ public partial class EdgarGodotGenerator : RefCounted
     public static bool resource_valid(Resource level)
         => level is not null && level.HasMeta("is_edgar_graph");
 
-    public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers)
-        => new(nodes, edges, layers);
+    public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0)
+        => new(nodes, edges, layers, minimum_room_distance);
 
     public static EdgarGodotGenerator from_resource(Resource level)
     {
