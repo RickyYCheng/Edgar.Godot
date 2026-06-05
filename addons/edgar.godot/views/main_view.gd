@@ -47,6 +47,7 @@ const EdgarIcon = preload("res://addons/edgar.godot/icons/edgar_graph.svg")
 # Open files tracking
 var open_files: Array[String] = []
 var file_map: Dictionary = {}
+var _applying_theme := false
 
 
 func _ready() -> void:
@@ -66,7 +67,16 @@ func _ready() -> void:
 	EditorInterface.get_resource_filesystem().filesystem_changed.connect(_on_filesystem_changed)
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED and is_node_ready():
+		_apply_theme()
+
+
 func _apply_theme() -> void:
+	if _applying_theme:
+		return
+	_applying_theme = true
+
 	create_button.icon = get_theme_icon("New", "EditorIcons")
 	create_button.tooltip_text = "Create a new file"
 
@@ -102,6 +112,7 @@ func _apply_theme() -> void:
 		header_style.bg_color = base.lerp(contrast, 0.1)
 		header_style.set_corner_radius_all(3)
 		property_header.add_theme_stylebox_override("panel", header_style)
+	_applying_theme = false
 
 
 func open_resource(resource: Resource) -> void:

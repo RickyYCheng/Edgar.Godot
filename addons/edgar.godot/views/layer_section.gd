@@ -25,6 +25,7 @@ const FileRowScene = preload("res://addons/edgar.godot/views/layer_file_row.tscn
 var layer_index: int = -1
 var _collapsed: bool = false
 var _renaming: bool = false
+var _applying_theme := false
 
 
 func _ready() -> void:
@@ -41,6 +42,11 @@ func _ready() -> void:
 	rename_edit.text_submitted.connect(_on_rename_submitted)
 	rename_edit.focus_exited.connect(_on_rename_focus_exited)
 	_update_collapse_icon()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_THEME_CHANGED and is_node_ready():
+		_apply_theme()
 
 
 func setup(p_layer_index: int, layer_name: String, files: Array) -> void:
@@ -128,6 +134,10 @@ func _on_delete() -> void:
 
 
 func _apply_theme() -> void:
+	if _applying_theme:
+		return
+	_applying_theme = true
+
 	var base := get_theme_color("base_color", "Editor")
 	var contrast := get_theme_color("contrast_color", "Editor")
 
@@ -150,3 +160,4 @@ func _apply_theme() -> void:
 	header_style.bg_color = base.lerp(contrast, 0.1)
 	header_style.set_corner_radius_all(3)
 	header_panel.add_theme_stylebox_override("panel", header_style)
+	_applying_theme = false
