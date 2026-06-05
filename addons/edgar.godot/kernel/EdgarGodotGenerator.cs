@@ -123,8 +123,8 @@ public partial class EdgarGodotGenerator : RefCounted
     public static bool resource_valid(Resource level)
         => level is not null && level.HasMeta("is_edgar_graph");
 
-    public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0, int? room_template_repeat_mode_default = null, int? room_template_repeat_mode_override = null)
-        => new(nodes, edges, layers, minimum_room_distance, room_template_repeat_mode_default, room_template_repeat_mode_override);
+    public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0, int room_template_repeat_mode_default = -1, int room_template_repeat_mode_override = -1)
+        => new(nodes, edges, layers, minimum_room_distance, room_template_repeat_mode_default >= 0 ? (int?)room_template_repeat_mode_default : null, room_template_repeat_mode_override >= 0 ? (int?)room_template_repeat_mode_override : null);
 
     public static EdgarGodotGenerator from_resource(Resource level)
     {
@@ -166,7 +166,7 @@ public partial class EdgarGodotGenerator : RefCounted
                 return result;
             }));
 
-            return cons(nodes, edges, layers, minimum_room_distance, room_template_repeat_mode_default, room_template_repeat_mode_override);
+            return cons(nodes, edges, layers, minimum_room_distance, room_template_repeat_mode_default ?? -1, room_template_repeat_mode_override ?? -1);
         }
         catch (System.Exception ex)
         {
