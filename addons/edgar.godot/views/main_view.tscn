@@ -20,17 +20,6 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_property_header"]
-content_margin_left = 6.0
-content_margin_top = 2.0
-content_margin_right = 6.0
-content_margin_bottom = 2.0
-bg_color = Color(0.18, 0.2, 0.25, 0.9)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
 [node name="MainView" type="Control" unique_id=839407430]
 clip_contents = true
 layout_mode = 3
@@ -117,8 +106,8 @@ layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="PropertyHeader" type="PanelContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661236]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_property_header")
 
 [node name="PropertyHeaderHBox" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyHeader" unique_id=953661241]
 layout_mode = 2

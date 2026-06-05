@@ -31,6 +31,7 @@ const EdgarIcon = preload("res://addons/edgar.godot/icons/edgar_graph.svg")
 @onready var repeat_override_option: OptionButton = %RepeatOverrideOption
 @onready var property_collapse_button: Button = %PropertyCollapseButton
 @onready var property_content: MarginContainer = %PropertyContent
+@onready var property_header: PanelContainer = %PropertyHeader
 
 # Context menu
 @onready var files_popup_menu: PopupMenu = %FilesPopupMenu
@@ -85,6 +86,18 @@ func _apply_theme() -> void:
 
 	if is_instance_valid(property_collapse_button):
 		property_collapse_button.icon = get_theme_icon("GuiTreeArrowRight", "EditorIcons")
+
+	if is_instance_valid(property_header):
+		var base := get_theme_color("base_color", "Editor")
+		var contrast := get_theme_color("contrast_color", "Editor")
+		var header_style := StyleBoxFlat.new()
+		header_style.content_margin_left = 6
+		header_style.content_margin_top = 2
+		header_style.content_margin_right = 6
+		header_style.content_margin_bottom = 2
+		header_style.bg_color = base.lerp(contrast, 0.2)
+		header_style.set_corner_radius_all(3)
+		property_header.add_theme_stylebox_override("panel", header_style)
 
 
 func open_resource(resource: Resource) -> void:

@@ -2,36 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dkb0imhb7xfg2" path="res://addons/edgar.godot/views/layer_section.gd" id="1"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_section"]
-content_margin_left = 6.0
-content_margin_top = 6.0
-content_margin_right = 6.0
-content_margin_bottom = 6.0
-bg_color = Color(0.15, 0.15, 0.15, 0.8)
-border_width_top = 1
-border_color = Color(0.25, 0.25, 0.25, 0.6)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
-content_margin_left = 8.0
-content_margin_top = 4.0
-content_margin_right = 8.0
-content_margin_bottom = 4.0
-bg_color = Color(0.18, 0.2, 0.25, 0.9)
-corner_radius_top_left = 3
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
-corner_radius_bottom_left = 3
-
 [sub_resource type="DPITexture" id="DPITexture_2u3ud"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\"><path fill=\"#ff5d5d\" d=\"M2 1v8.586l1.293-1.293a1 1 0 0 1 1.414 0L7 10.587l2.293-2.293a1 1 0 0 1 1.414 0L13 10.586l1-1V6H9V1H2zm8 0v4h4zm-6 9.414-2 2V15h12v-2.586l-.293.293a1 1 0 0 1-1.414 0L10 10.414l-2.293 2.293a1 1 0 0 1-1.414 0L4 10.414z\"/></svg>
 "
 
 [node name="LayerSection" type="PanelContainer" unique_id=203000052]
-theme_override_styles/panel = SubResource("StyleBoxFlat_section")
 script = ExtResource("1")
 
 [node name="SectionVBox" type="VBoxContainer" parent="." unique_id=785845755]
@@ -40,7 +15,6 @@ theme_override_constants/separation = 4
 
 [node name="Header" type="PanelContainer" parent="SectionVBox" unique_id=1515056459]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_header")
 
 [node name="HeaderHBox" type="HBoxContainer" parent="SectionVBox/Header" unique_id=1289828634]
 layout_mode = 2

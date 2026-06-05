@@ -20,6 +20,7 @@ const FileRowScene = preload("res://addons/edgar.godot/views/layer_file_row.tscn
 @onready var add_button: Button = $"SectionVBox/ContentMargin/ContentVBox/AddButton"
 @onready var collapse_button: Button = $"SectionVBox/Header/HeaderHBox/CollapseButton"
 @onready var content_margin: MarginContainer = $"SectionVBox/ContentMargin"
+@onready var header_panel: PanelContainer = $"SectionVBox/Header"
 
 var layer_index: int = -1
 var _collapsed: bool = false
@@ -27,6 +28,7 @@ var _renaming: bool = false
 
 
 func _ready() -> void:
+	_apply_theme()
 	add_button.icon = get_theme_icon("Add", "EditorIcons")
 	add_button.pressed.connect(_on_add)
 	collapse_button.pressed.connect(_on_collapse_toggle)
@@ -123,3 +125,28 @@ func _on_rename_focus_exited() -> void:
 
 func _on_delete() -> void:
 	delete_pressed.emit(layer_index)
+
+
+func _apply_theme() -> void:
+	var base := get_theme_color("base_color", "Editor")
+	var contrast := get_theme_color("contrast_color", "Editor")
+
+	# Section outer panel
+	var section_style := StyleBoxFlat.new()
+	section_style.content_margin_left = 6
+	section_style.content_margin_top = 6
+	section_style.content_margin_right = 6
+	section_style.content_margin_bottom = 6
+	section_style.bg_color = base
+	section_style.set_corner_radius_all(4)
+	add_theme_stylebox_override("panel", section_style)
+
+	# Header background
+	var header_style := StyleBoxFlat.new()
+	header_style.content_margin_left = 8
+	header_style.content_margin_top = 4
+	header_style.content_margin_right = 8
+	header_style.content_margin_bottom = 4
+	header_style.bg_color = base.lerp(contrast, 0.2)
+	header_style.set_corner_radius_all(3)
+	header_panel.add_theme_stylebox_override("panel", header_style)
