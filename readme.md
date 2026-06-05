@@ -47,11 +47,22 @@ For Edgar.Godot-specific fields, see [reference](addons/edgar.godot/reference.md
 Please check the exmaples in the `examples/` folder.
 
 ## Roadmap
+
+### Primitives
 - [x] Runtime external loading for tmx/tmj files
   - [x] Remove bundled `YATI` addon version
+
+### Godot 2D
 - [x] Godot 2D Scene Support — Alternative to Tiled files for room definitions
   - [x] Add proxy support to customize loading procedures
   - [x] Add `*.tscn/*.scn` support for main screen graph-edit
   - [x] Add edgar extractor for godot scenes
   - [x] Make proxy suitable for processing scenes
+
+### Godot 3D (experimental)
 - [ ] 3D Renderer Support — Integration with GridMap and other 3D tile systems
+
+### Edgar-Dotnet Functionalities
+- [ ] Cover `Edgar-Dotnet`'s minimun room distance
+- [ ] Simplify `Edgar-Dotnet` corridor design
+
