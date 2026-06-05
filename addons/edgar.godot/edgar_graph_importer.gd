@@ -101,6 +101,8 @@ static func _create_resource(source_file: String, json: Dictionary) -> EdgarGrap
 			layer_names = ["Layer 1"]
 	res.set_meta("layer_names", layer_names)
 
+	res.set_meta("minimum_room_distance", json.get("minimum_room_distance", 0))
+
 	return res
 
 static func import_external(source_file: String) -> EdgarGraphResource:

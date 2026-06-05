@@ -122,6 +122,7 @@ public partial class EdgarGodotGenerator : RefCounted
         {
             var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
             var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
+            var minimum_room_distance = (int)level.GetMeta("minimum_room_distance", 0);
             var cache = new Godot.Collections.Dictionary<string, Dictionary>();
             var proxy = EdgarGodot.get_proxy();
             var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
@@ -147,7 +148,7 @@ public partial class EdgarGodotGenerator : RefCounted
                 return result;
             }));
 
-            return cons(nodes, edges, layers);
+            return cons(nodes, edges, layers, minimum_room_distance);
         }
         catch (System.Exception ex)
         {

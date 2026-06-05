@@ -26,6 +26,7 @@ const EdgarIcon = preload("res://addons/edgar.godot/icons/edgar_graph.svg")
 @onready var item_list: ItemList = %ItemList
 @onready var edgar_graph_edit: EdgarGraphEdit = %EdgarGraphEdit
 @onready var layers_panel: LayersPanel = $"Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel"
+@onready var property_spin_box: SpinBox = %PropertySpinBox
 
 # Context menu
 @onready var files_popup_menu: PopupMenu = %FilesPopupMenu
@@ -52,6 +53,7 @@ func _ready() -> void:
 	layers_panel.layers_changed.connect(_on_layers_changed)
 	layers_panel.layer_deleted.connect(_on_layer_deleted)
 	layers_panel.layer_structure_changed.connect(_on_layer_structure_changed)
+	property_spin_box.value_changed.connect(_on_room_distance_changed)
 	EditorInterface.get_resource_filesystem().filesystem_changed.connect(_on_filesystem_changed)
 
 
@@ -82,6 +84,7 @@ func open_resource(resource: Resource) -> void:
 		file_map[path] = path.get_file()
 	edgar_graph_edit.graph_resource = resource
 	layers_panel.refresh(resource)
+	property_spin_box.set_value_no_signal(edgar_graph_edit.get_minimum_room_distance())
 	_refresh_files_list()
 	_update_visibility()
 
@@ -125,6 +128,11 @@ func _on_layer_structure_changed() -> void:
 	# Refresh node layer dropdowns and save
 	if edgar_graph_edit.graph_resource != null:
 		edgar_graph_edit.refresh_node_layer_options()
+		edgar_graph_edit.save_current_graph()
+
+func _on_room_distance_changed(value: float) -> void:
+	if edgar_graph_edit.graph_resource != null:
+		edgar_graph_edit.set_minimum_room_distance(int(value))
 		edgar_graph_edit.save_current_graph()
 
 func save_all() -> void:

@@ -44,6 +44,16 @@ var graph_nodes : Dictionary[String, GraphNode] = {}
 var _skip_save := false
 var _original_file_path := ""  # Store the original .edgar-graph file path
 
+func get_minimum_room_distance() -> int:
+	if graph_resource == null:
+		return 0
+	return graph_resource.get_meta("minimum_room_distance", 0)
+
+func set_minimum_room_distance(value: int) -> void:
+	if graph_resource == null:
+		return
+	graph_resource.set_meta("minimum_room_distance", value)
+
 func _ready() -> void:
 	_update_visibility()
 
@@ -67,6 +77,7 @@ func _save_graph_resource() -> bool:
 		"edges": graph_resource.get_meta("edges"),
 		"layers": layers_data,
 		"layer_names": layer_names,
+		"minimum_room_distance": graph_resource.get_meta("minimum_room_distance", 0),
 	}))
 
 func save_current_graph() -> void:
