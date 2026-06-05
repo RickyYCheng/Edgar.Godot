@@ -63,6 +63,5 @@ Please check the exmaples in the `examples/` folder.
 - [ ] 3D Renderer Support — Integration with GridMap and other 3D tile systems
 
 ### Edgar-Dotnet Functionalities
-- [ ] Cover `Edgar-Dotnet`'s minimun room distance
+- [x] Cover `Edgar-Dotnet`'s minimun room distance
 - [ ] Simplify `Edgar-Dotnet` corridor design
-
