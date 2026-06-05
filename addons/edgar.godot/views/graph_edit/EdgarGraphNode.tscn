@@ -66,6 +66,20 @@ popup/item_0/id = 0
 popup/item_1/text = "limit"
 popup/item_1/id = 1
 
+[node name="RepeatModeButton" type="OptionButton" parent="."]
+layout_mode = 2
+flat = true
+selected = 0
+item_count = 4
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+popup/item_1/text = "AllowRepeat"
+popup/item_1/id = 1
+popup/item_2/text = "NoImmediate"
+popup/item_2/id = 2
+popup/item_3/text = "NoRepeat"
+popup/item_3/id = 3
+
 [node name="IsPivotButton" type="CheckButton" parent="."]
 layout_mode = 2
 button_group = ExtResource("2_ksnd0")

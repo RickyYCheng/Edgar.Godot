@@ -29,6 +29,7 @@ signal change_name(old_name:String, new_name: String)
 @onready var room_type_button: OptionButton = $RoomTypeButton
 @onready var edgar_layer_button: OptionButton = $EdgarLayerButton
 @onready var is_pivot_button: CheckButton = $IsPivotButton
+@onready var repeat_mode_button: OptionButton = $RepeatModeButton
 @onready var line_edit: LineEdit = $LineEdit
 
 var room_name: String:
@@ -60,6 +61,7 @@ func get_data():
 		"is_corridor_room": room_type_button.selected if room_type_button.selected >= 0 else 0,
 		"edgar_layer": edgar_layer_button.selected if edgar_layer_button.selected >= 0 else 0,
 		"is_pivot": is_pivot_button.button_pressed,
+		"repeat_mode": _option_to_repeat_mode(repeat_mode_button.selected),
 	}
 
 func set_data(data):
@@ -67,6 +69,18 @@ func set_data(data):
 	room_type_button.select(data.is_corridor_room)
 	edgar_layer_button.select(data.edgar_layer)
 	is_pivot_button.button_pressed = data.is_pivot
+	repeat_mode_button.select(_repeat_mode_to_option(data.get("repeat_mode", -1)))
+
+func _option_to_repeat_mode(index: int) -> int:
+	match index:
+		0: return -1
+		1: return 0
+		2: return 1
+		3: return 2
+	return -1
+
+func _repeat_mode_to_option(value: int) -> int:
+	return value + 1
 
 func _on_line_edit_text_submitted(new_text: String) -> void:
 	room_name = new_text
