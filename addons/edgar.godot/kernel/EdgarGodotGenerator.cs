@@ -64,10 +64,10 @@ public partial class EdgarGodotGenerator : RefCounted
             RoomTemplateRepeatModeOverride = FromInt(room_template_repeat_mode_override)
         };
 
-        var layer_templates = new List<List<RoomTemplateGrid2D>>(layers.Count);
+        var layer_template_builders = new List<List<System.Func<RoomTemplateRepeatMode?, RoomTemplateGrid2D>>>(layers.Count);
         foreach (var layer in layers)
         {
-            var templates = new List<RoomTemplateGrid2D>(layers.Count);
+            var builders = new List<System.Func<RoomTemplateRepeatMode?, RoomTemplateGrid2D>>(layer.Count);
             foreach (var kv in layer)
             {
                 var name = kv.Key;
@@ -89,18 +89,25 @@ public partial class EdgarGodotGenerator : RefCounted
                 var transformations = lnk.ContainsKey("transformations") ? lnk["transformations"].AsInt32Array().Select(e => (TransformationGrid2D)e).ToList() : [TransformationGrid2D.Identity];
 
                 var manual_door = new ManualDoorModeGrid2D(doors_list);
-                var room_template = new RoomTemplateGrid2D(boundary, manual_door, name, allowedTransformations: transformations);
-                templates.Add(room_template);
+                builders.Add(repeatMode => new RoomTemplateGrid2D(boundary, manual_door, name, allowedTransformations: transformations, repeatMode: repeatMode));
             }
-            layer_templates.Add(templates);
+            layer_template_builders.Add(builders);
         }
 
-        foreach (var node in nodes.Keys)
+        foreach (var node_name in nodes.Keys)
         {
-            var layer = nodes[node]["edgar_layer"].AsInt32();
-            var is_corridor = nodes[node]["is_corridor_room"].AsBool();
-            var room_description = new RoomDescriptionGrid2D(is_corridor, layer_templates[layer]);
-            level_description.AddRoom(node, room_description);
+            var node = nodes[node_name];
+            var layer = node["edgar_layer"].AsInt32();
+            var is_corridor = node["is_corridor_room"].AsBool();
+
+            var repeat_mode_raw = node.ContainsKey("repeat_mode") ? (int?)node["repeat_mode"].AsInt32() : null;
+            var repeat_mode = repeat_mode_raw.HasValue && repeat_mode_raw.Value >= 0
+                ? (RoomTemplateRepeatMode?)repeat_mode_raw.Value
+                : null;
+
+            var room_templates = layer_template_builders[layer].Select(b => b(repeat_mode)).ToList();
+            var room_description = new RoomDescriptionGrid2D(is_corridor, room_templates);
+            level_description.AddRoom(node_name, room_description);
         }
 
         foreach (var connection in edges)
