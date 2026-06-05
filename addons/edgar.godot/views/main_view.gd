@@ -27,6 +27,10 @@ const EdgarIcon = preload("res://addons/edgar.godot/icons/edgar_graph.svg")
 @onready var edgar_graph_edit: EdgarGraphEdit = %EdgarGraphEdit
 @onready var layers_panel: LayersPanel = $"Margin/MainVBox/Content/SidePanel/LayersSplit/LayersPanel"
 @onready var minimum_room_distance_spinbox: SpinBox = %MinimumRoomDistanceSpinBox
+@onready var repeat_default_option: OptionButton = %RepeatDefaultOption
+@onready var repeat_override_option: OptionButton = %RepeatOverrideOption
+@onready var property_collapse_button: Button = %PropertyCollapseButton
+@onready var property_content: MarginContainer = %PropertyContent
 
 # Context menu
 @onready var files_popup_menu: PopupMenu = %FilesPopupMenu
@@ -54,6 +58,9 @@ func _ready() -> void:
 	layers_panel.layer_deleted.connect(_on_layer_deleted)
 	layers_panel.layer_structure_changed.connect(_on_layer_structure_changed)
 	minimum_room_distance_spinbox.value_changed.connect(_on_room_distance_changed)
+	repeat_default_option.item_selected.connect(_on_repeat_default_changed)
+	repeat_override_option.item_selected.connect(_on_repeat_override_changed)
+	property_collapse_button.pressed.connect(_on_property_collapse_toggle)
 	EditorInterface.get_resource_filesystem().filesystem_changed.connect(_on_filesystem_changed)
 
 
@@ -76,6 +83,9 @@ func _apply_theme() -> void:
 	if is_instance_valid(item_list):
 		item_list.add_theme_stylebox_override("panel", get_theme_stylebox("panel", "Panel"))
 
+	if is_instance_valid(property_collapse_button):
+		property_collapse_button.icon = get_theme_icon("GuiTreeArrowRight", "EditorIcons")
+
 
 func open_resource(resource: Resource) -> void:
 	var path: String = resource.resource_path
@@ -85,6 +95,8 @@ func open_resource(resource: Resource) -> void:
 	edgar_graph_edit.graph_resource = resource
 	layers_panel.refresh(resource)
 	minimum_room_distance_spinbox.set_value_no_signal(edgar_graph_edit.get_minimum_room_distance())
+	repeat_default_option.select(_meta_to_option(edgar_graph_edit.get_repeat_mode_default()))
+	repeat_override_option.select(_meta_to_option(edgar_graph_edit.get_repeat_mode_override()))
 	_refresh_files_list()
 	_update_visibility()
 
@@ -134,6 +146,32 @@ func _on_room_distance_changed(value: float) -> void:
 	if edgar_graph_edit.graph_resource != null:
 		edgar_graph_edit.set_minimum_room_distance(int(value))
 		edgar_graph_edit.save_current_graph()
+
+func _on_repeat_default_changed(index: int) -> void:
+	if edgar_graph_edit.graph_resource != null:
+		edgar_graph_edit.set_repeat_mode_default(_option_to_meta(index))
+		edgar_graph_edit.save_current_graph()
+
+func _on_repeat_override_changed(index: int) -> void:
+	if edgar_graph_edit.graph_resource != null:
+		edgar_graph_edit.set_repeat_mode_override(_option_to_meta(index))
+		edgar_graph_edit.save_current_graph()
+
+## OptionButton selected index → metadata value
+## selected 0="Default"→-1(null), 1="AllowRepeat"→0, 2="NoImmediate"→1, 3="NoRepeat"→2
+func _option_to_meta(index: int) -> int:
+	return index - 1
+
+## Metadata value → OptionButton selected index
+func _meta_to_option(value: int) -> int:
+	return value + 1
+
+func _on_property_collapse_toggle() -> void:
+	property_content.visible = not property_content.visible
+	if property_content.visible:
+		property_collapse_button.icon = get_theme_icon("GuiTreeArrowDown", "EditorIcons")
+	else:
+		property_collapse_button.icon = get_theme_icon("GuiTreeArrowRight", "EditorIcons")
 
 func save_all() -> void:
 	# Save all open files

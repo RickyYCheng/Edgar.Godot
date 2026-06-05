@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 
 using Edgar.Geometry;
+using Edgar.GraphBasedGenerator.Common;
 using Edgar.GraphBasedGenerator.Grid2D;
 
 using Godot;
@@ -16,6 +17,8 @@ public partial class EdgarGodotGenerator : RefCounted
     Array<Dictionary> _edges;
     Array<Godot.Collections.Dictionary<string, Dictionary>> _layers;
     int _minimum_room_distance;
+    int? _room_template_repeat_mode_default;
+    int? _room_template_repeat_mode_override;
 
     public EdgarGodotGenerator()
     {
@@ -25,13 +28,15 @@ public partial class EdgarGodotGenerator : RefCounted
         _layers = null;
     }
 
-    private EdgarGodotGenerator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0)
+    private EdgarGodotGenerator(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0, int? room_template_repeat_mode_default = null, int? room_template_repeat_mode_override = null)
     {
         _captured_generator = null;
         _nodes = nodes;
         _edges = edges;
         _layers = layers;
         _minimum_room_distance = minimum_room_distance;
+        _room_template_repeat_mode_default = room_template_repeat_mode_default;
+        _room_template_repeat_mode_override = room_template_repeat_mode_override;
     }
 
     private void ensure_generator()
@@ -39,7 +44,7 @@ public partial class EdgarGodotGenerator : RefCounted
         if (_captured_generator != null)
             return;
 
-        var level_description = GetLevelDescription(_nodes, _edges, _layers, _minimum_room_distance);
+        var level_description = GetLevelDescription(_nodes, _edges, _layers, _minimum_room_distance, _room_template_repeat_mode_default, _room_template_repeat_mode_override);
         if (level_description != null)
         {
             _captured_generator = new GraphBasedGeneratorGrid2D<string>(level_description);
@@ -47,14 +52,16 @@ public partial class EdgarGodotGenerator : RefCounted
     }
 
     [Pure]
-    private static LevelDescriptionGrid2D<string> GetLevelDescription(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0)
+    private static LevelDescriptionGrid2D<string> GetLevelDescription(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0, int? room_template_repeat_mode_default = null, int? room_template_repeat_mode_override = null)
     {
         if (nodes == null || edges == null || layers == null)
             return null;
 
         var level_description = new LevelDescriptionGrid2D<string>()
         {
-            MinimumRoomDistance = minimum_room_distance
+            MinimumRoomDistance = minimum_room_distance,
+            RoomTemplateRepeatModeDefault = FromInt(room_template_repeat_mode_default),
+            RoomTemplateRepeatModeOverride = FromInt(room_template_repeat_mode_override)
         };
 
         var layer_templates = new List<List<RoomTemplateGrid2D>>(layers.Count);
@@ -109,8 +116,8 @@ public partial class EdgarGodotGenerator : RefCounted
     public static bool resource_valid(Resource level)
         => level is not null && level.HasMeta("is_edgar_graph");
 
-    public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0)
-        => new(nodes, edges, layers, minimum_room_distance);
+    public static EdgarGodotGenerator cons(Godot.Collections.Dictionary<string, Dictionary> nodes, Array<Dictionary> edges, Array<Godot.Collections.Dictionary<string, Dictionary>> layers, int minimum_room_distance = 0, int? room_template_repeat_mode_default = null, int? room_template_repeat_mode_override = null)
+        => new(nodes, edges, layers, minimum_room_distance, room_template_repeat_mode_default, room_template_repeat_mode_override);
 
     public static EdgarGodotGenerator from_resource(Resource level)
     {
@@ -125,6 +132,8 @@ public partial class EdgarGodotGenerator : RefCounted
             var nodes = level.GetMeta("nodes").AsGodotDictionary<string, Dictionary>();
             var edges = level.GetMeta("edges").AsGodotArray<Dictionary>();
             var minimum_room_distance = (int)level.GetMeta("minimum_room_distance", 0);
+            var room_template_repeat_mode_default = level.HasMeta("room_template_repeat_mode_default") ? (int?)level.GetMeta("room_template_repeat_mode_default") : null;
+            var room_template_repeat_mode_override = level.HasMeta("room_template_repeat_mode_override") ? (int?)level.GetMeta("room_template_repeat_mode_override") : null;
             var cache = new Godot.Collections.Dictionary<string, Dictionary>();
             var proxy = EdgarGodot.get_proxy();
             var layers = new Array<Godot.Collections.Dictionary<string, Dictionary>>(level.GetMeta("layers").AsGodotArray<string[]>().Select(layer =>
@@ -150,7 +159,7 @@ public partial class EdgarGodotGenerator : RefCounted
                 return result;
             }));
 
-            return cons(nodes, edges, layers, minimum_room_distance);
+            return cons(nodes, edges, layers, minimum_room_distance, room_template_repeat_mode_default, room_template_repeat_mode_override);
         }
         catch (System.Exception ex)
         {
@@ -206,6 +215,15 @@ public partial class EdgarGodotGenerator : RefCounted
 
         _captured_generator.InjectRandomGenerator(new System.Random(seed));
     }
+
+    private static RoomTemplateRepeatMode? FromInt(int? value)
+        => value switch
+        {
+            0 => RoomTemplateRepeatMode.AllowRepeat,
+            1 => RoomTemplateRepeatMode.NoImmediate,
+            2 => RoomTemplateRepeatMode.NoRepeat,
+            _ => null
+        };
 
     private static Dictionary get_lnk(string template, GDScript proxy = null)
     {

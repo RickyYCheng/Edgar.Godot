@@ -20,6 +20,17 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_property_header"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.18, 0.2, 0.25, 0.9)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [node name="MainView" type="Control" unique_id=839407430]
 clip_contents = true
 layout_mode = 3
@@ -101,16 +112,49 @@ custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PropertyConfig" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel" unique_id=953661224]
+[node name="PropertyConfig" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel" unique_id=953661224]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="PropertyHeader" type="PanelContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661236]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_property_header")
+
+[node name="PropertyHeaderHBox" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyHeader" unique_id=953661241]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="PropertyLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661225]
+[node name="PropertyCollapseButton" type="Button" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyHeader/PropertyHeaderHBox" unique_id=953661237]
+unique_name_in_owner = true
+layout_mode = 2
+flat = true
+
+[node name="PropertyHeaderLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyHeader/PropertyHeaderHBox" unique_id=953661238]
+layout_mode = 2
+text = "Level Properties"
+size_flags_horizontal = 3
+
+[node name="PropertyContent" type="MarginContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661239]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 2
+
+[node name="PropertyVBox" type="VBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent" unique_id=953661240]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="DistanceRow" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox" unique_id=953661228]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="DistanceLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/DistanceRow" unique_id=953661229]
 layout_mode = 2
 text = "Min Room Distance"
 tooltip_text = "Minimum distance between rooms in the generated layout"
 
-[node name="MinimumRoomDistanceSpinBox" type="SpinBox" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661226]
+[node name="MinimumRoomDistanceSpinBox" type="SpinBox" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/DistanceRow" unique_id=953661226]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -118,6 +162,54 @@ min_value = 0.0
 max_value = 100.0
 step = 1.0
 value = 0.0
+
+[node name="RepeatDefaultRow" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox" unique_id=953661230]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="RepeatDefaultLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatDefaultRow" unique_id=953661231]
+layout_mode = 2
+text = "Repeat Default"
+tooltip_text = "Default room template repeat mode (null = system default NoRepeat)"
+
+[node name="RepeatDefaultOption" type="OptionButton" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatDefaultRow" unique_id=953661232]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+popup/item_1/text = "AllowRepeat"
+popup/item_1/id = 1
+popup/item_2/text = "NoImmediate"
+popup/item_2/id = 2
+popup/item_3/text = "NoRepeat"
+popup/item_3/id = 3
+selected = 3
+
+[node name="RepeatOverrideRow" type="HBoxContainer" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox" unique_id=953661233]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="RepeatOverrideLabel" type="Label" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatOverrideRow" unique_id=953661234]
+layout_mode = 2
+text = "Repeat Override"
+tooltip_text = "Override room template repeat mode (null = don't override)"
+
+[node name="RepeatOverrideOption" type="OptionButton" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig/PropertyContent/PropertyVBox/RepeatOverrideRow" unique_id=953661235]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "Default"
+popup/item_0/id = 0
+popup/item_1/text = "AllowRepeat"
+popup/item_1/id = 1
+popup/item_2/text = "NoImmediate"
+popup/item_2/id = 2
+popup/item_3/text = "NoRepeat"
+popup/item_3/id = 3
+selected = 0
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = 0.0

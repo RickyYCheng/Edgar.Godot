@@ -54,6 +54,26 @@ func set_minimum_room_distance(value: int) -> void:
 		return
 	graph_resource.set_meta("minimum_room_distance", value)
 
+func get_repeat_mode_default() -> int:
+	if graph_resource == null:
+		return 2
+	return graph_resource.get_meta("room_template_repeat_mode_default", 2)
+
+func set_repeat_mode_default(value: int) -> void:
+	if graph_resource == null:
+		return
+	graph_resource.set_meta("room_template_repeat_mode_default", value)
+
+func get_repeat_mode_override() -> int:
+	if graph_resource == null:
+		return -1
+	return graph_resource.get_meta("room_template_repeat_mode_override", -1)
+
+func set_repeat_mode_override(value: int) -> void:
+	if graph_resource == null:
+		return
+	graph_resource.set_meta("room_template_repeat_mode_override", value)
+
 func _ready() -> void:
 	_update_visibility()
 
@@ -78,6 +98,8 @@ func _save_graph_resource() -> bool:
 		"layers": layers_data,
 		"layer_names": layer_names,
 		"minimum_room_distance": graph_resource.get_meta("minimum_room_distance", 0),
+		"room_template_repeat_mode_default": graph_resource.get_meta("room_template_repeat_mode_default", 2),
+		"room_template_repeat_mode_override": graph_resource.get_meta("room_template_repeat_mode_override", -1),
 	}))
 
 func save_current_graph() -> void:

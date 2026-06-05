@@ -102,6 +102,8 @@ static func _create_resource(source_file: String, json: Dictionary) -> EdgarGrap
 	res.set_meta("layer_names", layer_names)
 
 	res.set_meta("minimum_room_distance", json.get("minimum_room_distance", 0))
+	res.set_meta("room_template_repeat_mode_default", json.get("room_template_repeat_mode_default", 2))
+	res.set_meta("room_template_repeat_mode_override", json.get("room_template_repeat_mode_override", -1))
 
 	return res
 
