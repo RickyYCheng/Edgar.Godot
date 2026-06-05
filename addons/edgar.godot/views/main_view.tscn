@@ -110,8 +110,14 @@ layout_mode = 2
 text = "Min Room Distance"
 tooltip_text = "Minimum distance between rooms in the generated layout"
 
-[node name="PropertySpinBox" type="SpinBox" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661226]
+[node name="MinimumRoomDistanceSpinBox" type="SpinBox" parent="Margin/MainVBox/Content/SidePanel/PropertyConfig" unique_id=953661226]
 unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+value = 0.0
 layout_mode = 2
 size_flags_horizontal = 3
 min_value = 0.0
