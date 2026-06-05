@@ -100,9 +100,9 @@ public partial class EdgarGodotGenerator : RefCounted
             var layer = node["edgar_layer"].AsInt32();
             var is_corridor = node["is_corridor_room"].AsBool();
 
-            var repeat_mode_raw = node.ContainsKey("repeat_mode") ? (int?)node["repeat_mode"].AsInt32() : null;
-            var repeat_mode = repeat_mode_raw.HasValue && repeat_mode_raw.Value >= 0
-                ? (RoomTemplateRepeatMode?)repeat_mode_raw.Value
+            var repeat_mode_raw = node.ContainsKey("repeat_mode") ? (int)node["repeat_mode"] : -1;
+            var repeat_mode = repeat_mode_raw >= 0
+                ? (RoomTemplateRepeatMode?)repeat_mode_raw
                 : null;
 
             var room_templates = layer_template_builders[layer].Select(b => b(repeat_mode)).ToList();
